@@ -22,6 +22,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { ResearchArtifact, type ResearchArtifactKind } from "@/components/research-artifacts"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -58,27 +59,30 @@ const researchThreads = [
     eyebrow: "ZnO quantum dots",
     title: "First-principles modeling of finite oxide nanocrystals",
     body: "DFT, DFPT, and PDEP-GW workflows for band-edge control, phonon behavior, passivation chemistry, and size-dependent piezoelectric response.",
-    image: fromBase("assets/zno-qd-coordinate-map.png"),
-    alt: "Coordinate-indexing figure for ligand-passivated ZnO quantum dots.",
+    artifact: "nanocrystal",
     icon: Atom,
   },
   {
     eyebrow: "Raman spectroscopy",
     title: "Temperature and excitation-power resolved Raman analysis",
     body: "Experimental and computational Raman pipelines for ZnO quantum dots, including linewidth, phonon confinement, and heating diagnostics.",
-    image: fromBase("assets/raman-spectra.png"),
-    alt: "Raw Raman spectra for a ZnO quantum dot power series.",
+    artifact: "raman",
     icon: Microscope,
   },
   {
     eyebrow: "Perovskite photovoltaics",
     title: "Tin-lead alloy perovskites with multi-cation engineering",
     body: "Spin-coated thin-film synthesis and optical characterization focused on stability, near-IR tunability, and photovoltaic relevance.",
-    image: fromBase("assets/qe-frontier-levels.png"),
-    alt: "Quantum Espresso frontier-level comparison chart for passivated ZnO quantum dots.",
+    artifact: "perovskite",
     icon: Cpu,
   },
-]
+] satisfies Array<{
+  eyebrow: string
+  title: string
+  body: string
+  artifact: ResearchArtifactKind
+  icon: typeof Atom
+}>
 
 const journalArticles = [
   {
@@ -445,11 +449,7 @@ function ResearchSection() {
       />
       <div className="mt-12 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
         <article className="overflow-hidden rounded-lg border border-border bg-card">
-          <img
-            src={researchThreads[0].image}
-            alt={researchThreads[0].alt}
-            className="aspect-[16/10] w-full object-cover"
-          />
+          <ResearchArtifact kind={researchThreads[0].artifact} />
           <div className="p-6 sm:p-8">
             <ResearchCopy thread={researchThreads[0]} />
           </div>
@@ -457,7 +457,7 @@ function ResearchSection() {
         <div className="grid gap-5">
           {researchThreads.slice(1).map((thread) => (
             <article key={thread.title} className="grid gap-0 overflow-hidden rounded-lg border border-border bg-card sm:grid-cols-[0.92fr_1.08fr] lg:grid-cols-1 xl:grid-cols-[0.88fr_1.12fr]">
-              <img src={thread.image} alt={thread.alt} className="h-full min-h-56 w-full object-cover" />
+              <ResearchArtifact kind={thread.artifact} compact />
               <div className="p-6">
                 <ResearchCopy thread={thread} compact />
               </div>

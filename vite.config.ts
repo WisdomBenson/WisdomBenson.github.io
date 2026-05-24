@@ -6,6 +6,9 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/WisdomBenson.github.io/',
+  build: {
+    chunkSizeWarningLimit: 900,
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
