@@ -42,7 +42,7 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ]
 
-const emailAddress = "wisdom.benson@howard.edu"
+const emailAddress = "wisdom.benson@bison.howard.edu"
 const phoneNumber = "+1 984-312-9015"
 const fromBase = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const resumeHref = fromBase("wisdom-benson-resume.docx")
