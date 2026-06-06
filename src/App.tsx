@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState, type MouseEvent } from "react"
 
 import {
   ArrowUpRight,
@@ -34,18 +34,19 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-const navItems = [
-  { label: "Research", href: "#research" },
-  { label: "Publications", href: "#publications" },
-  { label: "CV", href: "#cv" },
-  { label: "Experience", href: "#experience" },
-  { label: "Contact", href: "#contact" },
-]
-
 const emailAddress = "wisdom.benson@bison.howard.edu"
 const phoneNumber = "+1 984-312-9015"
 const fromBase = (path: string) => `${import.meta.env.BASE_URL}${path}`
+const sectionHref = (id: string) => `${import.meta.env.BASE_URL}#${id}`
 const resumeHref = fromBase("wisdom-benson-resume.docx")
+
+const navItems = [
+  { label: "Research", href: sectionHref("research") },
+  { label: "Publications", href: sectionHref("publications") },
+  { label: "CV", href: sectionHref("cv") },
+  { label: "Experience", href: sectionHref("experience") },
+  { label: "Contact", href: sectionHref("contact") },
+]
 
 const metrics = [
   { value: "5", label: "journal articles and thesis publications" },
@@ -296,10 +297,25 @@ function App() {
 }
 
 function SiteHeader() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const handleMobileSectionClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    const targetId = href.split("#")[1]
+    if (!targetId) return
+
+    event.preventDefault()
+    setMobileMenuOpen(false)
+    window.history.pushState(null, "", href)
+    const scrollToTarget = () => {
+      document.getElementById(targetId)?.scrollIntoView({ block: "start" })
+    }
+    window.setTimeout(scrollToTarget, 260)
+    window.setTimeout(scrollToTarget, 560)
+  }
+
   return (
     <header className="sticky top-0 z-20 border-b border-border/80 bg-background/88 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="#top" className="group inline-flex items-center gap-3 text-sm font-medium text-foreground">
+        <a href={sectionHref("top")} className="group inline-flex items-center gap-3 text-sm font-medium text-foreground">
           <span className="grid size-9 place-items-center rounded-full border border-border bg-card text-xs font-semibold transition-transform group-hover:-translate-y-0.5">
             WB
           </span>
@@ -333,7 +349,7 @@ function SiteHeader() {
             </a>
           </Button>
         </div>
-        <Sheet>
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation">
               <Menu className="size-4" aria-hidden="true" />
@@ -352,6 +368,7 @@ function SiteHeader() {
                     <a
                       key={item.href}
                       href={item.href}
+                      onClick={(event) => handleMobileSectionClick(event, item.href)}
                       className="rounded-md px-3 py-3 text-base text-foreground transition-colors hover:bg-muted"
                     >
                       {item.label}
@@ -361,13 +378,13 @@ function SiteHeader() {
                 <Separator />
                 <div className="grid gap-3">
                   <Button asChild>
-                    <a href={`mailto:${emailAddress}`}>
+                    <a href={`mailto:${emailAddress}`} onClick={() => setMobileMenuOpen(false)}>
                       <Mail className="size-4" aria-hidden="true" />
                       Email Wisdom
                     </a>
                   </Button>
                   <Button asChild variant="outline">
-                    <a href={resumeHref}>
+                    <a href={resumeHref} onClick={() => setMobileMenuOpen(false)}>
                       <Download className="size-4" aria-hidden="true" />
                       Resume
                     </a>
@@ -410,7 +427,7 @@ function HeroSection() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="group">
-                <a href="#publications">
+                <a href={sectionHref("publications")}>
                   Publications
                   <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
                 </a>
@@ -494,7 +511,7 @@ function PublicationsSection() {
         title="Articles, a CRC Press chapter, and conference work."
         body="DOI links are wired directly where the publication record exposes them; conference records are listed from the current resume source."
       />
-      <Tabs defaultValue="articles" className="mt-10">
+      <Tabs defaultValue="articles" className="mt-10 flex-col">
         <TabsList className="grid h-auto w-full grid-cols-3 rounded-lg bg-muted p-1 sm:w-fit">
           <TabsTrigger value="articles">Articles</TabsTrigger>
           <TabsTrigger value="chapter">Chapter</TabsTrigger>
@@ -570,7 +587,7 @@ function CVSection() {
         title="Physics training, computational materials research, and product-building range."
         body="The web CV is structured for scanning; the downloadable resume mirrors the current source document from Downloads."
       />
-      <Tabs defaultValue="cv" className="mt-10">
+      <Tabs defaultValue="cv" className="mt-10 flex-col">
         <TabsList className="grid h-auto w-full grid-cols-2 rounded-lg bg-muted p-1 sm:w-fit">
           <TabsTrigger value="cv">Curriculum Vitae</TabsTrigger>
           <TabsTrigger value="resume">Resume</TabsTrigger>
@@ -769,7 +786,7 @@ function ContactSection() {
       </div>
       <footer className="mt-10 flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>Wisdom Benson | Physics, computational materials, and spectroscopy</p>
-        <a href="#top" className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
+        <a href={sectionHref("top")} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
           Back to top
           <ArrowUpRight className="size-4" aria-hidden="true" />
         </a>
