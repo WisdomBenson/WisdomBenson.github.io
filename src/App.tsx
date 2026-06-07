@@ -1,10 +1,11 @@
-import { useEffect, useState, type MouseEvent } from "react"
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react"
 
 import {
   ArrowUpRight,
   Atom,
   Award,
   BookOpen,
+  Code2,
   Cpu,
   Download,
   ExternalLink,
@@ -13,11 +14,13 @@ import {
   Mail,
   MapPin,
   Menu,
+  MessageSquare,
   Microscope,
   Phone,
   ScrollText,
 } from "lucide-react"
 
+import { blogCategories, blogPosts, type BlogCategory, type BlogPost } from "@/blog-posts"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -43,6 +46,7 @@ const resumeHref = fromBase("wisdom-benson-resume.docx")
 const navItems = [
   { label: "Research", href: sectionHref("research") },
   { label: "Publications", href: sectionHref("publications") },
+  { label: "Blog", href: sectionHref("blog") },
   { label: "CV", href: sectionHref("cv") },
   { label: "Experience", href: sectionHref("experience") },
   { label: "Contact", href: sectionHref("contact") },
@@ -288,6 +292,7 @@ function App() {
         <HeroSection />
         <ResearchSection />
         <PublicationsSection />
+        <BlogSection />
         <CVSection />
         <ExperienceSection />
         <ContactSection />
@@ -576,6 +581,200 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
         </Card>
       ))}
     </div>
+  )
+}
+
+function BlogSection() {
+  const [activeCategory, setActiveCategory] = useState<BlogCategory | "All">("All")
+  const [selectedSlug, setSelectedSlug] = useState(blogPosts[0].slug)
+
+  const visiblePosts = useMemo(() => {
+    if (activeCategory === "All") return blogPosts
+    return blogPosts.filter((post) => post.categories.includes(activeCategory))
+  }, [activeCategory])
+
+  const selectedPost = useMemo(() => {
+    return visiblePosts.find((post) => post.slug === selectedSlug) ?? visiblePosts[0] ?? blogPosts[0]
+  }, [selectedSlug, visiblePosts])
+
+  return (
+    <section id="blog" data-slot="blog" className="section-wrap border-t border-border">
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+        <SectionHeader
+          eyebrow="Blog"
+          title="Field notes across philosophy, computation, and materials research."
+          body="A public writing space for essays, research notebooks, build logs, and technical reflections across philosophy, ZnO and perovskite modeling, quantum computing, ML, OCaml, CUDA, and related work."
+        />
+        <Card className="rounded-lg border-border bg-card shadow-none">
+          <CardContent className="p-5 sm:p-6">
+            <div className="flex items-start gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                <MessageSquare className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold leading-tight">Public comments are enabled per post.</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Readers can sign in with GitHub and leave comments through the discussion panel beneath each article.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-10 flex flex-wrap gap-2" aria-label="Filter blog posts by topic">
+        <Button
+          type="button"
+          variant={activeCategory === "All" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setActiveCategory("All")}
+        >
+          All
+        </Button>
+        {blogCategories.map((category) => (
+          <Button
+            key={category}
+            type="button"
+            variant={activeCategory === category ? "default" : "outline"}
+            size="sm"
+            onClick={() => setActiveCategory(category)}
+          >
+            {category}
+          </Button>
+        ))}
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
+        <div className="grid content-start gap-3">
+          {visiblePosts.map((post) => (
+            <BlogPostButton
+              key={post.slug}
+              post={post}
+              selected={post.slug === selectedPost.slug}
+              onSelect={() => setSelectedSlug(post.slug)}
+            />
+          ))}
+        </div>
+        <div className="grid gap-4">
+          <BlogReader post={selectedPost} />
+          <BlogComments post={selectedPost} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function BlogPostButton({ post, selected, onSelect }: { post: BlogPost; selected: boolean; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      className="group rounded-lg border border-border bg-card p-4 text-left shadow-none transition-all hover:-translate-y-0.5 hover:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      data-slot="blog-post-trigger"
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant={selected ? "default" : "secondary"}>{post.mode}</Badge>
+        <span className="text-xs text-muted-foreground">{post.date}</span>
+      </div>
+      <h3 className="mt-3 text-lg font-semibold leading-snug text-foreground">{post.title}</h3>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{post.summary}</p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {post.categories.map((category) => (
+          <Badge key={category} variant="outline">
+            {category}
+          </Badge>
+        ))}
+      </div>
+    </button>
+  )
+}
+
+function BlogReader({ post }: { post: BlogPost }) {
+  return (
+    <article data-slot="blog-reader">
+      <Card className="rounded-lg border-border bg-card shadow-none">
+        <CardContent className="p-5 sm:p-8">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge>{post.mode}</Badge>
+            <Badge variant="secondary">{post.readTime}</Badge>
+            <span className="text-sm text-muted-foreground">{post.date}</span>
+          </div>
+          <h2 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl">{post.title}</h2>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">{post.summary}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {post.categories.map((category) => (
+              <Badge key={category} variant="outline">
+                {category}
+              </Badge>
+            ))}
+          </div>
+
+          <Separator className="my-7" />
+
+          <div className="grid gap-7">
+            {post.body.map((section) => (
+              <section key={section.heading}>
+                <div className="mb-3 flex items-center gap-3">
+                  <span className="grid size-9 place-items-center rounded-full bg-secondary text-secondary-foreground">
+                    <Code2 className="size-4" aria-hidden="true" />
+                  </span>
+                  <h3 className="text-xl font-semibold leading-snug">{section.heading}</h3>
+                </div>
+                <div className="grid gap-4 text-base leading-8 text-muted-foreground">
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </article>
+  )
+}
+
+function BlogComments({ post }: { post: BlogPost }) {
+  const commentsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = commentsRef.current
+    if (!container) return
+
+    container.innerHTML = ""
+    const script = document.createElement("script")
+    script.src = "https://utteranc.es/client.js"
+    script.async = true
+    script.crossOrigin = "anonymous"
+    script.setAttribute("repo", "Wisemanking001/WisdomBenson.github.io")
+    script.setAttribute("issue-term", `blog-${post.slug}`)
+    script.setAttribute("label", "blog-comment")
+    script.setAttribute("theme", "github-light")
+    container.appendChild(script)
+
+    return () => {
+      container.innerHTML = ""
+    }
+  }, [post.slug])
+
+  return (
+    <Card className="rounded-lg border-border bg-card shadow-none" data-slot="blog-comments">
+      <CardContent className="p-5 sm:p-6">
+        <div className="flex items-start gap-3">
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+            <MessageSquare className="size-5" aria-hidden="true" />
+          </span>
+          <div>
+            <h3 className="text-xl font-semibold leading-tight">Comments</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Comments are public and powered by GitHub Issues. Sign in with GitHub to join the discussion.
+            </p>
+          </div>
+        </div>
+        <div ref={commentsRef} className="mt-5 min-h-40 overflow-hidden rounded-md border border-border bg-background/60 p-2" />
+      </CardContent>
+    </Card>
   )
 }
 
