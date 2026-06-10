@@ -1115,9 +1115,9 @@ function ExperienceSection() {
           <AccordionItem
             key={item.role + item.place}
             value={index === 0 ? "howard" : item.place}
-            className="overflow-hidden rounded-lg border border-border bg-card px-5 shadow-none sm:px-6"
+            className="overflow-hidden rounded-lg border border-border bg-card shadow-none"
           >
-            <AccordionTrigger className="py-5 text-left hover:no-underline">
+            <AccordionTrigger className="rounded-none border-0 px-5 py-5 text-left hover:no-underline focus-visible:ring-2 sm:px-6">
               <div className="flex flex-col gap-1">
                 <span className="text-lg font-semibold">{item.role}</span>
                 <span className="text-sm font-normal text-muted-foreground">
@@ -1125,7 +1125,7 @@ function ExperienceSection() {
                 </span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pb-5">
+            <AccordionContent className="px-5 pb-5 sm:px-6">
               <ul className="grid gap-3 text-sm leading-6 text-muted-foreground">
                 {item.bullets.map((bullet) => (
                   <li key={bullet} className="grid grid-cols-[0.6rem_1fr] gap-3">
