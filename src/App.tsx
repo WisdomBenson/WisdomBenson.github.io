@@ -43,8 +43,8 @@ const fromBase = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const sectionHref = (id: string) => `${import.meta.env.BASE_URL}#${id}`
 const resumeHref = fromBase("wisdom-benson-resume.docx")
 const blogHref = fromBase("blog/")
-const githubIssuesApi = "https://api.github.com/repos/Wisemanking001/WisdomBenson.github.io/issues?state=open&labels=blog-post&per_page=30"
-const newBlogIssueHref = "https://github.com/Wisemanking001/WisdomBenson.github.io/issues/new?template=blog-post.yml"
+const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues?state=open&labels=blog-post&per_page=30"
+const newBlogIssueHref = "https://github.com/WisdomBenson/WisdomBenson.github.io/issues/new?template=blog-post.yml"
 
 const navItems = [
   { label: "Research", href: sectionHref("research") },
@@ -373,7 +373,7 @@ function SiteHeader() {
         </NavigationMenu>
         <div className="hidden items-center gap-2 lg:flex">
           <Button asChild variant="ghost" size="sm">
-            <a href="https://github.com/Wisemanking001" target="_blank" rel="noreferrer">
+            <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
               <ExternalLink className="size-4" aria-hidden="true" />
               GitHub
             </a>
@@ -779,7 +779,7 @@ function BlogPage() {
                     </a>
                   </Button>
                   <Button asChild variant="outline" size="sm">
-                    <a href="https://github.com/Wisemanking001/WisdomBenson.github.io/issues?q=is%3Aissue%20label%3Ablog-post" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/WisdomBenson/WisdomBenson.github.io/issues?q=is%3Aissue%20label%3Ablog-post" target="_blank" rel="noreferrer">
                       <ExternalLink className="size-4" aria-hidden="true" />
                       Manage posts
                     </a>
@@ -980,7 +980,7 @@ function BlogComments({ post }: { post: DisplayBlogPost }) {
     script.src = "https://utteranc.es/client.js"
     script.async = true
     script.crossOrigin = "anonymous"
-    script.setAttribute("repo", "Wisemanking001/WisdomBenson.github.io")
+    script.setAttribute("repo", "WisdomBenson/WisdomBenson.github.io")
     if (post.issueNumber) {
       script.setAttribute("issue-number", String(post.issueNumber))
     } else {
