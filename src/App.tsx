@@ -20,7 +20,7 @@ import {
   ScrollText,
 } from "lucide-react"
 
-import { blogCategories, blogPosts, type BlogCategory, type BlogPost } from "@/blog-posts"
+import { blogCategories, type BlogCategory, type BlogPost } from "@/blog-posts"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -68,7 +68,6 @@ type GitHubIssue = {
 type DisplayBlogPost = BlogPost & {
   href?: string
   issueNumber?: number
-  source: "starter" | "github"
 }
 
 const metrics = [
@@ -636,7 +635,6 @@ function issueToBlogPost(issue: GitHubIssue): DisplayBlogPost {
     body: issueBodySections(articleBody),
     href: issue.html_url,
     issueNumber: issue.number,
-    source: "github",
   }
 }
 
@@ -716,13 +714,9 @@ function slugify(value: string) {
 
 function BlogPage() {
   const [activeCategory, setActiveCategory] = useState<BlogCategory | "All">("All")
-  const [selectedSlug, setSelectedSlug] = useState(blogPosts[0].slug)
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null)
   const [githubPosts, setGithubPosts] = useState<DisplayBlogPost[]>([])
   const [postStatus, setPostStatus] = useState<"loading" | "ready" | "error">("loading")
-
-  const starterPosts = useMemo<DisplayBlogPost[]>(() => {
-    return blogPosts.map((post) => ({ ...post, source: "starter" }))
-  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -749,18 +743,14 @@ function BlogPage() {
     }
   }, [])
 
-  const allPosts = useMemo<DisplayBlogPost[]>(() => {
-    return [...githubPosts, ...starterPosts]
-  }, [githubPosts, starterPosts])
-
   const visiblePosts = useMemo(() => {
-    if (activeCategory === "All") return allPosts
-    return allPosts.filter((post) => post.categories.includes(activeCategory))
-  }, [activeCategory, allPosts])
+    if (activeCategory === "All") return githubPosts
+    return githubPosts.filter((post) => post.categories.includes(activeCategory))
+  }, [activeCategory, githubPosts])
 
   const selectedPost = useMemo(() => {
-    return visiblePosts.find((post) => post.slug === selectedSlug) ?? visiblePosts[0] ?? starterPosts[0]
-  }, [selectedSlug, starterPosts, visiblePosts])
+    return visiblePosts.find((post) => post.slug === selectedSlug) ?? visiblePosts[0] ?? null
+  }, [selectedSlug, visiblePosts])
 
   return (
     <section id="blog" data-slot="blog" className="section-wrap">
@@ -803,48 +793,98 @@ function BlogPage() {
 
       {postStatus === "error" ? (
         <div className="mt-8 rounded-lg border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
-          GitHub posts could not be loaded right now, so the seeded articles are shown below. Refresh the page or check the repository issue label if a new post is missing.
+          Posts could not be loaded from GitHub right now. Refresh the page or use Manage posts to confirm the article is open and labeled <span className="font-mono text-foreground">blog-post</span>.
         </div>
       ) : null}
 
-      <div className="mt-10 flex flex-wrap gap-2" aria-label="Filter blog posts by topic">
-        <Button
-          type="button"
-          variant={activeCategory === "All" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setActiveCategory("All")}
-        >
-          All
-        </Button>
-        {blogCategories.map((category) => (
-          <Button
-            key={category}
-            type="button"
-            variant={activeCategory === category ? "default" : "outline"}
-            size="sm"
-            onClick={() => setActiveCategory(category)}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
+      {postStatus === "loading" ? (
+        <div className="mt-10 grid gap-3" aria-label="Loading blog posts">
+          <div className="h-24 animate-pulse rounded-lg border border-border bg-muted" />
+          <div className="h-24 animate-pulse rounded-lg border border-border bg-muted" />
+        </div>
+      ) : null}
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
-        <div className="grid content-start gap-3">
-          {visiblePosts.map((post) => (
-            <BlogPostButton
-              key={post.slug}
-              post={post}
-              selected={post.slug === selectedPost.slug}
-              onSelect={() => setSelectedSlug(post.slug)}
-            />
-          ))}
-        </div>
-        <div className="grid gap-4">
-          <BlogReader post={selectedPost} />
-          <BlogComments post={selectedPost} />
-        </div>
-      </div>
+      {postStatus === "ready" && githubPosts.length === 0 ? (
+        <Card className="mt-10 rounded-lg border-border bg-card shadow-none">
+          <CardContent className="grid gap-5 p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-8">
+            <span className="grid size-11 place-items-center rounded-full bg-primary/10 text-primary">
+              <FileText className="size-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 className="text-xl font-semibold">No articles published yet</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Use the prepared GitHub form to publish your first essay or research note. It will appear here automatically.
+              </p>
+            </div>
+            <Button asChild>
+              <a href={newBlogIssueHref} target="_blank" rel="noreferrer">
+                <FileText className="size-4" aria-hidden="true" />
+                Create article
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {githubPosts.length > 0 ? (
+        <>
+          <div className="mt-10 flex flex-wrap gap-2" aria-label="Filter blog posts by topic">
+            <Button
+              type="button"
+              variant={activeCategory === "All" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveCategory("All")}
+            >
+              All
+            </Button>
+            {blogCategories.map((category) => (
+              <Button
+                key={category}
+                type="button"
+                variant={activeCategory === category ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveCategory(category)}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {visiblePosts.length === 0 ? (
+            <div className="mt-8 rounded-lg border border-border bg-card p-6">
+              <p className="text-sm leading-6 text-muted-foreground">No published posts match this topic.</p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={() => setActiveCategory("All")}
+              >
+                Show all posts
+              </Button>
+            </div>
+          ) : (
+            <div className="mt-8 grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
+              <div className="grid content-start gap-3">
+                {visiblePosts.map((post) => (
+                  <BlogPostButton
+                    key={post.slug}
+                    post={post}
+                    selected={post.slug === selectedPost?.slug}
+                    onSelect={() => setSelectedSlug(post.slug)}
+                  />
+                ))}
+              </div>
+              {selectedPost ? (
+                <div className="grid gap-4">
+                  <BlogReader post={selectedPost} />
+                  <BlogComments post={selectedPost} />
+                </div>
+              ) : null}
+            </div>
+          )}
+        </>
+      ) : null}
     </section>
   )
 }
@@ -860,7 +900,6 @@ function BlogPostButton({ post, selected, onSelect }: { post: DisplayBlogPost; s
     >
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={selected ? "default" : "secondary"}>{post.mode}</Badge>
-        {post.source === "github" ? <Badge variant="outline">Public issue</Badge> : null}
         <span className="text-xs text-muted-foreground">{post.date}</span>
       </div>
       <h3 className="mt-3 text-lg font-semibold leading-snug text-foreground">{post.title}</h3>
@@ -884,7 +923,6 @@ function BlogReader({ post }: { post: DisplayBlogPost }) {
           <div className="flex flex-wrap items-center gap-2">
             <Badge>{post.mode}</Badge>
             <Badge variant="secondary">{post.readTime}</Badge>
-            {post.source === "github" ? <Badge variant="outline">Published from GitHub</Badge> : null}
             <span className="text-sm text-muted-foreground">{post.date}</span>
           </div>
           <h2 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl">{post.title}</h2>
