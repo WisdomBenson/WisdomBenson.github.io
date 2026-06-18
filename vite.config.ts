@@ -5,7 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/WisdomBenson.github.io/',
+  base: '/',
   build: {
     chunkSizeWarningLimit: 900,
     rollupOptions: {
