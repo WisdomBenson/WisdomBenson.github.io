@@ -62,8 +62,9 @@ const fromBase = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const sectionHref = (id: string) => `${import.meta.env.BASE_URL}#${id}`
 const resumeHref = fromBase("wisdom-benson-resume.docx")
 const blogHref = fromBase("blog/")
-const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues?state=open&labels=blog-post&per_page=30"
+const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues"
 const newBlogIssueHref = "https://github.com/WisdomBenson/WisdomBenson.github.io/issues/new?template=blog-post.yml"
+const approvedBlogAuthors = new Set(["wisdombenson"])
 
 const navItems = [
   { label: "Research", href: sectionHref("research") },
@@ -81,6 +82,7 @@ type GitHubIssue = {
   html_url: string
   created_at: string
   labels: Array<{ name: string }>
+  user: { login: string } | null
   pull_request?: unknown
 }
 
@@ -358,11 +360,14 @@ function SiteHeader() {
     const targetId = href.split("#")[1]
     if (!targetId) return
 
-    event.preventDefault()
     setMobileMenuOpen(false)
+    const target = document.getElementById(targetId)
+    if (!target) return
+
+    event.preventDefault()
     window.history.pushState(null, "", href)
     const scrollToTarget = () => {
-      document.getElementById(targetId)?.scrollIntoView({ block: "start" })
+      target.scrollIntoView({ block: "start" })
     }
     window.setTimeout(scrollToTarget, 260)
     window.setTimeout(scrollToTarget, 560)
@@ -615,7 +620,9 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
                 </Badge>
               ))}
             </div>
-            <CardTitle className="text-xl sm:pr-24">{item.title}</CardTitle>
+            <CardTitle>
+              <h3 className="text-xl leading-snug sm:pr-24">{item.title}</h3>
+            </CardTitle>
             <CardDescription className="leading-6">{item.citation}</CardDescription>
             <CardAction>
               <Button asChild variant="outline" size="sm">
@@ -723,6 +730,25 @@ function slugify(value: string) {
     .replace(/(^-|-$)/g, "")
 }
 
+async function fetchPublishedBlogIssues() {
+  const issues: GitHubIssue[] = []
+
+  for (let page = 1; ; page += 1) {
+    const query = new URLSearchParams({
+      state: "open",
+      labels: "blog-post",
+      per_page: "100",
+      page: String(page),
+    })
+    const response = await fetch(`${githubIssuesApi}?${query}`)
+    if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
+
+    const batch = (await response.json()) as GitHubIssue[]
+    issues.push(...batch)
+    if (batch.length < 100) return issues
+  }
+}
+
 function BlogPage() {
   const [activeCategory, setActiveCategory] = useState<BlogCategory | "All">("All")
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null)
@@ -734,12 +760,14 @@ function BlogPage() {
 
     async function loadGitHubPosts() {
       try {
-        const response = await fetch(githubIssuesApi)
-        if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
-        const issues = (await response.json()) as GitHubIssue[]
+        const issues = await fetchPublishedBlogIssues()
         if (cancelled) return
 
-        setGithubPosts(issues.filter((issue) => !issue.pull_request).map(issueToBlogPost))
+        setGithubPosts(
+          issues
+            .filter((issue) => !issue.pull_request && issue.user && approvedBlogAuthors.has(issue.user.login.toLowerCase()))
+            .map(issueToBlogPost),
+        )
         setPostStatus("ready")
       } catch {
         if (cancelled) return
@@ -938,7 +966,9 @@ function BlogReader({ post }: { post: DisplayBlogPost }) {
             <Badge variant="secondary">{post.readTime}</Badge>
             <span className="text-sm text-muted-foreground">{post.date}</span>
           </div>
-          <CardTitle className="text-2xl leading-tight sm:text-4xl">{post.title}</CardTitle>
+          <CardTitle>
+            <h2 className="text-2xl leading-tight sm:text-4xl">{post.title}</h2>
+          </CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">{post.summary}</CardDescription>
           <div className="mt-5 flex flex-wrap gap-2">
             {post.categories.map((category) => (
