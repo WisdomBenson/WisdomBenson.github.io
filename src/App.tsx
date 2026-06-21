@@ -5,7 +5,6 @@ import {
   Atom,
   Award,
   BookOpen,
-  Code2,
   Cpu,
   Download,
   ExternalLink,
@@ -19,12 +18,31 @@ import {
   Phone,
   ScrollText,
 } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 import { blogCategories, type BlogCategory, type BlogPost } from "@/blog-posts"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
 import { ResearchArtifact, type ResearchArtifactKind } from "@/components/research-artifacts"
 import {
   NavigationMenu,
@@ -35,6 +53,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const emailAddress = "wisdom.benson@bison.howard.edu"
@@ -43,8 +62,9 @@ const fromBase = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const sectionHref = (id: string) => `${import.meta.env.BASE_URL}#${id}`
 const resumeHref = fromBase("wisdom-benson-resume.docx")
 const blogHref = fromBase("blog/")
-const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues?state=open&labels=blog-post&per_page=30"
+const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues"
 const newBlogIssueHref = "https://github.com/WisdomBenson/WisdomBenson.github.io/issues/new?template=blog-post.yml"
+const approvedBlogAuthors = new Set(["wisdombenson"])
 
 const navItems = [
   { label: "Research", href: sectionHref("research") },
@@ -62,12 +82,14 @@ type GitHubIssue = {
   html_url: string
   created_at: string
   labels: Array<{ name: string }>
+  user: { login: string } | null
   pull_request?: unknown
 }
 
 type DisplayBlogPost = BlogPost & {
   href?: string
   issueNumber?: number
+  rawBody: string
 }
 
 const metrics = [
@@ -338,11 +360,14 @@ function SiteHeader() {
     const targetId = href.split("#")[1]
     if (!targetId) return
 
-    event.preventDefault()
     setMobileMenuOpen(false)
+    const target = document.getElementById(targetId)
+    if (!target) return
+
+    event.preventDefault()
     window.history.pushState(null, "", href)
     const scrollToTarget = () => {
-      document.getElementById(targetId)?.scrollIntoView({ block: "start" })
+      target.scrollIntoView({ block: "start" })
     }
     window.setTimeout(scrollToTarget, 260)
     window.setTimeout(scrollToTarget, 560)
@@ -374,13 +399,13 @@ function SiteHeader() {
         <div className="hidden items-center gap-2 lg:flex">
           <Button asChild variant="ghost" size="sm">
             <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
-              <ExternalLink className="size-4" aria-hidden="true" />
+              <ExternalLink data-icon="inline-start" aria-hidden="true" />
               GitHub
             </a>
           </Button>
           <Button asChild size="sm">
             <a href={`mailto:${emailAddress}`}>
-              <Mail className="size-4" aria-hidden="true" />
+              <Mail data-icon="inline-start" aria-hidden="true" />
               Contact
             </a>
           </Button>
@@ -388,7 +413,7 @@ function SiteHeader() {
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation">
-              <Menu className="size-4" aria-hidden="true" />
+              <Menu aria-hidden="true" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[min(86vw,24rem)] p-0">
@@ -415,13 +440,13 @@ function SiteHeader() {
                 <div className="grid gap-3">
                   <Button asChild>
                     <a href={`mailto:${emailAddress}`} onClick={() => setMobileMenuOpen(false)}>
-                      <Mail className="size-4" aria-hidden="true" />
+                      <Mail data-icon="inline-start" aria-hidden="true" />
                       Email Wisdom
                     </a>
                   </Button>
                   <Button asChild variant="outline">
                     <a href={resumeHref} onClick={() => setMobileMenuOpen(false)}>
-                      <Download className="size-4" aria-hidden="true" />
+                      <Download data-icon="inline-start" aria-hidden="true" />
                       Resume
                     </a>
                   </Button>
@@ -465,12 +490,12 @@ function HeroSection() {
               <Button asChild size="lg" className="group">
                 <a href={sectionHref("publications")}>
                   Publications
-                  <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                  <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
                 </a>
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a href={resumeHref}>
-                  <Download className="size-4" aria-hidden="true" />
+                  <Download data-icon="inline-start" aria-hidden="true" />
                   Download resume
                 </a>
               </Button>
@@ -584,30 +609,32 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
   return (
     <div className="grid gap-4">
       {items.map((item) => (
-        <Card key={item.title} className="overflow-hidden rounded-lg border-border bg-card shadow-none transition-transform hover:-translate-y-0.5">
-          <CardContent className="grid gap-5 p-5 sm:grid-cols-[1fr_auto] sm:p-6">
-            <div>
-              <div className="mb-4 flex flex-wrap gap-2">
-                <Badge>{item.year}</Badge>
-                <Badge variant="secondary">{item.venue}</Badge>
-                {item.tags.map((tag) => (
-                  <Badge key={tag} variant="outline">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              <h3 className="text-xl font-semibold leading-snug">{item.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.citation}</p>
-              <p className="mt-3 font-mono text-sm text-foreground">{item.doi}</p>
+        <Card key={item.title} className="transition-colors hover:ring-ring/40">
+          <CardHeader>
+            <div className="mb-3 flex flex-wrap gap-2">
+              <Badge>{item.year}</Badge>
+              <Badge variant="secondary">{item.venue}</Badge>
+              {item.tags.map((tag) => (
+                <Badge key={tag} variant="outline">
+                  {tag}
+                </Badge>
+              ))}
             </div>
-            <div className="flex items-start sm:justify-end">
+            <CardTitle>
+              <h3 className="text-xl leading-snug sm:pr-24">{item.title}</h3>
+            </CardTitle>
+            <CardDescription className="leading-6">{item.citation}</CardDescription>
+            <CardAction>
               <Button asChild variant="outline" size="sm">
                 <a href={item.href} target="_blank" rel="noreferrer">
-                  <ExternalLink className="size-4" aria-hidden="true" />
+                  <ExternalLink data-icon="inline-start" aria-hidden="true" />
                   Open
                 </a>
               </Button>
-            </div>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <p className="font-mono text-sm text-foreground">{item.doi}</p>
           </CardContent>
         </Card>
       ))}
@@ -618,6 +645,7 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
 function issueToBlogPost(issue: GitHubIssue): DisplayBlogPost {
   const body = issue.body?.trim() || "This article was published from a GitHub issue. Add a body to the issue to show the full essay here."
   const articleBody = issueArticleBody(body)
+  const markdownBody = withoutDuplicateTitle(articleBody, issue.title)
   const labelCategories = issue.labels
     .map((label) => label.name)
     .filter((label): label is BlogCategory => blogCategories.includes(label as BlogCategory))
@@ -628,11 +656,12 @@ function issueToBlogPost(issue: GitHubIssue): DisplayBlogPost {
     slug: `issue-${issue.number}-${slugify(issue.title)}`,
     title: issue.title,
     date: new Intl.DateTimeFormat("en", { month: "long", day: "numeric", year: "numeric" }).format(new Date(issue.created_at)),
-    readTime: `${Math.max(1, Math.ceil(articleBody.split(/\s+/).length / 220))} min read`,
+    readTime: `${Math.max(1, Math.ceil(markdownBody.split(/\s+/).length / 220))} min read`,
     mode: issueMode(issue.labels.map((label) => label.name), body),
     categories: categories.length ? categories : ["Field Notes"],
-    summary: issueSummary(articleBody),
-    body: issueBodySections(articleBody),
+    summary: issueSummary(markdownBody),
+    body: [],
+    rawBody: markdownBody,
     href: issue.html_url,
     issueNumber: issue.number,
   }
@@ -665,6 +694,13 @@ function issueArticleBody(body: string) {
   return article || body
 }
 
+function withoutDuplicateTitle(body: string, title: string) {
+  const lines = body.split("\n")
+  const firstLine = lines[0]?.replace(/^#\s+/, "").trim()
+  if (firstLine?.toLowerCase() !== title.trim().toLowerCase()) return body
+  return lines.slice(1).join("\n").trim()
+}
+
 function issueField(body: string, fieldName: string) {
   const escapedField = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   const match = body.match(new RegExp(`### ${escapedField}\\s*\\n([\\s\\S]*?)(?=\\n### |$)`, "i"))
@@ -674,35 +710,17 @@ function issueField(body: string, fieldName: string) {
 function issueSummary(body: string) {
   const firstParagraph = body
     .split(/\n{2,}/)
-    .map((part) => part.replace(/^#+\s+/gm, "").trim())
+    .map((part) =>
+      part
+        .replace(/^#+\s+/gm, "")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+        .replace(/[*_`>#-]/g, "")
+        .trim(),
+    )
     .find((part) => part && !part.toLowerCase().startsWith("topics:"))
 
   if (!firstParagraph) return "A public article from Wisdom Benson's GitHub-backed blog."
   return firstParagraph.length > 220 ? `${firstParagraph.slice(0, 217).trim()}...` : firstParagraph
-}
-
-function issueBodySections(body: string): BlogPost["body"] {
-  const cleanBody = body.replace(/^topics:.*$/gim, "").trim()
-  const chunks = cleanBody.split(/\n(?=##\s+)/).filter(Boolean)
-
-  if (!chunks.length) {
-    return [{ heading: "Article", paragraphs: ["This post is waiting for article body content."] }]
-  }
-
-  return chunks.map((chunk, index) => {
-    const lines = chunk.split("\n").map((line) => line.trim()).filter(Boolean)
-    const headingLine = lines[0]?.startsWith("## ") ? lines.shift() : null
-    const paragraphs = lines
-      .join("\n")
-      .split(/\n{2,}/)
-      .map((paragraph) => paragraph.replace(/^[-*]\s+/gm, "").trim())
-      .filter(Boolean)
-
-    return {
-      heading: headingLine?.replace(/^##\s+/, "") ?? (index === 0 ? "Article" : "Notes"),
-      paragraphs: paragraphs.length ? paragraphs : ["This section is waiting for content."],
-    }
-  })
 }
 
 function slugify(value: string) {
@@ -710,6 +728,25 @@ function slugify(value: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
+}
+
+async function fetchPublishedBlogIssues() {
+  const issues: GitHubIssue[] = []
+
+  for (let page = 1; ; page += 1) {
+    const query = new URLSearchParams({
+      state: "open",
+      labels: "blog-post",
+      per_page: "100",
+      page: String(page),
+    })
+    const response = await fetch(`${githubIssuesApi}?${query}`)
+    if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
+
+    const batch = (await response.json()) as GitHubIssue[]
+    issues.push(...batch)
+    if (batch.length < 100) return issues
+  }
 }
 
 function BlogPage() {
@@ -723,12 +760,14 @@ function BlogPage() {
 
     async function loadGitHubPosts() {
       try {
-        const response = await fetch(githubIssuesApi)
-        if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
-        const issues = (await response.json()) as GitHubIssue[]
+        const issues = await fetchPublishedBlogIssues()
         if (cancelled) return
 
-        setGithubPosts(issues.filter((issue) => !issue.pull_request).map(issueToBlogPost))
+        setGithubPosts(
+          issues
+            .filter((issue) => !issue.pull_request && issue.user && approvedBlogAuthors.has(issue.user.login.toLowerCase()))
+            .map(issueToBlogPost),
+        )
         setPostStatus("ready")
       } catch {
         if (cancelled) return
@@ -753,101 +792,103 @@ function BlogPage() {
   }, [selectedSlug, visiblePosts])
 
   return (
-    <section id="blog" data-slot="blog" className="section-wrap">
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+    <section id="blog" data-slot="blog" className="section-wrap min-w-0">
+      <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,0.75fr)] lg:items-end">
         <SectionHeader
           eyebrow="Blog"
           title="Field notes across philosophy, computation, and materials research."
           body="A public writing space for essays, research notebooks, build logs, and technical reflections. New posts can be published from GitHub Issues and appear here without changing the site code."
         />
-        <Card className="rounded-lg border-border bg-card shadow-none">
-          <CardContent className="p-5 sm:p-6">
-            <div className="flex items-start gap-3">
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                <MessageSquare className="size-5" aria-hidden="true" />
+        <Card size="sm">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                <MessageSquare className="size-4" aria-hidden="true" />
               </span>
               <div>
-                <h3 className="text-lg font-semibold leading-tight">Publish from GitHub. Discuss in public.</h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Create an issue labeled <span className="font-mono text-foreground">blog-post</span>; it becomes a public article. Readers can comment through the discussion panel beneath each post.
-                </p>
-                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-                  <Button asChild size="sm">
-                    <a href={newBlogIssueHref} target="_blank" rel="noreferrer">
-                      <FileText className="size-4" aria-hidden="true" />
-                      New article
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" size="sm">
-                    <a href="https://github.com/WisdomBenson/WisdomBenson.github.io/issues?q=is%3Aissue%20label%3Ablog-post" target="_blank" rel="noreferrer">
-                      <ExternalLink className="size-4" aria-hidden="true" />
-                      Manage posts
-                    </a>
-                  </Button>
-                </div>
+                <CardTitle>Publish from GitHub</CardTitle>
+                <CardDescription>New issues become public posts without a site deployment.</CardDescription>
               </div>
             </div>
-          </CardContent>
+          </CardHeader>
+          <CardFooter className="flex-col items-stretch gap-2 border-t sm:flex-row">
+            <Button asChild size="sm">
+              <a href={newBlogIssueHref} target="_blank" rel="noreferrer">
+                <FileText data-icon="inline-start" aria-hidden="true" />
+                New article
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <a href="https://github.com/WisdomBenson/WisdomBenson.github.io/issues?q=is%3Aissue%20label%3Ablog-post" target="_blank" rel="noreferrer">
+                <ExternalLink data-icon="inline-start" aria-hidden="true" />
+                Manage posts
+              </a>
+            </Button>
+          </CardFooter>
         </Card>
       </div>
 
       {postStatus === "error" ? (
-        <div className="mt-8 rounded-lg border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
-          Posts could not be loaded from GitHub right now. Refresh the page or use Manage posts to confirm the article is open and labeled <span className="font-mono text-foreground">blog-post</span>.
-        </div>
+        <Alert className="mt-8">
+          <MessageSquare aria-hidden="true" />
+          <AlertTitle>Posts could not be loaded</AlertTitle>
+          <AlertDescription>
+            Refresh the page or use Manage posts to confirm the article is open and labeled <span className="font-mono">blog-post</span>.
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       {postStatus === "loading" ? (
         <div className="mt-10 grid gap-3" aria-label="Loading blog posts">
-          <div className="h-24 animate-pulse rounded-lg border border-border bg-muted" />
-          <div className="h-24 animate-pulse rounded-lg border border-border bg-muted" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-24 w-full" />
         </div>
       ) : null}
 
       {postStatus === "ready" && githubPosts.length === 0 ? (
-        <Card className="mt-10 rounded-lg border-border bg-card shadow-none">
-          <CardContent className="grid gap-5 p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-8">
-            <span className="grid size-11 place-items-center rounded-full bg-primary/10 text-primary">
-              <FileText className="size-5" aria-hidden="true" />
-            </span>
-            <div>
-              <h2 className="text-xl font-semibold">No articles published yet</h2>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Use the prepared GitHub form to publish your first essay or research note. It will appear here automatically.
-              </p>
-            </div>
-            <Button asChild>
+        <Empty className="mt-10 border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileText aria-hidden="true" />
+            </EmptyMedia>
+            <EmptyTitle>No articles published yet</EmptyTitle>
+            <EmptyDescription>Use the prepared GitHub form to publish your first essay or research note.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button asChild size="sm">
               <a href={newBlogIssueHref} target="_blank" rel="noreferrer">
-                <FileText className="size-4" aria-hidden="true" />
+                <FileText data-icon="inline-start" aria-hidden="true" />
                 Create article
               </a>
             </Button>
-          </CardContent>
-        </Card>
+          </EmptyContent>
+        </Empty>
       ) : null}
 
       {githubPosts.length > 0 ? (
         <>
-          <div className="mt-10 flex flex-wrap gap-2" aria-label="Filter blog posts by topic">
-            <Button
-              type="button"
-              variant={activeCategory === "All" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveCategory("All")}
-            >
-              All
-            </Button>
-            {blogCategories.map((category) => (
+          <div className="-mx-4 mt-10 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0" aria-label="Filter blog posts by topic">
+            <div className="flex w-max gap-2">
               <Button
-                key={category}
                 type="button"
-                variant={activeCategory === category ? "default" : "outline"}
+                variant={activeCategory === "All" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setActiveCategory(category)}
+                onClick={() => setActiveCategory("All")}
               >
-                {category}
+                All
               </Button>
-            ))}
+              {blogCategories.map((category) => (
+                <Button
+                  key={category}
+                  type="button"
+                  variant={activeCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
 
           {visiblePosts.length === 0 ? (
@@ -864,8 +905,8 @@ function BlogPage() {
               </Button>
             </div>
           ) : (
-            <div className="mt-8 grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
-              <div className="grid content-start gap-3">
+            <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[19rem_minmax(0,1fr)]">
+              <div className="grid min-w-0 content-start gap-3 lg:sticky lg:top-24 lg:self-start">
                 {visiblePosts.map((post) => (
                   <BlogPostButton
                     key={post.slug}
@@ -876,7 +917,7 @@ function BlogPage() {
                 ))}
               </div>
               {selectedPost ? (
-                <div className="grid gap-4">
+                <div className="grid min-w-0 gap-4">
                   <BlogReader post={selectedPost} />
                   <BlogComments post={selectedPost} />
                 </div>
@@ -895,15 +936,15 @@ function BlogPostButton({ post, selected, onSelect }: { post: DisplayBlogPost; s
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className="group rounded-lg border border-border bg-card p-4 text-left shadow-none transition-all hover:-translate-y-0.5 hover:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group min-w-0 rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-ring hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       data-slot="blog-post-trigger"
     >
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={selected ? "default" : "secondary"}>{post.mode}</Badge>
         <span className="text-xs text-muted-foreground">{post.date}</span>
       </div>
-      <h3 className="mt-3 text-lg font-semibold leading-snug text-foreground">{post.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{post.summary}</p>
+      <h3 className="mt-3 text-base font-semibold leading-snug text-foreground">{post.title}</h3>
+      <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{post.summary}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         {post.categories.map((category) => (
           <Badge key={category} variant="outline">
@@ -917,16 +958,18 @@ function BlogPostButton({ post, selected, onSelect }: { post: DisplayBlogPost; s
 
 function BlogReader({ post }: { post: DisplayBlogPost }) {
   return (
-    <article data-slot="blog-reader">
-      <Card className="rounded-lg border-border bg-card shadow-none">
-        <CardContent className="p-5 sm:p-8">
+    <article data-slot="blog-reader" className="min-w-0">
+      <Card className="min-w-0">
+        <CardHeader className="gap-4 px-5 sm:px-8">
           <div className="flex flex-wrap items-center gap-2">
             <Badge>{post.mode}</Badge>
             <Badge variant="secondary">{post.readTime}</Badge>
             <span className="text-sm text-muted-foreground">{post.date}</span>
           </div>
-          <h2 className="mt-5 text-3xl font-semibold leading-tight sm:text-4xl">{post.title}</h2>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">{post.summary}</p>
+          <CardTitle>
+            <h2 className="text-2xl leading-tight sm:text-4xl">{post.title}</h2>
+          </CardTitle>
+          <CardDescription className="max-w-3xl text-base leading-7">{post.summary}</CardDescription>
           <div className="mt-5 flex flex-wrap gap-2">
             {post.categories.map((category) => (
               <Badge key={category} variant="outline">
@@ -937,31 +980,22 @@ function BlogReader({ post }: { post: DisplayBlogPost }) {
           {post.href ? (
             <Button asChild variant="outline" size="sm" className="mt-6">
               <a href={post.href} target="_blank" rel="noreferrer">
-                <ExternalLink className="size-4" aria-hidden="true" />
+                <ExternalLink data-icon="inline-start" aria-hidden="true" />
                 Open source issue
               </a>
             </Button>
           ) : null}
-
-          <Separator className="my-7" />
-
-          <div className="grid gap-7">
-            {post.body.map((section) => (
-              <section key={section.heading}>
-                <div className="mb-3 flex items-center gap-3">
-                  <span className="grid size-9 place-items-center rounded-full bg-secondary text-secondary-foreground">
-                    <Code2 className="size-4" aria-hidden="true" />
-                  </span>
-                  <h3 className="text-xl font-semibold leading-snug">{section.heading}</h3>
-                </div>
-                <div className="grid gap-4 text-base leading-8 text-muted-foreground">
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="blog-prose min-w-0 px-5 sm:px-8">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              a: ({ ...props }) => <a {...props} target="_blank" rel="noreferrer" />,
+            }}
+          >
+            {post.rawBody}
+          </ReactMarkdown>
         </CardContent>
       </Card>
     </article>
@@ -996,20 +1030,20 @@ function BlogComments({ post }: { post: DisplayBlogPost }) {
   }, [post.issueNumber, post.slug])
 
   return (
-    <Card className="rounded-lg border-border bg-card shadow-none" data-slot="blog-comments">
-      <CardContent className="p-5 sm:p-6">
+    <Card data-slot="blog-comments">
+      <CardHeader>
         <div className="flex items-start gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-            <MessageSquare className="size-5" aria-hidden="true" />
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+            <MessageSquare className="size-4" aria-hidden="true" />
           </span>
           <div>
-            <h3 className="text-xl font-semibold leading-tight">Comments</h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Comments are public and powered by GitHub Issues. Sign in with GitHub to join the discussion.
-            </p>
+            <CardTitle>Comments</CardTitle>
+            <CardDescription>Public discussion powered by GitHub Issues. Sign in with GitHub to join.</CardDescription>
           </div>
         </div>
-        <div ref={commentsRef} className="mt-5 min-h-40 overflow-hidden rounded-md border border-border bg-background/60 p-2" />
+      </CardHeader>
+      <CardContent>
+        <div ref={commentsRef} className="min-h-40 min-w-0 overflow-hidden rounded-md border border-border bg-background/60 p-2" />
       </CardContent>
     </Card>
   )
@@ -1205,19 +1239,19 @@ function ContactSection() {
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <Button asChild size="lg">
               <a href={`mailto:${emailAddress}`}>
-                <Mail className="size-4" aria-hidden="true" />
+                <Mail data-icon="inline-start" aria-hidden="true" />
                 {emailAddress}
               </a>
             </Button>
             <Button asChild variant="outline" size="lg">
               <a href="tel:+19843129015">
-                <Phone className="size-4" aria-hidden="true" />
+                <Phone data-icon="inline-start" aria-hidden="true" />
                 {phoneNumber}
               </a>
             </Button>
             <Button asChild variant="outline" size="lg">
               <a href="https://bold.pro/my/wisdom-benson/382r" target="_blank" rel="noreferrer">
-                <BookOpen className="size-4" aria-hidden="true" />
+                <BookOpen data-icon="inline-start" aria-hidden="true" />
                 Portfolio
               </a>
             </Button>
