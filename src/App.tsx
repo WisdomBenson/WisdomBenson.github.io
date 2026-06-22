@@ -64,7 +64,7 @@ const resumeHref = fromBase("wisdom-benson-resume.docx")
 const blogHref = fromBase("blog/")
 const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues"
 const newBlogIssueHref = "https://github.com/WisdomBenson/WisdomBenson.github.io/issues/new?template=blog-post.yml"
-const approvedBlogAuthors = new Set(["wisdombenson"])
+const approvedBlogAuthors = new Set(["wisdombenson", "wisemanking001"])
 
 const navItems = [
   { label: "Research", href: sectionHref("research") },
