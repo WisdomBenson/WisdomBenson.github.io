@@ -99,6 +99,12 @@ const metrics = [
   { value: "2", label: "APS Student Ambassador terms" },
 ]
 
+const currentFocus = [
+  "ZnO quantum-dot frontier levels",
+  "Raman power and temperature diagnostics",
+  "Tin-lead perovskite optical stability",
+]
+
 const researchThreads = [
   {
     eyebrow: "ZnO quantum dots",
@@ -469,37 +475,63 @@ function HeroSection() {
           alt="Ligand-passivated ZnO quantum dot coordinate map."
           className="hero-image absolute inset-y-0 right-0 z-0 h-full w-full object-cover"
         />
+        <div className="hero-orbit absolute inset-y-14 right-0 z-0 hidden w-[46vw] min-w-[34rem] lg:block" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="hero-veil absolute inset-0 z-0" aria-hidden="true" />
-        <div className="relative z-10 mx-auto grid min-h-[calc(100svh-11rem)] max-w-7xl content-center px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-          <div className="max-w-3xl space-y-6 reveal">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-sm text-muted-foreground shadow-sm backdrop-blur">
-              <MapPin className="size-4 text-primary" aria-hidden="true" />
-              Silver Spring, MD | Howard University Physics
+        <div className="relative z-10 mx-auto grid min-h-[calc(100svh-6.5rem)] max-w-7xl content-center px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(22rem,0.56fr)] lg:items-end">
+            <div className="flex max-w-3xl flex-col gap-6 reveal">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-sm text-muted-foreground shadow-sm backdrop-blur">
+                <MapPin className="size-4 text-primary" aria-hidden="true" />
+                Silver Spring, MD | Howard University Physics
+              </div>
+              <div className="flex flex-col gap-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Wisdom Benson</p>
+                <h1 className="max-w-4xl text-4xl font-semibold leading-[0.98] tracking-tighter text-foreground sm:text-5xl lg:text-7xl">
+                  Materials physics, computed from the atom up.
+                </h1>
+                <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
+                  Physics PhD student building first-principles workflows for ZnO quantum dots, tin-lead perovskite photovoltaics,
+                  and spectroscopy-guided nanomaterials design.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="group">
+                  <a href={sectionHref("publications")}>
+                    Publications
+                    <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href={resumeHref}>
+                    <Download data-icon="inline-start" aria-hidden="true" />
+                    Download resume
+                  </a>
+                </Button>
+              </div>
             </div>
-            <div className="space-y-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Wisdom Benson</p>
-              <h1 className="max-w-4xl text-4xl font-semibold leading-[1.02] text-foreground sm:text-5xl lg:text-6xl">
-                First-principles research for quantum dots, perovskites, and Raman spectroscopy.
-              </h1>
-              <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-                Physics PhD student building first-principles workflows for ZnO quantum dots, tin-lead perovskite photovoltaics,
-                and spectroscopy-guided nanomaterials design.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="group">
-                <a href={sectionHref("publications")}>
-                  Publications
-                  <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href={resumeHref}>
-                  <Download data-icon="inline-start" aria-hidden="true" />
-                  Download resume
-                </a>
-              </Button>
-            </div>
+            <aside className="hero-proof reveal flex flex-col gap-5" aria-label="Current research focus">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Current focus</p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  A compact portfolio for reviewers who need the research thread, publication record, and contact path in one scan.
+                </p>
+              </div>
+              <Separator />
+              <div className="grid gap-3">
+                {currentFocus.map((item, index) => (
+                  <div key={item} className="grid grid-cols-[2.4rem_1fr] items-start gap-3">
+                    <span className="grid size-9 place-items-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="pt-1.5 text-sm leading-6 text-foreground">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </aside>
           </div>
         </div>
       </section>
