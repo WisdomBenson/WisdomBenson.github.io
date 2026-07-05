@@ -55,6 +55,7 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
 
 const emailAddress = "wisdom.benson@bison.howard.edu"
 const phoneNumber = "+1 984-312-9015"
@@ -472,7 +473,8 @@ function HeroSection() {
       <section id="top" data-slot="hero" className="hero-shell relative isolate overflow-hidden">
         <img
           src={fromBase("assets/zno-qd-coordinate-map.png")}
-          alt="Ligand-passivated ZnO quantum dot coordinate map."
+          alt=""
+          aria-hidden="true"
           className="hero-image absolute inset-y-0 right-0 z-0 h-full w-full object-cover"
         />
         <div className="hero-orbit absolute inset-y-14 right-0 z-0 hidden w-[46vw] min-w-[34rem] lg:block" aria-hidden="true">
@@ -505,7 +507,19 @@ function HeroSection() {
                     <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
                   </a>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline" size="lg" className="lg:hidden">
+                  <a href={sectionHref("contact")}>
+                    <Mail data-icon="inline-start" aria-hidden="true" />
+                    Contact
+                  </a>
+                </Button>
+                <Button asChild variant="ghost" size="lg" className="sm:hidden">
+                  <a href={resumeHref}>
+                    <Download data-icon="inline-start" aria-hidden="true" />
+                    Resume
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="hidden sm:inline-flex">
                   <a href={resumeHref}>
                     <Download data-icon="inline-start" aria-hidden="true" />
                     Download resume
@@ -513,28 +527,25 @@ function HeroSection() {
                 </Button>
               </div>
             </div>
-            <aside className="hero-proof reveal flex flex-col gap-5" aria-label="Current research focus">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Current focus</p>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  A compact portfolio for reviewers who need the research thread, publication record, and contact path in one scan.
-                </p>
+            <aside className="hero-experiment-rail reveal hidden flex-col gap-5 lg:flex" aria-label="Current experiment rail">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.28em] text-primary">Current experiment</p>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    A field-note rail for reviewers who need the research thread, publication record, and contact path in one scan.
+                  </p>
+                </div>
+                <Badge variant="secondary" className="shrink-0 font-mono uppercase tracking-[0.14em]">
+                  Live
+                </Badge>
               </div>
               <Separator />
-              <div className="grid gap-3">
-                {currentFocus.map((item, index) => (
-                  <div key={item} className="grid grid-cols-[2.4rem_1fr] items-start gap-3">
-                    <span className="grid size-9 place-items-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <p className="pt-1.5 text-sm leading-6 text-foreground">{item}</p>
-                  </div>
-                ))}
-              </div>
+              <CurrentFocusList />
             </aside>
           </div>
         </div>
       </section>
+      <MobileCurrentFocus />
       <div data-slot="metrics-strip" className="relative z-10 border-t border-border/80 bg-background/86 backdrop-blur-xl">
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-y divide-border/80 px-4 sm:grid-cols-4 sm:px-6 lg:px-8">
           {metrics.map((metric) => (
@@ -546,6 +557,52 @@ function HeroSection() {
         </div>
       </div>
     </>
+  )
+}
+
+function CurrentFocusList({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={cn("grid", compact ? "gap-3" : "divide-y divide-border/80")}>
+      {currentFocus.map((item, index) => (
+        <div
+          key={item}
+          className={cn(
+            "grid items-start",
+            compact ? "grid-cols-[2.4rem_1fr] gap-3" : "grid-cols-[3rem_1fr] gap-4 py-4 first:pt-0 last:pb-0",
+          )}
+        >
+          <span
+            data-slot="focus-index"
+            className="grid size-9 place-items-center rounded-full border border-border bg-background/72 font-mono text-xs font-semibold text-primary"
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <p className="pt-1.5 text-sm leading-6 text-foreground">{item}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function MobileCurrentFocus() {
+  return (
+    <section data-slot="mobile-current-focus" className="mobile-current-focus relative z-10 lg:hidden" aria-label="Current experiment">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.24em] text-primary">Current experiment</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Proof follows the poster: the active materials thread, then the record.
+            </p>
+          </div>
+          <Badge variant="secondary" className="shrink-0 font-mono uppercase tracking-[0.14em]">
+            Live
+          </Badge>
+        </div>
+        <Separator />
+        <CurrentFocusList compact />
+      </div>
+    </section>
   )
 }
 
