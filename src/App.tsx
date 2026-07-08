@@ -663,7 +663,7 @@ function PublicationsSection() {
       />
       <Tabs defaultValue="articles" className="mt-10 flex-col">
         <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
-          <TabsList variant="line" className="publication-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
+          <TabsList variant="line" className="line-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
             <TabsTrigger value="articles" className="min-h-10 flex-none px-0">
               Articles
             </TabsTrigger>
@@ -1152,14 +1152,13 @@ function CVSection() {
       <SectionHeader
         eyebrow="CV and resume"
         title="Physics training, computational materials research, and product-building range."
-        body="The web CV is structured for scanning; the downloadable resume mirrors the current source document from Downloads."
       />
       <Tabs defaultValue="cv" className="mt-10 flex-col">
-        <TabsList className="grid h-auto w-full grid-cols-2 rounded-full bg-muted/70 p-1 sm:w-fit">
-          <TabsTrigger value="cv" className="min-h-10 px-4 sm:min-w-44">
+        <TabsList variant="line" className="line-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
+          <TabsTrigger value="cv" className="min-h-10 flex-none px-0">
             Curriculum Vitae
           </TabsTrigger>
-          <TabsTrigger value="resume" className="min-h-10 px-4 sm:min-w-32">
+          <TabsTrigger value="resume" className="min-h-10 flex-none px-0">
             Resume
           </TabsTrigger>
         </TabsList>
@@ -1370,12 +1369,12 @@ function ContactSection() {
   )
 }
 
-function SectionHeader({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
+function SectionHeader({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
   return (
     <div className="max-w-3xl">
       <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
       <h2 className="mt-4 text-3xl font-semibold leading-tight text-foreground sm:text-5xl">{title}</h2>
-      <p className="mt-5 text-base leading-7 text-muted-foreground">{body}</p>
+      {body ? <p className="mt-5 text-base leading-7 text-muted-foreground">{body}</p> : null}
     </div>
   )
 }
