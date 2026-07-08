@@ -662,17 +662,19 @@ function PublicationsSection() {
         body="DOI links are wired directly where the publication record exposes them; conference records are listed from the current resume source."
       />
       <Tabs defaultValue="articles" className="mt-10 flex-col">
-        <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 rounded-xl bg-muted p-1 sm:w-fit">
-          <TabsTrigger value="articles" className="min-h-9 min-w-28 flex-1 px-4 sm:flex-none">
-            Articles
-          </TabsTrigger>
-          <TabsTrigger value="chapter" className="min-h-9 min-w-28 flex-1 px-4 sm:flex-none">
-            Chapter
-          </TabsTrigger>
-          <TabsTrigger value="conferences" className="min-h-9 min-w-32 flex-1 px-4 sm:flex-none">
-            Conferences
-          </TabsTrigger>
-        </TabsList>
+        <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
+          <TabsList variant="line" className="publication-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
+            <TabsTrigger value="articles" className="min-h-10 flex-none px-0">
+              Articles
+            </TabsTrigger>
+            <TabsTrigger value="chapter" className="min-h-10 flex-none px-0">
+              Chapter
+            </TabsTrigger>
+            <TabsTrigger value="conferences" className="min-h-10 flex-none px-0">
+              Conferences
+            </TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="articles" className="mt-7">
           <PublicationGrid items={journalArticles} />
         </TabsContent>
@@ -1153,11 +1155,11 @@ function CVSection() {
         body="The web CV is structured for scanning; the downloadable resume mirrors the current source document from Downloads."
       />
       <Tabs defaultValue="cv" className="mt-10 flex-col">
-        <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 rounded-xl bg-muted p-1 sm:w-fit">
-          <TabsTrigger value="cv" className="min-h-9 min-w-44 flex-1 px-4 sm:flex-none">
+        <TabsList className="grid h-auto w-full grid-cols-2 rounded-full bg-muted/70 p-1 sm:w-fit">
+          <TabsTrigger value="cv" className="min-h-10 px-4 sm:min-w-44">
             Curriculum Vitae
           </TabsTrigger>
-          <TabsTrigger value="resume" className="min-h-9 min-w-32 flex-1 px-4 sm:flex-none">
+          <TabsTrigger value="resume" className="min-h-10 px-4 sm:min-w-32">
             Resume
           </TabsTrigger>
         </TabsList>
