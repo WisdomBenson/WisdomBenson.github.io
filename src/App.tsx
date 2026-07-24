@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Atom,
   Award,
-  BookOpen,
   Cpu,
   Download,
   ExternalLink,
@@ -28,7 +27,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -55,7 +53,6 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
 
 const emailAddress = "wisdom.benson@bison.howard.edu"
 const phoneNumber = "+1 984-312-9015"
@@ -381,11 +378,11 @@ function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border/80 bg-background/88 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href={sectionHref("top")} className="group inline-flex items-center gap-3 text-sm font-medium text-foreground">
-          <span className="grid size-9 place-items-center rounded-full border border-border bg-card text-xs font-semibold transition-transform group-hover:-translate-y-0.5">
-            WB
+    <header className="site-header sticky top-0 z-20 border-b border-border/70 bg-background/92 backdrop-blur-xl">
+      <div className="mx-auto flex h-[4.5rem] max-w-[90rem] items-center justify-between px-4 sm:px-6 lg:px-10">
+        <a href={sectionHref("top")} className="group inline-flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground">
+          <span className="grid size-9 place-items-center border border-foreground bg-foreground text-xs font-semibold text-background transition-transform duration-300 group-hover:-translate-y-0.5">
+            W/B
           </span>
           <span className="hidden sm:inline">Wisdom Benson</span>
         </a>
@@ -395,7 +392,7 @@ function SiteHeader() {
               <NavigationMenuItem key={item.href}>
                 <NavigationMenuLink
                   href={item.href}
-                  className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:bg-muted focus:text-foreground"
+                  className="px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground"
                 >
                   {item.label}
                 </NavigationMenuLink>
@@ -472,84 +469,63 @@ function HeroSection() {
     <>
       <section id="top" data-slot="hero" className="hero-shell relative isolate overflow-hidden">
         <img
-          src={fromBase("assets/zno-qd-coordinate-map.png")}
-          alt=""
-          aria-hidden="true"
-          className="hero-image absolute inset-y-0 right-0 z-0 h-full w-full object-cover"
+          src={fromBase("assets/wisdom-benson-lab-hero.webp")}
+          alt="Wisdom Benson in a computational materials laboratory."
+          className="hero-image absolute inset-0 z-0 size-full object-cover object-[68%_center]"
         />
-        <div className="hero-orbit absolute inset-y-14 right-0 z-0 hidden w-[46vw] min-w-[34rem] lg:block" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
         <div className="hero-veil absolute inset-0 z-0" aria-hidden="true" />
-        <div className="relative z-10 mx-auto grid min-h-[calc(100svh-6.5rem)] max-w-7xl content-center px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.94fr)_minmax(22rem,0.56fr)] lg:items-end">
-            <div className="flex max-w-3xl flex-col gap-6 reveal">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1 text-sm text-muted-foreground shadow-sm backdrop-blur">
-                <MapPin className="size-4 text-primary" aria-hidden="true" />
-                Silver Spring, MD | Howard University Physics
-              </div>
-              <div className="flex flex-col gap-5">
-                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Wisdom Benson</p>
-                <h1 className="max-w-4xl text-4xl font-semibold leading-[0.98] tracking-tighter text-foreground sm:text-5xl lg:text-7xl">
-                  Materials physics, computed from the atom up.
-                </h1>
-                <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-                  Physics PhD student building first-principles workflows for ZnO quantum dots, tin-lead perovskite photovoltaics,
-                  and spectroscopy-guided nanomaterials design.
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" className="group">
-                  <a href={sectionHref("publications")}>
-                    Publications
-                    <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                  </a>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="lg:hidden">
-                  <a href={sectionHref("contact")}>
-                    <Mail data-icon="inline-start" aria-hidden="true" />
-                    Contact
-                  </a>
-                </Button>
-                <Button asChild variant="ghost" size="lg" className="sm:hidden">
-                  <a href={resumeHref}>
-                    <Download data-icon="inline-start" aria-hidden="true" />
-                    Resume
-                  </a>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="hidden sm:inline-flex">
-                  <a href={resumeHref}>
-                    <Download data-icon="inline-start" aria-hidden="true" />
-                    Download resume
-                  </a>
-                </Button>
-              </div>
+        <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-4.5rem)] max-w-[90rem] content-end px-4 pb-10 pt-28 sm:px-6 sm:pb-14 lg:px-10 lg:pb-16">
+          <div className="reveal max-w-3xl">
+            <p className="mb-6 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-foreground/70">
+              <MapPin className="size-4 text-primary" aria-hidden="true" />
+              Howard University · Computational materials physics
+            </p>
+            <h1 className="flex flex-col gap-3 tracking-[-0.055em] text-foreground">
+              <span className="text-5xl font-semibold leading-[0.9] sm:text-7xl lg:text-[6.9rem]">Wisdom Benson.</span>
+              <span className="max-w-2xl text-3xl font-medium leading-[0.98] text-foreground/78 sm:text-4xl lg:text-5xl">
+                I model materials where their behavior begins.
+              </span>
+            </h1>
+            <p className="mt-7 max-w-xl text-base leading-7 text-foreground/72 sm:text-lg sm:leading-8">
+              First-principles simulation, Raman spectroscopy, and computational workflows for quantum dots and photovoltaic materials.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg" className="group">
+                <a href={sectionHref("research")}>
+                  Explore the research
+                  <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="hero-secondary-action">
+                <a href={resumeHref}>
+                  <Download data-icon="inline-start" aria-hidden="true" />
+                  Download resume
+                </a>
+              </Button>
             </div>
-            <aside className="hero-experiment-rail reveal hidden flex-col gap-5 lg:flex" aria-label="Current experiment rail">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.28em] text-primary">Current experiment</p>
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                    A field-note rail for reviewers who need the research thread, publication record, and contact path in one scan.
-                  </p>
-                </div>
-                <Badge variant="secondary" className="shrink-0 font-mono uppercase tracking-[0.14em]">
-                  Live
-                </Badge>
-              </div>
-              <Separator />
-              <CurrentFocusList />
-            </aside>
           </div>
         </div>
       </section>
-      <MobileCurrentFocus />
-      <div data-slot="metrics-strip" className="relative z-10 border-t border-border/80 bg-background/86 backdrop-blur-xl">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-y divide-border/80 px-4 sm:grid-cols-4 sm:px-6 lg:px-8">
+      <section className="focus-band border-b border-border" aria-label="Current research focus">
+        <div className="mx-auto grid max-w-[90rem] gap-7 px-4 py-8 sm:px-6 lg:grid-cols-[0.7fr_2.3fr] lg:px-10 lg:py-10">
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Now investigating</p>
+            <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">Three active lines of inquiry, one materials-scale question.</p>
+          </div>
+          <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+            {currentFocus.map((item, index) => (
+              <div key={item} className="grid grid-cols-[2rem_1fr] gap-3 py-4 first:pt-0 last:pb-0 lg:px-6 lg:py-0 lg:first:pl-0 lg:last:pr-0">
+                <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, "0")}</span>
+                <p className="text-sm leading-6 text-foreground">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <div data-slot="metrics-strip" className="border-b border-border bg-muted/35">
+        <div className="mx-auto grid max-w-[90rem] grid-cols-2 divide-x divide-y divide-border px-4 sm:grid-cols-4 sm:px-6 lg:px-10">
           {metrics.map((metric) => (
-            <div key={metric.label} className="px-4 py-5 first:pl-0 sm:py-6">
+            <div key={metric.label} className="px-4 py-5 first:pl-0 sm:py-7 lg:px-7">
               <p className="font-mono text-2xl font-semibold text-foreground">{metric.value}</p>
               <p className="mt-1 max-w-44 text-sm leading-5 text-muted-foreground">{metric.label}</p>
             </div>
@@ -560,72 +536,26 @@ function HeroSection() {
   )
 }
 
-function CurrentFocusList({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={cn("grid", compact ? "gap-3" : "divide-y divide-border/80")}>
-      {currentFocus.map((item, index) => (
-        <div
-          key={item}
-          className={cn(
-            "grid items-start",
-            compact ? "grid-cols-[2.4rem_1fr] gap-3" : "grid-cols-[3rem_1fr] gap-4 py-4 first:pt-0 last:pb-0",
-          )}
-        >
-          <span
-            data-slot="focus-index"
-            className="grid size-9 place-items-center rounded-full border border-border bg-background/72 font-mono text-xs font-semibold text-primary"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <p className="pt-1.5 text-sm leading-6 text-foreground">{item}</p>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function MobileCurrentFocus() {
-  return (
-    <section data-slot="mobile-current-focus" className="mobile-current-focus relative z-10 lg:hidden" aria-label="Current experiment">
-      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6 sm:px-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.24em] text-primary">Current experiment</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Proof follows the poster: the active materials thread, then the record.
-            </p>
-          </div>
-          <Badge variant="secondary" className="shrink-0 font-mono uppercase tracking-[0.14em]">
-            Live
-          </Badge>
-        </div>
-        <Separator />
-        <CurrentFocusList compact />
-      </div>
-    </section>
-  )
-}
-
 function ResearchSection() {
   return (
     <section id="research" data-slot="research" className="section-wrap">
       <SectionHeader
-        eyebrow="Research"
-        title="A materials workflow spanning theory, experiment, and computing."
-        body="Current work connects first-principles simulation, Raman spectroscopy, and GPU-enabled HPC workflows for optoelectronic and quantum information materials."
+        eyebrow="Research practice"
+        title="Theory and experiment, connected at the materials scale."
+        body="I move between atomistic simulation, Raman evidence, and high-performance computing to understand how nanoscale structure becomes measurable behavior."
       />
-      <div className="mt-12 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
-        <article className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="mt-14 border-y border-border">
+        <article className="research-lead grid lg:grid-cols-[1.2fr_0.8fr]">
           <ResearchArtifact kind={researchThreads[0].artifact} />
-          <div className="p-6 sm:p-8">
+          <div className="flex items-center border-t border-border p-6 sm:p-10 lg:border-l lg:border-t-0">
             <ResearchCopy thread={researchThreads[0]} />
           </div>
         </article>
-        <div className="grid gap-5">
+        <div className="grid border-t border-border lg:grid-cols-2 lg:divide-x lg:divide-border">
           {researchThreads.slice(1).map((thread) => (
-            <article key={thread.title} className="grid gap-0 overflow-hidden rounded-lg border border-border bg-card sm:grid-cols-[0.92fr_1.08fr] lg:grid-cols-1 xl:grid-cols-[0.88fr_1.12fr]">
+            <article key={thread.title} className="grid border-b border-border last:border-b-0 sm:grid-cols-[0.85fr_1.15fr] lg:grid-cols-1 lg:border-b-0 xl:grid-cols-[0.85fr_1.15fr]">
               <ResearchArtifact kind={thread.artifact} compact />
-              <div className="p-6">
+              <div className="flex items-center border-t border-border p-6 sm:border-l sm:border-t-0 lg:border-l-0 lg:border-t xl:border-l xl:border-t-0">
                 <ResearchCopy thread={thread} compact />
               </div>
             </article>
@@ -642,12 +572,12 @@ function ResearchCopy({ thread, compact = false }: { thread: (typeof researchThr
   return (
     <div>
       <div className="mb-5 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-full bg-primary/10 text-primary">
+        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </span>
-        <p className="text-sm font-medium uppercase tracking-[0.22em] text-muted-foreground">{thread.eyebrow}</p>
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">{thread.eyebrow}</p>
       </div>
-      <h3 className={compact ? "text-xl font-semibold leading-tight" : "text-3xl font-semibold leading-tight"}>{thread.title}</h3>
+      <h3 className={compact ? "text-xl font-semibold leading-tight tracking-tight" : "text-3xl font-semibold leading-tight tracking-tight"}>{thread.title}</h3>
       <p className="mt-4 text-sm leading-6 text-muted-foreground sm:text-base">{thread.body}</p>
     </div>
   )
@@ -658,8 +588,8 @@ function PublicationsSection() {
     <section id="publications" data-slot="publications" className="section-wrap border-t border-border">
       <SectionHeader
         eyebrow="Publications"
-        title="Articles, a CRC Press chapter, and conference work."
-        body="DOI links are wired directly where the publication record exposes them; conference records are listed from the current resume source."
+        title="A record built across computation, experiment, and theory."
+        body="Peer-reviewed articles, a CRC Press chapter, and conference work—organized for quick review and direct access."
       />
       <Tabs defaultValue="articles" className="mt-10 flex-col">
         <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
@@ -682,15 +612,15 @@ function PublicationsSection() {
           <PublicationGrid items={bookChapters} />
         </TabsContent>
         <TabsContent value="conferences" className="mt-7">
-          <div className="grid gap-3">
+          <div className="divide-y divide-border border-y border-border">
             {conferenceItems.map((item) => (
-              <div key={`${item.venue}-${item.title}`} className="grid gap-3 rounded-lg border border-border bg-card p-5 sm:grid-cols-[9rem_1fr]">
+              <div key={`${item.venue}-${item.title}`} className="group grid gap-5 py-7 transition-colors hover:bg-muted/35 sm:grid-cols-[10rem_1fr] sm:px-4">
                 <div>
-                  <Badge variant="outline">{item.year}</Badge>
-                  <p className="mt-3 text-sm font-medium text-primary">{item.venue}</p>
+                  <p className="font-mono text-xs text-muted-foreground">{item.year}</p>
+                  <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold leading-snug">{item.title}</h3>
+                  <h3 className="max-w-4xl text-lg font-semibold leading-snug tracking-tight">{item.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.details}</p>
                 </div>
               </div>
@@ -704,36 +634,31 @@ function PublicationsSection() {
 
 function PublicationGrid({ items }: { items: typeof journalArticles }) {
   return (
-    <div className="grid gap-4">
+    <div className="divide-y divide-border border-y border-border">
       {items.map((item) => (
-        <Card key={item.title} className="transition-colors hover:ring-ring/40">
-          <CardHeader>
-            <div className="mb-3 flex flex-wrap gap-2">
-              <Badge>{item.year}</Badge>
-              <Badge variant="secondary">{item.venue}</Badge>
+        <article key={item.title} className="publication-row group grid gap-5 py-7 transition-colors hover:bg-muted/35 sm:grid-cols-[10rem_1fr_auto] sm:items-start sm:px-4">
+          <div>
+            <p className="font-mono text-xs text-muted-foreground">{item.year}</p>
+            <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
+          </div>
+          <div>
+            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">{item.title}</h3>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">{item.citation}</p>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+              <span className="font-mono text-xs text-foreground">{item.doi}</span>
               {item.tags.map((tag) => (
-                <Badge key={tag} variant="outline">
+                <span key={tag} className="text-xs text-muted-foreground">
                   {tag}
-                </Badge>
+                </span>
               ))}
             </div>
-            <CardTitle>
-              <h3 className="text-xl leading-snug sm:pr-24">{item.title}</h3>
-            </CardTitle>
-            <CardDescription className="leading-6">{item.citation}</CardDescription>
-            <CardAction>
-              <Button asChild variant="outline" size="sm">
-                <a href={item.href} target="_blank" rel="noreferrer">
-                  <ExternalLink data-icon="inline-start" aria-hidden="true" />
-                  Open
-                </a>
-              </Button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <p className="font-mono text-sm text-foreground">{item.doi}</p>
-          </CardContent>
-        </Card>
+          </div>
+          <Button asChild variant="ghost" size="icon" className="publication-open shrink-0" aria-label={`Open ${item.title}`}>
+            <a href={item.href} target="_blank" rel="noreferrer">
+              <ArrowUpRight className="size-4" aria-hidden="true" />
+            </a>
+          </Button>
+        </article>
       ))}
     </div>
   )
@@ -1151,7 +1076,7 @@ function CVSection() {
     <section id="cv" data-slot="cv" className="section-wrap border-t border-border">
       <SectionHeader
         eyebrow="CV and resume"
-        title="Physics training, computational materials research, and product-building range."
+        title="Training for questions that cross disciplinary boundaries."
       />
       <Tabs defaultValue="cv" className="mt-10 flex-col">
         <TabsList variant="line" className="line-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
@@ -1172,10 +1097,10 @@ function CVSection() {
           </div>
         </TabsContent>
         <TabsContent value="resume" className="mt-8">
-          <div className="grid gap-6 rounded-lg border border-border bg-card p-6 sm:p-8 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-8 border-y border-border py-8 lg:grid-cols-[1fr_auto]">
             <div>
               <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center rounded-full bg-primary/10 text-primary">
+                <span className="grid size-11 place-items-center border border-border bg-background text-primary">
                   <FileText className="size-5" aria-hidden="true" />
                 </span>
                 <div>
@@ -1238,7 +1163,7 @@ function SkillCloud() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
+        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
           <ScrollText className="size-5" aria-hidden="true" />
         </span>
         <h3 className="text-2xl font-semibold">Technical skills</h3>
@@ -1258,7 +1183,7 @@ function AwardsBlock() {
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
+        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
           <Award className="size-5" aria-hidden="true" />
         </span>
         <h3 className="text-2xl font-semibold">Achievements</h3>
@@ -1279,26 +1204,25 @@ function ExperienceSection() {
     <section id="experience" data-slot="experience" className="section-wrap border-t border-border">
       <SectionHeader
         eyebrow="Experience"
-        title="Research, teaching, mentoring, and software implementation."
-        body="The through-line is hands-on scientific computing: from lab instruction and thin-film synthesis to many-body simulation workflows and analytics product work."
+        title="Research deepens when it can also be taught, tested, and built."
+        body="From laboratory instruction and thin-film synthesis to many-body simulation workflows and scientific software."
       />
-      <Accordion type="single" collapsible defaultValue="howard" className="mt-10 grid gap-3">
+      <Accordion type="single" collapsible defaultValue="howard" className="mt-10 border-y border-border">
         {experienceItems.map((item, index) => (
           <AccordionItem
             key={item.role + item.place}
             value={index === 0 ? "howard" : item.place}
-            className="overflow-hidden rounded-lg border border-border bg-card shadow-none"
+            className="border-b border-border bg-transparent shadow-none last:border-b-0"
           >
-            <AccordionTrigger className="rounded-none border-0 px-5 py-5 text-left hover:no-underline focus-visible:ring-2 sm:px-6">
-              <div className="flex flex-col gap-1">
+            <AccordionTrigger className="rounded-none border-0 px-0 py-6 text-left hover:no-underline focus-visible:ring-2 sm:px-4 sm:py-7">
+              <div className="grid gap-1 sm:grid-cols-[15rem_1fr] sm:gap-8">
+                <span className="font-mono text-xs font-normal uppercase tracking-[0.16em] text-primary">{item.place}</span>
                 <span className="text-lg font-semibold">{item.role}</span>
-                <span className="text-sm font-normal text-muted-foreground">
-                  {item.place} | {item.period}
-                </span>
+                <span className="text-sm font-normal text-muted-foreground sm:col-start-2">{item.period}</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-5 pb-5 sm:px-6">
-              <ul className="grid gap-3 text-sm leading-6 text-muted-foreground">
+            <AccordionContent className="px-0 pb-7 sm:pl-[17rem] sm:pr-12">
+              <ul className="grid max-w-3xl gap-3 text-sm leading-6 text-muted-foreground">
                 {item.bullets.map((bullet) => (
                   <li key={bullet} className="grid grid-cols-[0.6rem_1fr] gap-3">
                     <span className="mt-2 size-1.5 rounded-full bg-primary" aria-hidden="true" />
@@ -1316,49 +1240,51 @@ function ExperienceSection() {
 
 function ContactSection() {
   return (
-    <section data-slot="contact" className="section-wrap border-t border-border pb-12">
-      <div id="contact" className="grid scroll-mt-20 overflow-hidden rounded-lg border border-border bg-card lg:grid-cols-[0.82fr_1.18fr]">
-        <div className="relative min-h-[28rem] border-b border-border lg:border-b-0 lg:border-r">
+    <section data-slot="contact" className="contact-shell border-t border-border">
+      <div id="contact" className="mx-auto grid min-h-[38rem] max-w-[90rem] scroll-mt-20 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="order-2 flex items-center px-4 py-14 sm:px-6 lg:order-1 lg:px-10 lg:py-20">
+          <div className="max-w-3xl">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Start a conversation</p>
+            <h2 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl">
+              Bring me the material question you cannot resolve at one scale.
+            </h2>
+            <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
+              I am open to research collaboration, conference conversations, and academic opportunities in computational materials, spectroscopy, and nanomaterials.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button asChild size="lg">
+                <a href={`mailto:${emailAddress}`}>
+                  <Mail data-icon="inline-start" aria-hidden="true" />
+                  Email Wisdom
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <a href="tel:+19843129015">
+                  <Phone data-icon="inline-start" aria-hidden="true" />
+                  {phoneNumber}
+                </a>
+              </Button>
+              <Button asChild variant="ghost" size="lg">
+                <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
+                  <ExternalLink data-icon="inline-start" aria-hidden="true" />
+                  GitHub
+                </a>
+              </Button>
+            </div>
+            <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+              Silver Spring, Maryland · Replies typically within 24 hours
+            </p>
+          </div>
+        </div>
+        <div className="relative order-1 min-h-[30rem] border-b border-border lg:order-2 lg:min-h-full lg:border-b-0 lg:border-l">
           <img
             src={fromBase("assets/wisdom-benson-portrait.jpeg")}
             alt="Portrait of Wisdom Benson."
-            className="h-full min-h-[28rem] w-full object-cover object-top"
+            className="size-full object-cover object-top grayscale-[0.12]"
           />
         </div>
-        <div className="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">Contact</p>
-            <h2 className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl">Open to research collaboration, conference contact, and academic opportunities.</h2>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Reach out for ZnO quantum dot simulations, perovskite characterization, Raman spectroscopy, or computational materials workflows.
-            </p>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">
-              <span className="font-medium text-foreground">Response expectation:</span> email and phone calls are answered within 24 hours.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-            <Button asChild size="lg">
-              <a href={`mailto:${emailAddress}`}>
-                <Mail data-icon="inline-start" aria-hidden="true" />
-                {emailAddress}
-              </a>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <a href="tel:+19843129015">
-                <Phone data-icon="inline-start" aria-hidden="true" />
-                {phoneNumber}
-              </a>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <a href="https://bold.pro/my/wisdom-benson/382r" target="_blank" rel="noreferrer">
-                <BookOpen data-icon="inline-start" aria-hidden="true" />
-                Portfolio
-              </a>
-            </Button>
-          </div>
-        </div>
       </div>
-      <footer className="mt-10 flex flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <footer className="mx-auto flex max-w-[90rem] flex-col gap-3 border-t border-border px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
         <p>Wisdom Benson | Physics, computational materials, and spectroscopy</p>
         <a href={sectionHref("top")} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
           Back to top
@@ -1371,10 +1297,12 @@ function ContactSection() {
 
 function SectionHeader({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
   return (
-    <div className="max-w-3xl">
-      <p className="text-sm font-semibold uppercase tracking-[0.24em] text-primary">{eyebrow}</p>
-      <h2 className="mt-4 text-3xl font-semibold leading-tight text-foreground sm:text-5xl">{title}</h2>
-      {body ? <p className="mt-5 text-base leading-7 text-muted-foreground">{body}</p> : null}
+    <div className="grid gap-5 lg:grid-cols-[0.7fr_2.3fr] lg:gap-10">
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">{eyebrow}</p>
+      <div className="max-w-4xl">
+        <h2 className="text-3xl font-semibold leading-[1.04] tracking-tight text-foreground sm:text-5xl lg:text-6xl">{title}</h2>
+        {body ? <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">{body}</p> : null}
+      </div>
     </div>
   )
 }
