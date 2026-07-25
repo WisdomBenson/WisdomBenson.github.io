@@ -10,7 +10,6 @@ import {
   FileText,
   GraduationCap,
   Mail,
-  MapPin,
   Menu,
   MessageSquare,
   Microscope,
@@ -41,7 +40,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { ResearchArtifact, type ResearchArtifactKind } from "@/components/research-artifacts"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -97,39 +95,29 @@ const metrics = [
   { value: "2", label: "APS Student Ambassador terms" },
 ]
 
-const currentFocus = [
-  "ZnO quantum-dot frontier levels",
-  "Raman power and temperature diagnostics",
-  "Tin-lead perovskite optical stability",
-]
-
 const researchThreads = [
   {
     eyebrow: "ZnO quantum dots",
     title: "First-principles modeling of finite oxide nanocrystals",
     body: "DFT, DFPT, and PDEP-GW workflows for band-edge control, phonon behavior, passivation chemistry, and size-dependent piezoelectric response.",
-    artifact: "nanocrystal",
     icon: Atom,
   },
   {
     eyebrow: "Raman spectroscopy",
     title: "Temperature and excitation-power resolved Raman analysis",
     body: "Experimental and computational Raman pipelines for ZnO quantum dots, including linewidth, phonon confinement, and heating diagnostics.",
-    artifact: "raman",
     icon: Microscope,
   },
   {
     eyebrow: "Perovskite photovoltaics",
     title: "Tin-lead alloy perovskites with multi-cation engineering",
     body: "Spin-coated thin-film synthesis and optical characterization focused on stability, near-IR tunability, and photovoltaic relevance.",
-    artifact: "perovskite",
     icon: Cpu,
   },
 ] satisfies Array<{
   eyebrow: string
   title: string
   body: string
-  artifact: ResearchArtifactKind
   icon: typeof Atom
 }>
 
@@ -286,28 +274,23 @@ const experienceItems = [
   },
 ]
 
-const skills = [
-  "Quantum ESPRESSO",
-  "WEST/PDEP-GW",
-  "SIESTA",
-  "VESTA",
-  "DFT",
-  "DFPT",
-  "Many-body perturbation theory",
-  "Python",
-  "C++",
-  "Java",
-  "MATLAB",
-  "LaTeX",
-  "TensorFlow",
-  "Data profiling",
-  "Systems analysis",
-  "Database management",
-  "Reinforcement ML",
-  "Unsupervised ML",
-  "SaaS product design",
-  "Agile",
-  "SOLID design",
+const skillGroups = [
+  {
+    label: "Electronic structure",
+    items: ["Quantum ESPRESSO", "WEST/PDEP-GW", "SIESTA", "DFT", "DFPT", "Many-body perturbation theory", "VESTA"],
+  },
+  {
+    label: "Scientific computing",
+    items: ["Python", "C++", "Java", "MATLAB", "LaTeX"],
+  },
+  {
+    label: "Data and ML",
+    items: ["TensorFlow", "Data profiling", "Database management", "Reinforcement ML", "Unsupervised ML"],
+  },
+  {
+    label: "Product practice",
+    items: ["Systems analysis", "SaaS product design", "Agile", "SOLID design"],
+  },
 ]
 
 const awards = [
@@ -335,8 +318,11 @@ function App() {
   if (isBlogPage) {
     return (
       <div className="min-h-dvh bg-background text-foreground">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <SiteHeader />
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <BlogPage />
         </main>
       </div>
@@ -345,8 +331,11 @@ function App() {
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <SiteHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroSection />
         <ResearchSection />
         <PublicationsSection />
@@ -372,6 +361,7 @@ function SiteHeader() {
     window.history.pushState(null, "", href)
     const scrollToTarget = () => {
       target.scrollIntoView({ block: "start" })
+      target.querySelector<HTMLElement>("h1, h2")?.focus({ preventScroll: true })
     }
     window.setTimeout(scrollToTarget, 260)
     window.setTimeout(scrollToTarget, 560)
@@ -401,13 +391,13 @@ function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost">
             <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
               <ExternalLink data-icon="inline-start" aria-hidden="true" />
               GitHub
             </a>
           </Button>
-          <Button asChild size="sm">
+          <Button asChild>
             <a href={`mailto:${emailAddress}`}>
               <Mail data-icon="inline-start" aria-hidden="true" />
               Contact
@@ -416,14 +406,14 @@ function SiteHeader() {
         </div>
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation">
+            <Button variant="outline" size="icon" className="size-11 lg:hidden" aria-label="Open navigation">
               <Menu aria-hidden="true" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[min(86vw,24rem)] p-0">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <ScrollArea className="h-dvh">
-              <div className="space-y-8 p-6">
+              <div className="flex flex-col gap-8 p-6">
                 <div>
                   <p className="text-sm font-medium">Wisdom Benson</p>
                   <p className="mt-1 text-sm text-muted-foreground">Physics PhD student and computational materials researcher.</p>
@@ -434,7 +424,7 @@ function SiteHeader() {
                       key={item.href}
                       href={item.href}
                       onClick={(event) => handleMobileSectionClick(event, item.href)}
-                      className="rounded-md px-3 py-3 text-base text-foreground transition-colors hover:bg-muted"
+                      className="flex min-h-11 items-center rounded-md px-3 text-base text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {item.label}
                     </a>
@@ -467,58 +457,50 @@ function SiteHeader() {
 function HeroSection() {
   return (
     <>
-      <section id="top" data-slot="hero" className="hero-shell relative isolate overflow-hidden">
-        <img
-          src={fromBase("assets/wisdom-benson-lab-hero.webp")}
-          alt="Wisdom Benson in a computational materials laboratory."
-          className="hero-image absolute inset-0 z-0 size-full object-cover object-[68%_center]"
-        />
-        <div className="hero-veil absolute inset-0 z-0" aria-hidden="true" />
-        <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-4.5rem)] max-w-[90rem] content-end px-4 pb-10 pt-28 sm:px-6 sm:pb-14 lg:px-10 lg:pb-16">
-          <div className="reveal max-w-3xl">
-            <p className="mb-6 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-foreground/70">
-              <MapPin className="size-4 text-primary" aria-hidden="true" />
-              Howard University · Computational materials physics
-            </p>
-            <h1 className="flex flex-col gap-3 tracking-[-0.055em] text-foreground">
-              <span className="text-5xl font-semibold leading-[0.9] sm:text-7xl lg:text-[6.9rem]">Wisdom Benson.</span>
-              <span className="max-w-2xl text-3xl font-medium leading-[0.98] text-foreground/78 sm:text-4xl lg:text-5xl">
-                I model materials where their behavior begins.
-              </span>
-            </h1>
-            <p className="mt-7 max-w-xl text-base leading-7 text-foreground/72 sm:text-lg sm:leading-8">
-              First-principles simulation, Raman spectroscopy, and computational workflows for quantum dots and photovoltaic materials.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="group">
-                <a href={sectionHref("research")}>
-                  Explore the research
-                  <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="hero-secondary-action">
-                <a href={resumeHref}>
-                  <Download data-icon="inline-start" aria-hidden="true" />
-                  Download resume
-                </a>
-              </Button>
+      <section id="top" data-slot="hero" className="hero-shell border-b border-border">
+        <div className="mx-auto grid max-w-[90rem] lg:grid-cols-[minmax(0,0.92fr)_minmax(30rem,0.78fr)]">
+          <div className="order-2 flex items-center px-4 py-14 sm:px-6 sm:py-16 lg:order-1 lg:min-h-[44rem] lg:px-10 lg:py-20">
+            <div className="reveal max-w-3xl">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">Computational materials physicist</p>
+              <h1 tabIndex={-1} className="mt-5 text-5xl font-semibold leading-[0.92] tracking-[-0.05em] text-foreground outline-none sm:text-7xl lg:text-[5.5rem]">
+                Wisdom Benson.
+              </h1>
+              <p className="mt-6 max-w-2xl text-2xl font-medium leading-[1.08] tracking-tight text-foreground/80 sm:text-3xl">
+                Physics PhD researcher studying quantum dots and photovoltaic materials.
+              </p>
+              <p className="mt-6 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+                I connect first-principles simulation, Raman spectroscopy, and high-performance computing to explain how nanoscale structure becomes measurable behavior.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="group">
+                  <a href={sectionHref("research")}>
+                    Explore the research
+                    <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href={resumeHref}>
+                    <Download data-icon="inline-start" aria-hidden="true" />
+                    Resume (DOCX)
+                  </a>
+                </Button>
+              </div>
+              <div className="mt-9 flex flex-wrap gap-x-5 gap-y-3 border-t border-border pt-5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <span>Howard University</span>
+                <span>DFT / GW</span>
+                <span>Raman spectroscopy</span>
+                <span>HPC workflows</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <section className="focus-band border-b border-border" aria-label="Current research focus">
-        <div className="mx-auto grid max-w-[90rem] gap-7 px-4 py-8 sm:px-6 lg:grid-cols-[0.7fr_2.3fr] lg:px-10 lg:py-10">
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Now investigating</p>
-            <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">Three active lines of inquiry, one materials-scale question.</p>
-          </div>
-          <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
-            {currentFocus.map((item, index) => (
-              <div key={item} className="grid grid-cols-[2rem_1fr] gap-3 py-4 first:pt-0 last:pb-0 lg:px-6 lg:py-0 lg:first:pl-0 lg:last:pr-0">
-                <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, "0")}</span>
-                <p className="text-sm leading-6 text-foreground">{item}</p>
-              </div>
-            ))}
+          <div className="hero-portrait order-1 min-h-[18rem] overflow-hidden border-b border-border sm:min-h-[26rem] lg:order-2 lg:min-h-[44rem] lg:border-b-0 lg:border-l">
+            <img
+              src={fromBase("assets/wisdom-benson-portrait.jpeg")}
+              alt="Portrait of Wisdom Benson."
+              width="1023"
+              height="1536"
+              className="size-full object-cover object-[center_24%]"
+            />
           </div>
         </div>
       </section>
@@ -544,20 +526,29 @@ function ResearchSection() {
         title="Theory and experiment, connected at the materials scale."
         body="I move between atomistic simulation, Raman evidence, and high-performance computing to understand how nanoscale structure becomes measurable behavior."
       />
-      <div className="mt-14 border-y border-border">
+      <div className="mt-12 border-y border-border">
         <article className="research-lead grid lg:grid-cols-[1.2fr_0.8fr]">
-          <ResearchArtifact kind={researchThreads[0].artifact} />
+          <figure className="research-evidence relative min-h-[22rem] overflow-hidden bg-muted sm:min-h-[28rem]">
+            <img
+              src={fromBase("assets/zno-qd-coordinate-map.png")}
+              alt="Atomic coordinate map for a finite zinc oxide quantum dot."
+              width="1600"
+              height="900"
+              loading="lazy"
+              className="size-full object-cover"
+            />
+            <figcaption className="absolute inset-x-4 bottom-4 bg-background/92 px-3 py-2 font-mono text-xs uppercase tracking-[0.1em] text-foreground backdrop-blur">
+              Finite ZnO nanocrystal · atomic coordinate map
+            </figcaption>
+          </figure>
           <div className="flex items-center border-t border-border p-6 sm:p-10 lg:border-l lg:border-t-0">
             <ResearchCopy thread={researchThreads[0]} />
           </div>
         </article>
         <div className="grid border-t border-border lg:grid-cols-2 lg:divide-x lg:divide-border">
           {researchThreads.slice(1).map((thread) => (
-            <article key={thread.title} className="grid border-b border-border last:border-b-0 sm:grid-cols-[0.85fr_1.15fr] lg:grid-cols-1 lg:border-b-0 xl:grid-cols-[0.85fr_1.15fr]">
-              <ResearchArtifact kind={thread.artifact} compact />
-              <div className="flex items-center border-t border-border p-6 sm:border-l sm:border-t-0 lg:border-l-0 lg:border-t xl:border-l xl:border-t-0">
-                <ResearchCopy thread={thread} compact />
-              </div>
+            <article key={thread.title} className="border-b border-border p-6 last:border-b-0 sm:p-8 lg:border-b-0">
+              <ResearchCopy thread={thread} compact />
             </article>
           ))}
         </div>
@@ -642,7 +633,16 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
             <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
           </div>
           <div>
-            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">{item.title}</h3>
+            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className="decoration-primary/50 transition-colors hover:text-primary hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {item.title}
+              </a>
+            </h3>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">{item.citation}</p>
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
               <span className="font-mono text-xs text-foreground">{item.doi}</span>
@@ -653,9 +653,10 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
               ))}
             </div>
           </div>
-          <Button asChild variant="ghost" size="icon" className="publication-open shrink-0" aria-label={`Open ${item.title}`}>
+          <Button asChild variant="outline" size="sm" className="publication-open min-h-11 shrink-0 px-4">
             <a href={item.href} target="_blank" rel="noreferrer">
-              <ArrowUpRight className="size-4" aria-hidden="true" />
+              View publication
+              <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
             </a>
           </Button>
         </article>
@@ -820,6 +821,7 @@ function BlogPage() {
           eyebrow="Blog"
           title="Field notes across philosophy, computation, and materials research."
           body="A public writing space for essays, research notebooks, build logs, and technical reflections. New posts can be published from GitHub Issues and appear here without changing the site code."
+          headingLevel="h1"
         />
         <Card size="sm">
           <CardHeader>
@@ -1090,7 +1092,7 @@ function CVSection() {
         <TabsContent value="cv" className="mt-8">
           <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr]">
             <Timeline title="Education" icon={GraduationCap} items={educationItems} />
-            <div className="space-y-8">
+            <div className="flex flex-col gap-10">
               <SkillCloud />
               <AwardsBlock />
             </div>
@@ -1105,7 +1107,7 @@ function CVSection() {
                 </span>
                 <div>
                   <h3 className="text-2xl font-semibold">Wisdom Benson resume</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Current resume source: wisdom_benson_resume.docx</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Current resume source: wisdom-benson-resume.docx</p>
                 </div>
               </div>
               <p className="mt-6 max-w-2xl text-sm leading-6 text-muted-foreground">
@@ -1116,7 +1118,7 @@ function CVSection() {
             <div className="flex items-start lg:justify-end">
               <Button asChild size="lg">
                 <a href={resumeHref}>
-                  <Download className="size-4" aria-hidden="true" />
+                  <Download data-icon="inline-start" aria-hidden="true" />
                   Download DOCX
                 </a>
               </Button>
@@ -1140,18 +1142,21 @@ function Timeline({
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
+        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
           <Icon className="size-5" aria-hidden="true" />
         </span>
         <h3 className="text-2xl font-semibold">{title}</h3>
       </div>
-      <div className="divide-y divide-border rounded-lg border border-border bg-card">
-        {items.map((item) => (
-          <div key={item.school} className="p-5 sm:p-6">
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">{item.school}</p>
-            <h4 className="mt-2 text-xl font-semibold leading-snug">{item.degree}</h4>
-            <p className="mt-2 text-sm text-muted-foreground">{item.meta}</p>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.body}</p>
+      <div className="divide-y divide-border border-y border-border">
+        {items.map((item, index) => (
+          <div key={item.school} className="grid gap-4 py-6 sm:grid-cols-[2rem_1fr]">
+            <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+            <div>
+              <p className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-primary">{item.school}</p>
+              <h4 className="mt-2 text-xl font-semibold leading-snug">{item.degree}</h4>
+              <p className="mt-2 text-sm text-muted-foreground">{item.meta}</p>
+              <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.body}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -1168,11 +1173,12 @@ function SkillCloud() {
         </span>
         <h3 className="text-2xl font-semibold">Technical skills</h3>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <Badge key={skill} variant="secondary" className="rounded-full px-3 py-1.5">
-            {skill}
-          </Badge>
+      <div className="divide-y divide-border border-y border-border">
+        {skillGroups.map((group) => (
+          <div key={group.label} className="grid gap-2 py-4 sm:grid-cols-[10rem_1fr] sm:gap-5">
+            <p className="font-mono text-xs font-medium uppercase tracking-[0.12em] text-primary">{group.label}</p>
+            <p className="text-sm leading-6 text-muted-foreground">{group.items.join(" / ")}</p>
+          </div>
         ))}
       </div>
     </div>
@@ -1188,10 +1194,11 @@ function AwardsBlock() {
         </span>
         <h3 className="text-2xl font-semibold">Achievements</h3>
       </div>
-      <div className="divide-y divide-border rounded-lg border border-border bg-card">
-        {awards.map((award) => (
-          <div key={award} className="p-5 text-sm font-medium leading-6">
-            {award}
+      <div className="divide-y divide-border border-y border-border">
+        {awards.map((award, index) => (
+          <div key={award} className="grid grid-cols-[2rem_1fr] gap-3 py-4 text-sm font-medium leading-6">
+            <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+            <span>{award}</span>
           </div>
         ))}
       </div>
@@ -1241,52 +1248,43 @@ function ExperienceSection() {
 function ContactSection() {
   return (
     <section data-slot="contact" className="contact-shell border-t border-border">
-      <div id="contact" className="mx-auto grid min-h-[38rem] max-w-[90rem] scroll-mt-20 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="order-2 flex items-center px-4 py-14 sm:px-6 lg:order-1 lg:px-10 lg:py-20">
-          <div className="max-w-3xl">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Start a conversation</p>
-            <h2 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl">
-              Bring me the material question you cannot resolve at one scale.
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-              I am open to research collaboration, conference conversations, and academic opportunities in computational materials, spectroscopy, and nanomaterials.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg">
-                <a href={`mailto:${emailAddress}`}>
-                  <Mail data-icon="inline-start" aria-hidden="true" />
-                  Email Wisdom
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:+19843129015">
-                  <Phone data-icon="inline-start" aria-hidden="true" />
-                  {phoneNumber}
-                </a>
-              </Button>
-              <Button asChild variant="ghost" size="lg">
-                <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
-                  <ExternalLink data-icon="inline-start" aria-hidden="true" />
-                  GitHub
-                </a>
-              </Button>
-            </div>
-            <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
-              Silver Spring, Maryland · Replies typically within 24 hours
-            </p>
-          </div>
+      <div id="contact" className="mx-auto grid max-w-[90rem] scroll-mt-20 gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.35fr_0.65fr] lg:items-end lg:px-10 lg:py-24">
+        <div className="max-w-4xl">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">Start a conversation</p>
+          <h2 tabIndex={-1} className="mt-5 text-4xl font-semibold leading-[1.04] tracking-tight text-foreground outline-none sm:text-5xl">
+            Bring me the material question that cannot be resolved at one scale.
+          </h2>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
+            I am open to research collaboration, conference conversations, and academic opportunities in computational materials, spectroscopy, and nanomaterials.
+          </p>
         </div>
-        <div className="relative order-1 min-h-[30rem] border-b border-border lg:order-2 lg:min-h-full lg:border-b-0 lg:border-l">
-          <img
-            src={fromBase("assets/wisdom-benson-portrait.jpeg")}
-            alt="Portrait of Wisdom Benson."
-            className="size-full object-cover object-top grayscale-[0.12]"
-          />
+        <div className="flex flex-col gap-3 lg:items-stretch">
+          <Button asChild size="lg">
+            <a href={`mailto:${emailAddress}`}>
+              <Mail data-icon="inline-start" aria-hidden="true" />
+              Email Wisdom
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <a href="tel:+19843129015">
+              <Phone data-icon="inline-start" aria-hidden="true" />
+              {phoneNumber}
+            </a>
+          </Button>
+          <Button asChild variant="ghost" size="lg">
+            <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
+              <ExternalLink data-icon="inline-start" aria-hidden="true" />
+              GitHub
+            </a>
+          </Button>
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Silver Spring, Maryland · Replies typically within 24 hours
+          </p>
         </div>
       </div>
       <footer className="mx-auto flex max-w-[90rem] flex-col gap-3 border-t border-border px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
         <p>Wisdom Benson | Physics, computational materials, and spectroscopy</p>
-        <a href={sectionHref("top")} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
+        <a href={sectionHref("top")} className="inline-flex items-center gap-2 rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           Back to top
           <ArrowUpRight className="size-4" aria-hidden="true" />
         </a>
@@ -1295,12 +1293,24 @@ function ContactSection() {
   )
 }
 
-function SectionHeader({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
+function SectionHeader({
+  eyebrow,
+  title,
+  body,
+  headingLevel = "h2",
+}: {
+  eyebrow: string
+  title: string
+  body?: string
+  headingLevel?: "h1" | "h2"
+}) {
+  const Heading = headingLevel
+
   return (
     <div className="grid gap-5 lg:grid-cols-[0.7fr_2.3fr] lg:gap-10">
-      <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">{eyebrow}</p>
+      <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">{eyebrow}</p>
       <div className="max-w-4xl">
-        <h2 className="text-3xl font-semibold leading-[1.04] tracking-tight text-foreground sm:text-5xl lg:text-6xl">{title}</h2>
+        <Heading tabIndex={-1} className="text-3xl font-semibold leading-[1.06] tracking-tight text-foreground outline-none sm:text-5xl">{title}</Heading>
         {body ? <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">{body}</p> : null}
       </div>
     </div>
