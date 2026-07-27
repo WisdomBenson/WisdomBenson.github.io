@@ -2,20 +2,13 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react"
 
 import {
   ArrowUpRight,
-  Atom,
-  Award,
-  Cpu,
   Download,
   ExternalLink,
   FileText,
-  GraduationCap,
   Mail,
-  MapPin,
   Menu,
   MessageSquare,
-  Microscope,
   Phone,
-  ScrollText,
 } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -41,7 +34,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { ResearchArtifact, type ResearchArtifactKind } from "@/components/research-artifacts"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -97,41 +89,38 @@ const metrics = [
   { value: "2", label: "APS Student Ambassador terms" },
 ]
 
-const currentFocus = [
-  "ZnO quantum-dot frontier levels",
-  "Raman power and temperature diagnostics",
-  "Tin-lead perovskite optical stability",
-]
-
 const researchThreads = [
   {
+    index: "01",
     eyebrow: "ZnO quantum dots",
     title: "First-principles modeling of finite oxide nanocrystals",
     body: "DFT, DFPT, and PDEP-GW workflows for band-edge control, phonon behavior, passivation chemistry, and size-dependent piezoelectric response.",
-    artifact: "nanocrystal",
-    icon: Atom,
+    methods: ["DFT", "DFPT", "PDEP-GW"],
+    image: "assets/zno-qd-coordinate-map.png",
+    imageAlt: "Atomic coordinate map for ligand-passivated zinc oxide quantum dots.",
+    evidence: "Atomic coordinate indexing across hydroxyl- and acetate-passivated ZnO structures.",
   },
   {
+    index: "02",
     eyebrow: "Raman spectroscopy",
     title: "Temperature and excitation-power resolved Raman analysis",
     body: "Experimental and computational Raman pipelines for ZnO quantum dots, including linewidth, phonon confinement, and heating diagnostics.",
-    artifact: "raman",
-    icon: Microscope,
+    methods: ["532 nm excitation", "Power series", "Peak analysis"],
+    image: "assets/raman-spectra.png",
+    imageAlt: "Raman spectra for zinc oxide quantum dots across a 532 nanometer excitation-power series.",
+    evidence: "Raw spectra across five excitation powers, retained as data rather than decoration.",
   },
   {
+    index: "03",
     eyebrow: "Perovskite photovoltaics",
     title: "Tin-lead alloy perovskites with multi-cation engineering",
     body: "Spin-coated thin-film synthesis and optical characterization focused on stability, near-IR tunability, and photovoltaic relevance.",
-    artifact: "perovskite",
-    icon: Cpu,
+    methods: ["Thin-film synthesis", "Optical characterization", "Near-IR response"],
+    image: null,
+    imageAlt: "",
+    evidence: "A materials-design line connecting composition, optical response, and device relevance.",
   },
-] satisfies Array<{
-  eyebrow: string
-  title: string
-  body: string
-  artifact: ResearchArtifactKind
-  icon: typeof Atom
-}>
+]
 
 const journalArticles = [
   {
@@ -286,28 +275,23 @@ const experienceItems = [
   },
 ]
 
-const skills = [
-  "Quantum ESPRESSO",
-  "WEST/PDEP-GW",
-  "SIESTA",
-  "VESTA",
-  "DFT",
-  "DFPT",
-  "Many-body perturbation theory",
-  "Python",
-  "C++",
-  "Java",
-  "MATLAB",
-  "LaTeX",
-  "TensorFlow",
-  "Data profiling",
-  "Systems analysis",
-  "Database management",
-  "Reinforcement ML",
-  "Unsupervised ML",
-  "SaaS product design",
-  "Agile",
-  "SOLID design",
+const skillGroups = [
+  {
+    label: "Electronic structure",
+    items: ["Quantum ESPRESSO", "WEST/PDEP-GW", "SIESTA", "DFT", "DFPT", "Many-body perturbation theory", "VESTA"],
+  },
+  {
+    label: "Scientific computing",
+    items: ["Python", "C++", "Java", "MATLAB", "LaTeX"],
+  },
+  {
+    label: "Data and ML",
+    items: ["TensorFlow", "Data profiling", "Database management", "Reinforcement ML", "Unsupervised ML"],
+  },
+  {
+    label: "Product practice",
+    items: ["Systems analysis", "SaaS product design", "Agile", "SOLID design"],
+  },
 ]
 
 const awards = [
@@ -335,8 +319,11 @@ function App() {
   if (isBlogPage) {
     return (
       <div className="min-h-dvh bg-background text-foreground">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <SiteHeader />
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <BlogPage />
         </main>
       </div>
@@ -345,8 +332,11 @@ function App() {
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <SiteHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroSection />
         <ResearchSection />
         <PublicationsSection />
@@ -372,17 +362,18 @@ function SiteHeader() {
     window.history.pushState(null, "", href)
     const scrollToTarget = () => {
       target.scrollIntoView({ block: "start" })
+      target.querySelector<HTMLElement>("h1, h2")?.focus({ preventScroll: true })
     }
     window.setTimeout(scrollToTarget, 260)
     window.setTimeout(scrollToTarget, 560)
   }
 
   return (
-    <header className="site-header sticky top-0 z-20 border-b border-border/70 bg-background/92 backdrop-blur-xl">
-      <div className="mx-auto flex h-[4.5rem] max-w-[90rem] items-center justify-between px-4 sm:px-6 lg:px-10">
-        <a href={sectionHref("top")} className="group inline-flex items-center gap-3 text-sm font-semibold tracking-tight text-foreground">
-          <span className="grid size-9 place-items-center border border-foreground bg-foreground text-xs font-semibold text-background transition-transform duration-300 group-hover:-translate-y-0.5">
-            W/B
+    <header className="site-header sticky top-0 z-20 border-b border-background/15 bg-foreground text-background">
+      <div className="mx-auto flex h-16 max-w-[86rem] items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href={sectionHref("top")} className="group inline-flex items-center gap-3 text-sm font-semibold tracking-tight">
+          <span className="grid size-8 place-items-center border border-background/30 font-mono text-[0.65rem] font-semibold transition-colors duration-300 group-hover:border-primary group-hover:text-primary">
+            WB
           </span>
           <span className="hidden sm:inline">Wisdom Benson</span>
         </a>
@@ -392,7 +383,7 @@ function SiteHeader() {
               <NavigationMenuItem key={item.href}>
                 <NavigationMenuLink
                   href={item.href}
-                  className="px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground"
+                  className="px-3 py-2 text-sm text-background/65 transition-colors hover:bg-transparent hover:text-background focus:bg-transparent focus:text-background"
                 >
                   {item.label}
                 </NavigationMenuLink>
@@ -401,13 +392,13 @@ function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" className="text-background hover:bg-background/10 hover:text-background">
             <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
               <ExternalLink data-icon="inline-start" aria-hidden="true" />
               GitHub
             </a>
           </Button>
-          <Button asChild size="sm">
+          <Button asChild className="bg-background text-foreground hover:bg-background/90">
             <a href={`mailto:${emailAddress}`}>
               <Mail data-icon="inline-start" aria-hidden="true" />
               Contact
@@ -416,14 +407,14 @@ function SiteHeader() {
         </div>
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation">
+            <Button variant="outline" size="icon" className="size-11 border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background lg:hidden" aria-label="Open navigation">
               <Menu aria-hidden="true" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[min(86vw,24rem)] p-0">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <ScrollArea className="h-dvh">
-              <div className="space-y-8 p-6">
+              <div className="flex flex-col gap-8 p-6">
                 <div>
                   <p className="text-sm font-medium">Wisdom Benson</p>
                   <p className="mt-1 text-sm text-muted-foreground">Physics PhD student and computational materials researcher.</p>
@@ -434,7 +425,7 @@ function SiteHeader() {
                       key={item.href}
                       href={item.href}
                       onClick={(event) => handleMobileSectionClick(event, item.href)}
-                      className="rounded-md px-3 py-3 text-base text-foreground transition-colors hover:bg-muted"
+                      className="flex min-h-11 items-center rounded-md px-3 text-base text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {item.label}
                     </a>
@@ -467,118 +458,150 @@ function SiteHeader() {
 function HeroSection() {
   return (
     <>
-      <section id="top" data-slot="hero" className="hero-shell relative isolate overflow-hidden">
-        <img
-          src={fromBase("assets/wisdom-benson-lab-hero.webp")}
-          alt="Wisdom Benson in a computational materials laboratory."
-          className="hero-image absolute inset-0 z-0 size-full object-cover object-[68%_center]"
-        />
-        <div className="hero-veil absolute inset-0 z-0" aria-hidden="true" />
-        <div className="relative z-10 mx-auto grid min-h-[calc(100dvh-4.5rem)] max-w-[90rem] content-end px-4 pb-10 pt-28 sm:px-6 sm:pb-14 lg:px-10 lg:pb-16">
-          <div className="reveal max-w-3xl">
-            <p className="mb-6 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-foreground/70">
-              <MapPin className="size-4 text-primary" aria-hidden="true" />
-              Howard University · Computational materials physics
-            </p>
-            <h1 className="flex flex-col gap-3 tracking-[-0.055em] text-foreground">
-              <span className="text-5xl font-semibold leading-[0.9] sm:text-7xl lg:text-[6.9rem]">Wisdom Benson.</span>
-              <span className="max-w-2xl text-3xl font-medium leading-[0.98] text-foreground/78 sm:text-4xl lg:text-5xl">
-                I model materials where their behavior begins.
-              </span>
-            </h1>
-            <p className="mt-7 max-w-xl text-base leading-7 text-foreground/72 sm:text-lg sm:leading-8">
-              First-principles simulation, Raman spectroscopy, and computational workflows for quantum dots and photovoltaic materials.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg" className="group">
-                <a href={sectionHref("research")}>
-                  Explore the research
-                  <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="hero-secondary-action">
-                <a href={resumeHref}>
-                  <Download data-icon="inline-start" aria-hidden="true" />
-                  Download resume
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="focus-band border-b border-border" aria-label="Current research focus">
-        <div className="mx-auto grid max-w-[90rem] gap-7 px-4 py-8 sm:px-6 lg:grid-cols-[0.7fr_2.3fr] lg:px-10 lg:py-10">
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Now investigating</p>
-            <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">Three active lines of inquiry, one materials-scale question.</p>
-          </div>
-          <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
-            {currentFocus.map((item, index) => (
-              <div key={item} className="grid grid-cols-[2rem_1fr] gap-3 py-4 first:pt-0 last:pb-0 lg:px-6 lg:py-0 lg:first:pl-0 lg:last:pr-0">
-                <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, "0")}</span>
-                <p className="text-sm leading-6 text-foreground">{item}</p>
+      <section id="top" data-slot="hero" className="hero-shell overflow-hidden bg-foreground text-background">
+        <div className="hero-grid mx-auto grid min-h-[calc(100dvh-4rem)] max-w-[86rem] lg:grid-cols-[minmax(0,1.12fr)_minmax(24rem,0.88fr)]">
+          <div className="order-2 flex flex-col justify-between px-4 py-12 sm:px-6 sm:py-16 lg:order-1 lg:px-8 lg:py-20">
+            <div className="reveal max-w-3xl">
+              <div className="flex items-center gap-4">
+                <span className="h-px w-10 bg-primary" aria-hidden="true" />
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  Computational materials physics
+                </p>
               </div>
-            ))}
+              <h1 tabIndex={-1} className="mt-8 max-w-[11ch] text-5xl font-semibold leading-[0.94] tracking-[-0.045em] outline-none sm:text-6xl lg:text-[4.7rem]">
+                From atoms to evidence.
+              </h1>
+              <p className="mt-7 max-w-xl text-xl font-medium leading-[1.25] text-background/82 sm:text-2xl">
+                I study how nanoscale structure becomes measurable electronic, vibrational, and optical behavior.
+              </p>
+              <p className="mt-6 max-w-[60ch] text-base leading-7 text-background/60">
+                Wisdom Benson is a Physics PhD researcher at Howard University working across first-principles simulation,
+                Raman spectroscopy, and high-performance computing.
+              </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="group bg-primary text-primary-foreground hover:bg-primary/90">
+                  <a href={sectionHref("research")}>
+                    View selected research
+                    <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </a>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="border-background/25 bg-transparent text-background hover:bg-background/10 hover:text-background">
+                  <a href={resumeHref}>
+                    <Download data-icon="inline-start" aria-hidden="true" />
+                    Download resume
+                  </a>
+                </Button>
+              </div>
+            </div>
+            <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-background/15 pt-6 sm:grid-cols-4 lg:mt-20">
+              {metrics.map((metric) => (
+                <div key={metric.label}>
+                  <p className="font-mono text-xl font-semibold text-background">{metric.value}</p>
+                  <p className="mt-1 max-w-36 text-xs leading-5 text-background/52">{metric.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="hero-portrait order-1 flex min-h-[24rem] items-end px-4 pt-6 sm:min-h-[34rem] sm:px-6 lg:order-2 lg:min-h-0 lg:px-8 lg:pt-10">
+            <figure className="relative mx-auto aspect-[5/6] w-full max-w-[34rem] overflow-hidden border-x border-t border-background/15 lg:h-full lg:aspect-auto">
+              <div className="absolute inset-y-0 right-0 z-10 w-2 bg-primary" aria-hidden="true" />
+              <img
+                src={fromBase("assets/wisdom-benson-portrait.jpeg")}
+                alt="Portrait of Wisdom Benson."
+                width="1023"
+                height="1536"
+                className="size-full object-cover object-[center_20%]"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 bg-foreground/88 px-4 py-4 backdrop-blur-sm">
+                <span className="text-sm font-medium">Wisdom Benson</span>
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-background/55">
+                  Silver Spring, MD
+                </span>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
-      <div data-slot="metrics-strip" className="border-b border-border bg-muted/35">
-        <div className="mx-auto grid max-w-[90rem] grid-cols-2 divide-x divide-y divide-border px-4 sm:grid-cols-4 sm:px-6 lg:px-10">
-          {metrics.map((metric) => (
-            <div key={metric.label} className="px-4 py-5 first:pl-0 sm:py-7 lg:px-7">
-              <p className="font-mono text-2xl font-semibold text-foreground">{metric.value}</p>
-              <p className="mt-1 max-w-44 text-sm leading-5 text-muted-foreground">{metric.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   )
 }
 
 function ResearchSection() {
+  const featuredThreads = researchThreads.slice(0, 2)
+  const supportingThread = researchThreads[2]
+
   return (
     <section id="research" data-slot="research" className="section-wrap">
       <SectionHeader
-        eyebrow="Research practice"
-        title="Theory and experiment, connected at the materials scale."
-        body="I move between atomistic simulation, Raman evidence, and high-performance computing to understand how nanoscale structure becomes measurable behavior."
+        index="01"
+        eyebrow="Selected research"
+        title="The work begins with a physical question, not a visual effect."
+        body="Real coordinate maps and measured spectra anchor the research record. Each project connects a material system, a method, and the evidence needed to make a defensible claim."
       />
-      <div className="mt-14 border-y border-border">
-        <article className="research-lead grid lg:grid-cols-[1.2fr_0.8fr]">
-          <ResearchArtifact kind={researchThreads[0].artifact} />
-          <div className="flex items-center border-t border-border p-6 sm:p-10 lg:border-l lg:border-t-0">
-            <ResearchCopy thread={researchThreads[0]} />
+      <div className="mt-14 flex flex-col gap-20 sm:mt-16 lg:gap-28">
+        {featuredThreads.map((thread, threadIndex) => (
+          <article
+            key={thread.title}
+            className="research-story grid items-center gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)] lg:gap-14"
+          >
+            <figure className={`research-figure overflow-hidden border border-border bg-card ${threadIndex % 2 === 1 ? "lg:order-2" : ""}`}>
+              <div className="flex items-center justify-between border-b border-border px-4 py-3">
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
+                  Evidence plate {thread.index}
+                </span>
+                <span className="size-2 bg-primary" aria-hidden="true" />
+              </div>
+              <div className="aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src={fromBase(thread.image!)}
+                  alt={thread.imageAlt}
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  className="size-full object-cover object-center"
+                />
+              </div>
+              <figcaption className="border-t border-border px-4 py-3 text-xs leading-5 text-muted-foreground">
+                {thread.evidence}
+              </figcaption>
+            </figure>
+            <ResearchCopy thread={thread} />
+          </article>
+        ))}
+        <article className="research-alloy grid overflow-hidden border-y border-border bg-foreground text-background lg:grid-cols-[0.62fr_1.38fr]">
+          <div className="flex min-h-64 items-center justify-center border-b border-background/15 p-8 lg:border-b-0 lg:border-r">
+            <div className="text-center">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-primary">Material system</p>
+              <p className="mt-4 text-6xl font-semibold tracking-[-0.06em] sm:text-7xl">Sn/Pb</p>
+              <p className="mt-2 font-mono text-sm text-background/55">ABX3 alloy perovskite</p>
+            </div>
+          </div>
+          <div className="flex items-center p-7 sm:p-10 lg:p-14">
+            <ResearchCopy thread={supportingThread} dark />
           </div>
         </article>
-        <div className="grid border-t border-border lg:grid-cols-2 lg:divide-x lg:divide-border">
-          {researchThreads.slice(1).map((thread) => (
-            <article key={thread.title} className="grid border-b border-border last:border-b-0 sm:grid-cols-[0.85fr_1.15fr] lg:grid-cols-1 lg:border-b-0 xl:grid-cols-[0.85fr_1.15fr]">
-              <ResearchArtifact kind={thread.artifact} compact />
-              <div className="flex items-center border-t border-border p-6 sm:border-l sm:border-t-0 lg:border-l-0 lg:border-t xl:border-l xl:border-t-0">
-                <ResearchCopy thread={thread} compact />
-              </div>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
   )
 }
 
-function ResearchCopy({ thread, compact = false }: { thread: (typeof researchThreads)[number]; compact?: boolean }) {
-  const Icon = thread.icon
-
+function ResearchCopy({ thread, dark = false }: { thread: (typeof researchThreads)[number]; dark?: boolean }) {
   return (
-    <div>
-      <div className="mb-5 flex items-center gap-3">
-        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
-          <Icon className="size-5" aria-hidden="true" />
-        </span>
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">{thread.eyebrow}</p>
+    <div className="max-w-xl">
+      <div className="flex items-center gap-4">
+        <span className="font-mono text-xs font-semibold text-primary">{thread.index}</span>
+        <span className={`h-px w-8 ${dark ? "bg-background/25" : "bg-border"}`} aria-hidden="true" />
+        <p className={`font-mono text-xs font-medium uppercase tracking-[0.18em] ${dark ? "text-background/55" : "text-muted-foreground"}`}>
+          {thread.eyebrow}
+        </p>
       </div>
-      <h3 className={compact ? "text-xl font-semibold leading-tight tracking-tight" : "text-3xl font-semibold leading-tight tracking-tight"}>{thread.title}</h3>
-      <p className="mt-4 text-sm leading-6 text-muted-foreground sm:text-base">{thread.body}</p>
+      <h3 className="mt-6 text-3xl font-semibold leading-[1.08] tracking-[-0.03em] sm:text-4xl">{thread.title}</h3>
+      <p className={`mt-5 text-base leading-7 ${dark ? "text-background/62" : "text-muted-foreground"}`}>{thread.body}</p>
+      <div className={`mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 font-mono text-[0.68rem] uppercase tracking-[0.12em] ${dark ? "border-background/15 text-background/55" : "border-border text-muted-foreground"}`}>
+        {thread.methods.map((method) => (
+          <span key={method}>{method}</span>
+        ))}
+      </div>
     </div>
   )
 }
@@ -587,6 +610,7 @@ function PublicationsSection() {
   return (
     <section id="publications" data-slot="publications" className="section-wrap border-t border-border">
       <SectionHeader
+        index="02"
         eyebrow="Publications"
         title="A record built across computation, experiment, and theory."
         body="Peer-reviewed articles, a CRC Press chapter, and conference work—organized for quick review and direct access."
@@ -642,7 +666,16 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
             <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
           </div>
           <div>
-            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">{item.title}</h3>
+            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className="decoration-primary/50 transition-colors hover:text-primary hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {item.title}
+              </a>
+            </h3>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">{item.citation}</p>
             <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
               <span className="font-mono text-xs text-foreground">{item.doi}</span>
@@ -653,9 +686,10 @@ function PublicationGrid({ items }: { items: typeof journalArticles }) {
               ))}
             </div>
           </div>
-          <Button asChild variant="ghost" size="icon" className="publication-open shrink-0" aria-label={`Open ${item.title}`}>
+          <Button asChild variant="outline" size="sm" className="publication-open min-h-11 shrink-0 px-4">
             <a href={item.href} target="_blank" rel="noreferrer">
-              <ArrowUpRight className="size-4" aria-hidden="true" />
+              View publication
+              <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
             </a>
           </Button>
         </article>
@@ -820,6 +854,7 @@ function BlogPage() {
           eyebrow="Blog"
           title="Field notes across philosophy, computation, and materials research."
           body="A public writing space for essays, research notebooks, build logs, and technical reflections. New posts can be published from GitHub Issues and appear here without changing the site code."
+          headingLevel="h1"
         />
         <Card size="sm">
           <CardHeader>
@@ -1073,129 +1108,69 @@ function BlogComments({ post }: { post: DisplayBlogPost }) {
 
 function CVSection() {
   return (
-    <section id="cv" data-slot="cv" className="section-wrap border-t border-border">
-      <SectionHeader
-        eyebrow="CV and resume"
-        title="Training for questions that cross disciplinary boundaries."
-      />
-      <Tabs defaultValue="cv" className="mt-10 flex-col">
-        <TabsList variant="line" className="line-tabs-list h-auto w-max min-w-full justify-start gap-7 p-0 sm:min-w-0">
-          <TabsTrigger value="cv" className="min-h-10 flex-none px-0">
-            Curriculum Vitae
-          </TabsTrigger>
-          <TabsTrigger value="resume" className="min-h-10 flex-none px-0">
-            Resume
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="cv" className="mt-8">
-          <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr]">
-            <Timeline title="Education" icon={GraduationCap} items={educationItems} />
-            <div className="space-y-8">
-              <SkillCloud />
-              <AwardsBlock />
+    <section id="cv" data-slot="cv" className="cv-shell border-y border-border bg-muted/55">
+      <div className="section-wrap">
+        <div className="grid gap-8 border-b border-border pb-10 lg:grid-cols-[1fr_auto] lg:items-end">
+          <SectionHeader
+            index="03"
+            eyebrow="Curriculum"
+            title="Training, methods, and recognition in one continuous record."
+          />
+          <Button asChild size="lg" className="w-full sm:w-auto">
+            <a href={resumeHref}>
+              <Download data-icon="inline-start" aria-hidden="true" />
+              Download resume
+            </a>
+          </Button>
+        </div>
+
+        <div className="mt-12 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Education</p>
+            <div className="mt-6 border-t border-border">
+              {educationItems.map((item, index) => (
+                <article key={item.school} className="grid gap-4 border-b border-border py-7 sm:grid-cols-[5rem_1fr]">
+                  <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-primary">{item.school}</p>
+                    <h3 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.025em]">{item.degree}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{item.meta}</p>
+                    <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{item.body}</p>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
-        </TabsContent>
-        <TabsContent value="resume" className="mt-8">
-          <div className="grid gap-8 border-y border-border py-8 lg:grid-cols-[1fr_auto]">
+
+          <div className="flex flex-col gap-12">
             <div>
-              <div className="flex items-center gap-3">
-                <span className="grid size-11 place-items-center border border-border bg-background text-primary">
-                  <FileText className="size-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <h3 className="text-2xl font-semibold">Wisdom Benson resume</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Current resume source: wisdom_benson_resume.docx</p>
-                </div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Methods and tools</p>
+              <div className="mt-6 border-t border-border">
+                {skillGroups.map((group, index) => (
+                  <div key={group.label} className="grid gap-3 border-b border-border py-5 sm:grid-cols-[2rem_9rem_1fr]">
+                    <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                    <h3 className="text-sm font-semibold">{group.label}</h3>
+                    <p className="text-sm leading-6 text-muted-foreground">{group.items.join(", ")}</p>
+                  </div>
+                ))}
               </div>
-              <p className="mt-6 max-w-2xl text-sm leading-6 text-muted-foreground">
-                Focus areas include Quantum ESPRESSO, WEST/PDEP-GW, perovskite thin-film characterization, Raman spectroscopy,
-                HPC workflows, and SaaS product implementation through CryptoTrackAI.
-              </p>
             </div>
-            <div className="flex items-start lg:justify-end">
-              <Button asChild size="lg">
-                <a href={resumeHref}>
-                  <Download className="size-4" aria-hidden="true" />
-                  Download DOCX
-                </a>
-              </Button>
+
+            <div>
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Recognition</p>
+              <ol className="mt-6 border-t border-border">
+                {awards.map((award, index) => (
+                  <li key={award} className="grid grid-cols-[2rem_1fr] gap-3 border-b border-border py-4 text-sm font-medium leading-6">
+                    <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                    <span>{award}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </section>
-  )
-}
-
-function Timeline({
-  title,
-  icon: Icon,
-  items,
-}: {
-  title: string
-  icon: typeof GraduationCap
-  items: typeof educationItems
-}) {
-  return (
-    <div>
-      <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
-          <Icon className="size-5" aria-hidden="true" />
-        </span>
-        <h3 className="text-2xl font-semibold">{title}</h3>
-      </div>
-      <div className="divide-y divide-border rounded-lg border border-border bg-card">
-        {items.map((item) => (
-          <div key={item.school} className="p-5 sm:p-6">
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">{item.school}</p>
-            <h4 className="mt-2 text-xl font-semibold leading-snug">{item.degree}</h4>
-            <p className="mt-2 text-sm text-muted-foreground">{item.meta}</p>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">{item.body}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SkillCloud() {
-  return (
-    <div>
-      <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
-          <ScrollText className="size-5" aria-hidden="true" />
-        </span>
-        <h3 className="text-2xl font-semibold">Technical skills</h3>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
-          <Badge key={skill} variant="secondary" className="rounded-full px-3 py-1.5">
-            {skill}
-          </Badge>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function AwardsBlock() {
-  return (
-    <div>
-      <div className="mb-6 flex items-center gap-3">
-        <span className="grid size-10 place-items-center border border-border bg-background text-primary">
-          <Award className="size-5" aria-hidden="true" />
-        </span>
-        <h3 className="text-2xl font-semibold">Achievements</h3>
-      </div>
-      <div className="divide-y divide-border rounded-lg border border-border bg-card">
-        {awards.map((award) => (
-          <div key={award} className="p-5 text-sm font-medium leading-6">
-            {award}
-          </div>
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -1203,6 +1178,7 @@ function ExperienceSection() {
   return (
     <section id="experience" data-slot="experience" className="section-wrap border-t border-border">
       <SectionHeader
+        index="04"
         eyebrow="Experience"
         title="Research deepens when it can also be taught, tested, and built."
         body="From laboratory instruction and thin-film synthesis to many-body simulation workflows and scientific software."
@@ -1240,53 +1216,48 @@ function ExperienceSection() {
 
 function ContactSection() {
   return (
-    <section data-slot="contact" className="contact-shell border-t border-border">
-      <div id="contact" className="mx-auto grid min-h-[38rem] max-w-[90rem] scroll-mt-20 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="order-2 flex items-center px-4 py-14 sm:px-6 lg:order-1 lg:px-10 lg:py-20">
-          <div className="max-w-3xl">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">Start a conversation</p>
-            <h2 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl">
-              Bring me the material question you cannot resolve at one scale.
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-              I am open to research collaboration, conference conversations, and academic opportunities in computational materials, spectroscopy, and nanomaterials.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg">
-                <a href={`mailto:${emailAddress}`}>
-                  <Mail data-icon="inline-start" aria-hidden="true" />
-                  Email Wisdom
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="tel:+19843129015">
-                  <Phone data-icon="inline-start" aria-hidden="true" />
-                  {phoneNumber}
-                </a>
-              </Button>
-              <Button asChild variant="ghost" size="lg">
-                <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
-                  <ExternalLink data-icon="inline-start" aria-hidden="true" />
-                  GitHub
-                </a>
-              </Button>
-            </div>
-            <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
-              Silver Spring, Maryland · Replies typically within 24 hours
-            </p>
+    <section data-slot="contact" className="contact-shell bg-foreground text-background">
+      <div id="contact" className="mx-auto grid max-w-[86rem] scroll-mt-20 gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:items-end lg:px-8 lg:py-28">
+        <div className="max-w-4xl">
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs font-semibold text-primary">05</span>
+            <span className="h-px w-10 bg-background/20" aria-hidden="true" />
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-background/55">Contact</p>
           </div>
+          <h2 tabIndex={-1} className="mt-7 max-w-3xl text-4xl font-semibold leading-[1.02] tracking-[-0.035em] outline-none sm:text-6xl">
+            Let us work on the question between the scales.
+          </h2>
+          <p className="mt-7 max-w-2xl text-base leading-7 text-background/60">
+            I am open to research collaboration, conference conversations, and academic opportunities in computational materials, spectroscopy, and nanomaterials.
+          </p>
         </div>
-        <div className="relative order-1 min-h-[30rem] border-b border-border lg:order-2 lg:min-h-full lg:border-b-0 lg:border-l">
-          <img
-            src={fromBase("assets/wisdom-benson-portrait.jpeg")}
-            alt="Portrait of Wisdom Benson."
-            className="size-full object-cover object-top grayscale-[0.12]"
-          />
+        <div className="flex flex-col gap-3 lg:items-stretch">
+          <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <a href={`mailto:${emailAddress}`}>
+              <Mail data-icon="inline-start" aria-hidden="true" />
+              Email Wisdom
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="border-background/25 bg-transparent text-background hover:bg-background/10 hover:text-background">
+            <a href="tel:+19843129015">
+              <Phone data-icon="inline-start" aria-hidden="true" />
+              {phoneNumber}
+            </a>
+          </Button>
+          <Button asChild variant="ghost" size="lg" className="text-background hover:bg-background/10 hover:text-background">
+            <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
+              <ExternalLink data-icon="inline-start" aria-hidden="true" />
+              GitHub
+            </a>
+          </Button>
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.12em] text-background/45">
+            Silver Spring, Maryland · Replies typically within 24 hours
+          </p>
         </div>
       </div>
-      <footer className="mx-auto flex max-w-[90rem] flex-col gap-3 border-t border-border px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
+      <footer className="mx-auto flex max-w-[86rem] flex-col gap-3 border-t border-background/15 px-4 py-8 text-sm text-background/48 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <p>Wisdom Benson | Physics, computational materials, and spectroscopy</p>
-        <a href={sectionHref("top")} className="inline-flex items-center gap-2 transition-colors hover:text-foreground">
+        <a href={sectionHref("top")} className="inline-flex items-center gap-2 rounded-sm transition-colors hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           Back to top
           <ArrowUpRight className="size-4" aria-hidden="true" />
         </a>
@@ -1295,12 +1266,30 @@ function ContactSection() {
   )
 }
 
-function SectionHeader({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
+function SectionHeader({
+  index,
+  eyebrow,
+  title,
+  body,
+  headingLevel = "h2",
+}: {
+  index?: string
+  eyebrow: string
+  title: string
+  body?: string
+  headingLevel?: "h1" | "h2"
+}) {
+  const Heading = headingLevel
+
   return (
-    <div className="grid gap-5 lg:grid-cols-[0.7fr_2.3fr] lg:gap-10">
-      <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-primary">{eyebrow}</p>
+    <div className="grid gap-6 lg:grid-cols-[0.72fr_2.28fr] lg:gap-12">
+      <div className="flex items-center gap-4 lg:items-start">
+        {index ? <span className="font-mono text-xs font-semibold text-primary">{index}</span> : null}
+        {index ? <span className="mt-2 hidden h-px flex-1 bg-border lg:block" aria-hidden="true" /> : null}
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">{eyebrow}</p>
+      </div>
       <div className="max-w-4xl">
-        <h2 className="text-3xl font-semibold leading-[1.04] tracking-tight text-foreground sm:text-5xl lg:text-6xl">{title}</h2>
+        <Heading tabIndex={-1} className="text-3xl font-semibold leading-[1.05] tracking-[-0.035em] text-foreground outline-none sm:text-5xl">{title}</Heading>
         {body ? <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">{body}</p> : null}
       </div>
     </div>
