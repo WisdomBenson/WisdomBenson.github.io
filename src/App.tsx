@@ -103,12 +103,12 @@ const researchThreads = [
   {
     index: "02",
     eyebrow: "Raman spectroscopy",
-    title: "Temperature and excitation-power resolved Raman analysis",
-    body: "Experimental and computational Raman pipelines for ZnO quantum dots, including linewidth, phonon confinement, and heating diagnostics.",
-    methods: ["532 nm excitation", "Power series", "Peak analysis"],
-    image: "assets/raman-spectra.png",
-    imageAlt: "Raman spectra for zinc oxide quantum dots across a 532 nanometer excitation-power series.",
-    evidence: "Raw spectra across five excitation powers, retained as data rather than decoration.",
+    title: "Room-temperature Raman response under 488 nm excitation",
+    body: "Raman characterization of ZnO quantum dots under 488 nm laser excitation, resolving the measured spectral response across the full Raman-shift range.",
+    methods: ["488 nm excitation", "Room temperature", "Spectral analysis"],
+    image: "assets/raman-spectrum-488nm-rt.png",
+    imageAlt: "Room-temperature Raman spectrum for ZnO quantum dots under 488 nanometer laser excitation.",
+    evidence: "Clean room-temperature spectrum measured under 488 nm excitation.",
   },
   {
     index: "03",

@@ -19,8 +19,8 @@ const artifactCopy = {
   },
   raman: {
     label: "Raman spectra map",
-    metric: "532 nm | power sweep",
-    compactMetric: "532 nm power sweep",
+    metric: "488 nm | room temperature",
+    compactMetric: "488 nm room temperature",
     caption: "Temperature bands, excitation power, and phonon shifts",
   },
   perovskite: {
