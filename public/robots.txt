@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wisdombenson.github.io/sitemap.xml
