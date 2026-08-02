@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type MouseEvent }
 import {
   ArrowUpRight,
   Check,
+  ChevronRight,
   Copy,
   Download,
   ExternalLink,
@@ -11,6 +12,7 @@ import {
   Maximize2,
   Menu,
   MessageSquare,
+  MoveRight,
 } from "lucide-react"
 
 import { blogCategories, type BlogCategory, type BlogPost } from "@/blog-posts"
@@ -49,7 +51,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { MaterialField } from "@/components/monograph/material-field"
+import { useMonographMotion } from "@/hooks/use-monograph-motion"
 
 const emailAddress = "wisdom.benson@bison.howard.edu"
 const phoneNumber = "+1 984-312-9015"
@@ -101,20 +104,20 @@ const proofPoints = [
   { value: "First author", label: "AIP Advances · ZnO quantum dots · 2026" },
   { value: "First author", label: "JPCS · mixed Sn-Pb perovskites · 2026" },
   { value: "HPC workflows", label: "Quantum ESPRESSO + WEST · Expanse + ANL-CNM" },
-  { value: "Book chapter", label: "CRC Press · quantum-dot applications · 2025" },
+  { value: "First author", label: "CRC Press · quantum-dot applications · 2026" },
 ]
 
 const researchThreads = [
   {
     index: "01",
-    eyebrow: "Published study + ongoing work",
-    title: "How quantum confinement reshapes ZnO electronic response",
+    eyebrow: "Ongoing passivation work + published foundation",
+    title: "Mapping passivation in finite ZnO nanocrystals",
     question:
       "How do finite size, surface termination, and many-body corrections alter the band edges and electromechanical behavior of ZnO quantum dots?",
     contribution:
       "I build and validate first-principles workflows spanning DFT, DFPT, and ongoing PDEP-GW calculations on ligand-passivated nanocrystals.",
     outcome:
-      "The first-author DFT study is published in AIP Advances; current work extends the model toward surface-driven band-edge control and quasiparticle corrections.",
+      "The coordinate map documents ongoing ligand-passivation models. The linked first-author AIP paper provides the published DFT foundation for this next stage of work.",
     methods: ["DFT", "DFPT", "PDEP-GW"],
     image: "assets/zno-qd-coordinate-map-1400.webp",
     imageSrcSet:
@@ -128,13 +131,13 @@ const researchThreads = [
   },
   {
     index: "02",
-    eyebrow: "Measured evidence",
+    eyebrow: "Spectral record",
     title: "Room-temperature Raman response under 488 nm excitation",
     question: "What does the room-temperature vibrational response reveal under 488 nm excitation?",
     contribution:
       "I analyze Raman spectra alongside computational phonon workflows, keeping the measured trace and the model interpretation explicitly separated.",
     outcome:
-      "The spectrum shown is the room-temperature 488 nm acquisition retained as the experimental evidence record for this ZnO quantum-dot study.",
+      "The figure shows the available room-temperature 488 nm plotted spectrum for this stage of the ZnO quantum-dot study.",
     methods: ["488 nm excitation", "Room temperature", "Spectral analysis"],
     image: "assets/raman-spectrum-488nm-rt-1400.webp",
     imageSrcSet:
@@ -143,7 +146,7 @@ const researchThreads = [
     imageHeight: 955,
     imageAlt: "Room-temperature Raman spectrum for ZnO quantum dots under 488 nanometer laser excitation.",
     figureCaption:
-      "ZnO QD 7B at room temperature under 488 nm excitation; raw intensity plotted against Raman shift.",
+      "ZnO QD 7B at room temperature under 488 nm excitation; plotted intensity shown against Raman shift.",
     proofHref: null,
     proofLabel: null,
   },
@@ -204,10 +207,10 @@ const journalArticles = [
   },
   {
     title: "Synthesis and optical characterization of lead-tin alloy perovskites for photovoltaic applications",
-    citation: "Benson, W. ProQuest dissertation/thesis publication, 2024.",
+    citation: "Benson, W. Master's thesis, North Carolina Central University, 2024.",
     venue: "ProQuest",
     year: "2024",
-    doi: "ProQuest 3176103303",
+    doi: "ProQuest publication no. 31237299",
     href: "https://www.proquest.com/docview/3176103303",
     contribution: "Author",
     kind: "Master's thesis",
@@ -229,9 +232,9 @@ const journalArticles = [
 const bookChapters = [
   {
     title: "Advanced computational studies of quantum dots for optoelectronic, sensing, and computing applications",
-    citation: "Benson, W., Bandopadhyay, S., Adams, C., Baral, B., & Misra, P. In Nanoelectronics, pp. 169-197. CRC Press, 2025.",
+    citation: "Benson, W., Bandopadhyay, S., Adams, C., Baral, B., & Misra, P. In Nanoelectronics, pp. 169-197. CRC Press, 2026.",
     venue: "Nanoelectronics, CRC Press",
-    year: "2025",
+    year: "2026",
     doi: "10.1201/9781003512899-8",
     href: "https://doi.org/10.1201/9781003512899-8",
     contribution: "First author",
@@ -245,28 +248,10 @@ const additionalScholarship = [journalArticles[2], journalArticles[3], journalAr
 
 const conferenceItems = [
   {
-    title: "Quantifying surface-driven band-edge control in ZnO quantum dots using GW-DFT with truncation for quasiparticle gap",
-    venue: "MRS Spring Meeting",
-    year: "2026",
-    details: "Wisdom Benson, Hind Ajadani, Jovani Pitterson, and Prabhakar Misra.",
-  },
-  {
-    title: "Validated GW/BSE workflow with uncertainty quantification for finite oxide nanocrystals",
-    venue: "APS March Meeting",
-    year: "2026",
-    details: "Wisdom Benson, Hind Ajadani, Jovani Pitterson, and Prabhakar Misra.",
-  },
-  {
     title: "Spin-orbit coupling and piezoelectric properties of zinc oxide quantum dots using first-principles calculations",
-    venue: "SMT",
+    venue: "APS Global Physics Summit",
     year: "2025",
-    details: "Misra, P., Benson, W. H., Adams, C., Baral, B., Ogbuka, J., and Williams, Z.",
-  },
-  {
-    title: "Spin-orbit coupling and piezoelectric properties of zinc oxide quantum dot: Insights from first-principles calculations",
-    venue: "APS Global Summit",
-    year: "2025",
-    details: "Wisdom Benson and collaborators.",
+    details: "Coauthor; presented by Prabhakar Misra at the APS Global Physics Summit on March 18, 2025.",
   },
   {
     title: "Investigating the optical properties of multiple cation tin-lead alloy perovskite thin films",
@@ -311,8 +296,7 @@ const experienceItems = [
     bullets: [
       "Conduct first-principles DFT and many-body GW calculations with Quantum ESPRESSO and WEST on SDSC Expanse and ANL-CNM HPC resources.",
       "Model phonon dynamics, frontier levels, passivation chemistry, and electronic structure in ZnO quantum dots.",
-      "Led the summer 2025 REU program on modeling and simulation of piezoelectric quantum dots in the Laser Spectroscopy Lab.",
-      "Designed GPU-accelerated computational workflows using Agile and SOLID software-design principles.",
+      "Develop computational workflows for electronic-structure calculations and research analysis.",
     ],
   },
   {
@@ -321,7 +305,7 @@ const experienceItems = [
     period: "Aug. 2022 - May 2024",
     bullets: [
       "Synthesized and optically characterized perovskite thin films with statistical analysis of experimental results.",
-      "Taught practical physics laboratory sections to 200+ undergraduate students and supported academic mentoring.",
+      "Taught practical physics laboratory sections and supported undergraduate academic mentoring.",
       "Presented research at national conferences and contributed to peer-reviewed publications.",
     ],
   },
@@ -330,7 +314,7 @@ const experienceItems = [
     place: "God's Will Academy",
     period: "Feb. 2022 - July 2022",
     bullets: [
-      "Developed and delivered physics lesson plans for 100+ students across secondary-school levels.",
+      "Developed and delivered physics lesson plans across secondary-school levels.",
       "Coordinated with parents and counselors to support student academic development.",
     ],
   },
@@ -351,12 +335,12 @@ const skillGroups = [
   },
   {
     label: "Research workflows",
-    items: ["SDSC Expanse", "ANL-CNM resources", "Convergence testing", "Workflow validation", "Reproducible analysis"],
+    items: ["SDSC Expanse", "ANL-CNM resources", "Convergence testing", "Workflow validation", "Research analysis"],
   },
 ]
 
 const awards = [
-  "APS Student Ambassador, 2024-2025 and 2025-2026 terms",
+  "APS Student Ambassador, 2026-2027 cohort",
   "NCCU International Student Award, 2024",
   "MSc Physics with Honors, North Carolina Central University, 2024",
   "BSc Physics with Honors, University of Nigeria Nsukka, 2021",
@@ -364,6 +348,8 @@ const awards = [
 
 function App() {
   const isBlogPage = window.location.pathname.endsWith("/blog/") || window.location.pathname.endsWith("/blog/index.html")
+
+  useMonographMotion(!isBlogPage)
 
   useEffect(() => {
     if (isBlogPage) return
@@ -411,44 +397,65 @@ function App() {
 
 function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState(() => window.location.hash.slice(1) || "top")
+  const pendingMobileTarget = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (window.location.pathname.includes("/blog")) return
+
+    const sections = ["top", ...navItems.map((item) => item.href.split("#")[1])]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section))
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible?.target.id) setActiveSection(visible.target.id)
+      },
+      { rootMargin: "-18% 0px -68%", threshold: [0, 0.2, 0.5] },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
   const handleMobileSectionClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     const targetId = href.split("#")[1]
     if (!targetId) return
 
-    setMobileMenuOpen(false)
-    const target = document.getElementById(targetId)
-    if (!target) return
-
     event.preventDefault()
+    pendingMobileTarget.current = targetId
     window.history.pushState(null, "", href)
-    const scrollToTarget = () => {
-      target.scrollIntoView({ block: "start" })
-      target.querySelector<HTMLElement>("h1, h2")?.focus({ preventScroll: true })
-    }
-    window.setTimeout(scrollToTarget, 260)
-    window.setTimeout(scrollToTarget, 560)
+    setMobileMenuOpen(false)
   }
 
   return (
-    <header className="site-header sticky top-0 z-20 border-b border-border bg-background text-foreground">
-      <div className="mx-auto flex h-16 max-w-[86rem] items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="monograph-header sticky top-0 z-20 border-b border-border bg-background/94 text-foreground backdrop-blur-md">
+      <div className="mx-auto flex h-[4.5rem] max-w-[90rem] items-center justify-between px-4 sm:px-6 lg:px-10">
         <a
           href={sectionHref("top")}
           aria-label="Wisdom Benson — home"
-          className="group inline-flex min-h-11 items-center gap-3 text-sm font-semibold tracking-tight"
+          className="group inline-flex min-h-11 items-center gap-3"
         >
-          <span className="relative grid size-4 place-items-center" aria-hidden="true">
-            <span className="size-2 rounded-full bg-primary transition-transform duration-300 group-hover:scale-125" />
+          <span className="grid size-9 place-items-center border border-foreground bg-foreground font-mono text-[0.68rem] font-semibold tracking-[0.08em] text-background transition-transform duration-300 group-hover:-translate-y-0.5" aria-hidden="true">
+            WB
           </span>
-          <span>Wisdom Benson</span>
+          <span className="grid leading-none">
+            <span className="text-sm font-semibold tracking-[-0.02em]">Wisdom Benson</span>
+            <span className="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.13em] text-muted-foreground">Research monograph</span>
+          </span>
         </a>
         <NavigationMenu className="hidden lg:flex">
-          <NavigationMenuList className="gap-1">
+          <NavigationMenuList className="gap-0">
             {navItems.map((item) => (
               <NavigationMenuItem key={item.href}>
                 <NavigationMenuLink
                   href={item.href}
-                  className="px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground"
+                  data-active={activeSection === item.href.split("#")[1] ? "true" : undefined}
+                  aria-current={activeSection === item.href.split("#")[1] ? "location" : undefined}
+                  className="monograph-nav-link px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground focus:bg-transparent focus:text-foreground data-[active=true]:text-foreground"
                 >
                   {item.label}
                 </NavigationMenuLink>
@@ -457,16 +464,16 @@ function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost">
+          <Button asChild variant="ghost" size="sm">
             <a href={resumePdfHref} download>
               <Download data-icon="inline-start" aria-hidden="true" />
               Résumé
             </a>
           </Button>
-          <Button asChild>
+          <Button asChild size="sm">
             <a href={`mailto:${emailAddress}`}>
               <Mail data-icon="inline-start" aria-hidden="true" />
-              Contact
+              Start a conversation
             </a>
           </Button>
         </div>
@@ -479,23 +486,36 @@ function SiteHeader() {
           <SheetContent
             side="right"
             className="w-[min(86vw,24rem)] p-0 [&_[data-slot=sheet-close]]:size-11"
+            onCloseAutoFocus={(event) => {
+              const targetId = pendingMobileTarget.current
+              if (!targetId) return
+              event.preventDefault()
+              pendingMobileTarget.current = null
+              const target = document.getElementById(targetId)
+              if (!target) return
+              target.scrollIntoView({ block: "start" })
+              target.querySelector<HTMLElement>("h1, h2")?.focus({ preventScroll: true })
+            }}
           >
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <ScrollArea className="h-dvh">
-              <div className="flex flex-col gap-8 p-6">
+              <div className="flex min-h-dvh flex-col gap-9 p-6 pt-18">
                 <div>
-                  <p className="text-sm font-medium">Wisdom Benson</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Physics PhD student and computational materials researcher.</p>
+                  <p className="font-serif text-3xl leading-none">Wisdom Benson</p>
+                  <p className="mt-3 max-w-[24ch] text-sm leading-6 text-muted-foreground">Physics PhD researcher in computational materials and spectroscopy.</p>
                 </div>
-                <nav className="grid gap-2">
-                  {navItems.map((item) => (
+                <nav className="grid gap-1">
+                  {navItems.map((item, index) => (
                     <a
                       key={item.href}
                       href={item.href}
+                      aria-current={activeSection === item.href.split("#")[1] ? "location" : undefined}
                       onClick={(event) => handleMobileSectionClick(event, item.href)}
-                      className="flex min-h-11 items-center rounded-md px-3 text-base text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="grid min-h-12 grid-cols-[2rem_1fr_auto] items-center border-b border-border text-base text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
-                      {item.label}
+                      <span className="font-mono text-[0.68rem] text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                      <span>{item.label}</span>
+                      <ChevronRight className="size-4" aria-hidden="true" />
                     </a>
                   ))}
                 </nav>
@@ -520,6 +540,7 @@ function SiteHeader() {
                     </a>
                   </Button>
                 </div>
+                <p className="mt-auto font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">Silver Spring, Maryland · EDT</p>
               </div>
             </ScrollArea>
           </SheetContent>
@@ -531,83 +552,89 @@ function SiteHeader() {
 
 function HeroSection() {
   return (
-    <section id="top" data-slot="hero" className="hero-shell overflow-hidden border-b border-border bg-background">
-      <div className="hero-grid mx-auto grid max-w-[86rem] md:grid-cols-[minmax(0,1.16fr)_minmax(18rem,0.84fr)] lg:min-h-[calc(100dvh-4rem)]">
-        <div className="reveal order-1 flex flex-col justify-center px-4 py-10 sm:px-6 sm:py-18 md:py-20 lg:px-8 lg:py-24">
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-            Physics PhD researcher · Howard University
-          </p>
+    <section id="top" data-slot="hero" className="monograph-hero relative isolate overflow-hidden border-b border-border">
+      <div className="monograph-hero__field" data-ambient aria-hidden="true">
+        <MaterialField />
+      </div>
+      <div className="mx-auto grid max-w-[90rem] lg:min-h-[calc(100dvh-4.5rem)] lg:grid-cols-[minmax(0,1.08fr)_minmax(24rem,0.92fr)]">
+        <div className="monograph-hero__copy flex flex-col justify-center px-4 py-14 sm:px-6 sm:py-18 lg:px-10 lg:py-20">
+          <div className="hero-enter hero-enter--one flex items-center gap-3 font-mono text-[0.68rem] uppercase tracking-[0.13em] text-primary">
+            <span>Monograph 01</span>
+            <span className="h-px w-10 bg-primary" aria-hidden="true" />
+            <span>Computational materials</span>
+          </div>
           <h1
             tabIndex={-1}
-            aria-label="Wisdom Benson — computational materials physicist."
-            className="destination-heading mt-6 max-w-[12ch] text-[2.8rem] font-semibold leading-[0.96] tracking-[-0.05em] text-foreground sm:mt-7 sm:text-6xl lg:text-[4.65rem]"
+            className="destination-heading hero-enter hero-enter--two mt-7 max-w-[10.5ch] font-serif text-[3.35rem] font-medium leading-[0.9] tracking-[-0.055em] text-foreground sm:text-[4.8rem] lg:text-[clamp(4.6rem,6.4vw,7rem)]"
           >
-            <span className="block text-[0.34em] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-              Wisdom Benson
-            </span>
-            <span className="mt-3 block">Computational materials physicist.</span>
+            I model matter before it becomes material.
           </h1>
-          <p className="mt-6 max-w-xl text-xl font-medium leading-snug text-foreground sm:mt-7 sm:text-2xl">
-            From atoms to evidence.
+          <figure className="hero-enter hero-enter--three mt-7 overflow-hidden border border-border bg-muted lg:hidden">
+            <div className="relative aspect-[16/7]">
+              <img
+                src={fromBase("assets/wisdom-benson-portrait.jpeg")}
+                alt="Portrait of Wisdom Benson."
+                width="1023"
+                height="1537"
+                fetchPriority="high"
+                className="size-full object-cover object-[center_25%]"
+              />
+              <div className="portrait-plate__wash" aria-hidden="true" />
+              <span className="portrait-plate__index font-mono text-[0.68rem] uppercase tracking-[0.12em] text-background">Wisdom Benson · Howard University</span>
+            </div>
+          </figure>
+          <p className="hero-enter hero-enter--three mt-7 max-w-[58ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+            I connect first-principles physics, Raman spectroscopy, and computational workflows to explain how nanoscale materials behave.
           </p>
-          <p className="mt-4 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
-            I connect first-principles simulation, Raman spectroscopy, high-performance computing, and
-            reproducible scientific workflows to understand nanoscale materials.
-          </p>
-          <p className="mt-4 max-w-[62ch] border-l-2 border-primary pl-4 text-sm leading-6 text-foreground/82 sm:mt-6">
-            Open to research collaborations and opportunities in computational materials, spectroscopy,
-            and scientific software.
-          </p>
-          <div className="mt-4 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+          <div className="hero-enter hero-enter--four mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group min-h-11 px-5">
               <a href={sectionHref("research")}>
-                Explore research
-                <ArrowUpRight
-                  data-icon="inline-end"
-                  className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
+                Enter the research
+                <ArrowUpRight data-icon="inline-end" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
               </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-h-11 px-5">
               <a href={resumePdfHref} download>
                 <Download data-icon="inline-start" aria-hidden="true" />
-                Download résumé (PDF)
+                Résumé
               </a>
             </Button>
           </div>
+          <div className="hero-enter hero-enter--five mt-10 max-w-2xl border-y border-border py-4">
+            <div className="grid gap-1 sm:grid-cols-[8.5rem_1fr] sm:gap-5">
+              <span className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">Current question</span>
+              <span className="text-sm leading-6 text-muted-foreground">How do finite size, passivation, and many-body effects reshape ZnO quantum-dot response?</span>
+            </div>
+          </div>
         </div>
-        <div className="hero-portrait order-2 flex items-end px-4 pb-8 sm:px-6 md:px-0 md:pb-0 md:pr-6 md:pt-8 lg:pr-8 lg:pt-10">
-          <figure className="relative mx-auto h-[23rem] w-full max-w-[30rem] overflow-hidden border border-border bg-card sm:h-[28rem] md:h-full md:max-h-[47rem]">
-            <div className="absolute inset-y-0 right-0 z-10 w-1.5 bg-primary" aria-hidden="true" />
-            <img
-              src={fromBase("assets/wisdom-benson-portrait.jpeg")}
-              alt="Portrait of Wisdom Benson."
-              width="1023"
-              height="1537"
-              fetchPriority="high"
-              className="size-full object-cover object-[center_20%]"
-            />
-            <figcaption className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 bg-foreground px-4 py-4 text-background">
-              <span className="text-sm font-medium">Wisdom Benson</span>
-              <span className="font-mono text-xs uppercase tracking-[0.1em] text-background/68">
-                Silver Spring, MD
-              </span>
+        <div className="monograph-hero__portrait relative hidden items-end px-4 pb-10 sm:px-6 lg:flex lg:px-10 lg:pb-14 lg:pt-12">
+          <figure className="hero-enter hero-enter--portrait relative ml-auto w-full max-w-[34rem]" data-ambient>
+            <div className="portrait-plate relative aspect-[4/5] overflow-hidden bg-muted">
+              <img
+                src={fromBase("assets/wisdom-benson-portrait.jpeg")}
+                alt="Portrait of Wisdom Benson."
+                width="1023"
+                height="1537"
+                fetchPriority="high"
+                className="size-full object-cover object-[center_18%]"
+              />
+              <div className="portrait-plate__wash" aria-hidden="true" />
+              <span className="portrait-plate__index font-mono text-[0.68rem] uppercase tracking-[0.13em] text-background">Fig. 00 / Researcher</span>
+            </div>
+            <figcaption className="grid grid-cols-[1fr_auto] gap-5 border-b border-border py-4 text-xs leading-5 text-muted-foreground">
+              <span>Wisdom Benson · Physics PhD researcher at Howard University</span>
+              <span className="font-mono uppercase tracking-[0.1em]">Silver Spring, MD</span>
             </figcaption>
           </figure>
         </div>
       </div>
-      <dl className="mx-auto grid max-w-[86rem] border-t border-border sm:grid-cols-2 lg:grid-cols-4">
-        {proofPoints.map((proof, index) => (
-          <div
-            key={proof.label}
-            className={`border-border px-4 py-5 sm:px-6 lg:px-8 ${index > 0 ? "border-t" : ""} ${index % 2 === 1 ? "sm:border-l" : ""} ${index >= 2 ? "sm:border-t" : "sm:border-t-0"} ${index > 0 ? "lg:border-l lg:border-t-0" : ""}`}
-          >
-            <dt className="text-sm font-semibold text-foreground">{proof.value}</dt>
-            <dd className="mt-1 text-xs leading-5 text-muted-foreground">{proof.label}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="mx-auto grid max-w-[90rem] border-t border-border px-4 py-4 sm:grid-cols-[1fr_auto] sm:items-center sm:px-6 lg:px-10">
+        <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">DFT · DFPT · PDEP-GW · Raman · Spectral analysis</p>
+        <a href={`mailto:${emailAddress}`} className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary sm:mt-0">
+          Open to computational-materials research opportunities
+          <MoveRight className="size-4" aria-hidden="true" />
+        </a>
+      </div>
     </section>
   )
 }
@@ -617,27 +644,29 @@ function ResearchSection() {
   const supportingThread = researchThreads[2]
 
   return (
-    <section id="research" data-slot="research" className="section-wrap">
+    <section id="research" data-slot="research" className="monograph-section section-wrap">
       <SectionHeader
         index="01"
-        eyebrow="Selected research"
-        title="Questions, methods, and evidence across nanoscale materials."
-        body="Each case study separates the physical question, my contribution, and the resulting evidence. Published work is linked directly; ongoing work is labeled as such."
+        eyebrow="Investigations"
+        title="Two ways of asking the same question: what is the material telling us?"
+        body="The model and the measurement stay distinct. Together, they define the next question without overstating what either can prove alone."
       />
-      <div className="mt-12 flex flex-col gap-16 sm:mt-16 lg:gap-24">
+      <div className="mt-12 border-t border-border sm:mt-16">
         {featuredThreads.map((thread, threadIndex) => (
           <article
             key={thread.title}
-            className="research-story grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(22rem,0.8fr)] lg:gap-14"
+            data-reveal
+            className="research-chapter grid gap-8 border-b border-border py-12 sm:py-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(22rem,0.9fr)] lg:items-center lg:gap-16 lg:py-24"
           >
             <figure
-              className={`research-figure overflow-hidden border border-border bg-card ${threadIndex % 2 === 1 ? "lg:order-2" : ""}`}
+              data-ambient
+              className={`research-figure order-2 overflow-hidden bg-card ${threadIndex % 2 === 1 ? "lg:order-2" : "lg:order-none"}`}
             >
               <div className="flex items-center justify-between border-b border-border px-4 py-3">
-                <span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
-                  Figure {thread.index}
+                <span className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">
+                  Evidence plate {thread.index}
                 </span>
-                <span className="text-xs text-muted-foreground">Open to inspect</span>
+                <span className="font-mono text-[0.68rem] uppercase tracking-[0.1em] text-primary">Open figure</span>
               </div>
               <Dialog>
                 <DialogTrigger asChild>
@@ -661,14 +690,10 @@ function ResearchSection() {
                         height={thread.imageHeight!}
                         loading="lazy"
                         decoding="async"
-                        className={
-                          thread.index === "02"
-                            ? "size-full object-cover object-bottom"
-                            : "size-full object-contain object-center"
-                        }
+                        className="size-full object-contain object-center"
                       />
                     </picture>
-                    <span className="absolute bottom-4 right-4 grid size-11 place-items-center rounded-full border border-border bg-background text-foreground shadow-sm transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                    <span className="absolute bottom-4 right-4 grid size-11 place-items-center border border-border bg-background text-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
                       <Maximize2 className="size-4" aria-hidden="true" />
                     </span>
                   </button>
@@ -684,25 +709,39 @@ function ResearchSection() {
                       alt={thread.imageAlt}
                       width={thread.imageWidth!}
                       height={thread.imageHeight!}
-                      className={
-                        thread.index === "02"
-                          ? "size-full object-cover object-bottom"
-                          : "max-h-[76dvh] w-full object-contain"
-                      }
+                      className="max-h-[76dvh] size-full object-contain object-center"
                     />
                   </div>
                 </DialogContent>
               </Dialog>
-              <figcaption className="border-t border-border px-4 py-3 text-xs leading-5 text-muted-foreground">
-                {thread.figureCaption}
+              <figcaption className="grid gap-2 border-t border-border px-4 py-4 text-xs leading-5 text-muted-foreground sm:grid-cols-[5rem_1fr]">
+                <span className="font-mono uppercase tracking-[0.1em] text-primary">Caption</span>
+                <span>{thread.figureCaption}</span>
               </figcaption>
             </figure>
             <ResearchCopy thread={thread} />
           </article>
         ))}
-        <article className="overflow-hidden border-y border-border bg-muted/55">
-          <div className="p-7 sm:p-10 lg:p-14">
-            <ResearchCopy thread={supportingThread} wide />
+        <article data-reveal className="research-coda grid gap-8 border-b border-border py-12 sm:py-16 lg:grid-cols-[0.38fr_1fr] lg:gap-16 lg:py-20">
+          <div className="flex items-start gap-4">
+            <span className="font-serif text-6xl leading-none text-primary/30">03</span>
+            <span className="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">Experimental origin</span>
+          </div>
+          <div className="max-w-3xl">
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">{supportingThread.eyebrow}</p>
+            <h3 className="mt-5 font-serif text-4xl font-medium leading-[1.02] tracking-[-0.035em] sm:text-5xl">{supportingThread.title}</h3>
+            <p className="mt-6 max-w-[65ch] text-base leading-7 text-muted-foreground">{supportingThread.contribution} {supportingThread.outcome}</p>
+            <div className="mt-7 flex flex-wrap gap-2">
+              {supportingThread.methods.map((method) => <Badge key={method} variant="outline">{method}</Badge>)}
+            </div>
+            {supportingThread.proofHref ? (
+              <Button asChild variant="link" className="mt-5 h-auto justify-start px-0">
+                <a href={supportingThread.proofHref} target="_blank" rel="noreferrer">
+                  Read the first-author paper
+                  <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                </a>
+              </Button>
+            ) : null}
           </div>
         </article>
       </div>
@@ -712,38 +751,35 @@ function ResearchSection() {
 
 function ResearchCopy({
   thread,
-  wide = false,
 }: {
   thread: (typeof researchThreads)[number]
-  wide?: boolean
 }) {
   return (
-    <div className={wide ? "max-w-4xl" : "max-w-xl"}>
+    <div className="max-w-xl">
       <div className="flex items-center gap-4">
-        <span className="font-mono text-xs font-semibold text-primary">{thread.index}</span>
-        <span className="h-px w-8 bg-border" aria-hidden="true" />
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+        <span className="font-serif text-5xl leading-none text-primary/30">{thread.index}</span>
+        <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           {thread.eyebrow}
         </p>
       </div>
-      <h3 className="mt-6 text-3xl font-semibold leading-[1.08] tracking-[-0.03em] sm:text-4xl">{thread.title}</h3>
-      <dl className="mt-7 grid gap-5">
-        <div className="grid gap-2 sm:grid-cols-[6.5rem_1fr]">
-          <dt className="font-mono text-xs uppercase tracking-[0.1em] text-primary">Question</dt>
+      <h3 className="mt-6 font-serif text-4xl font-medium leading-[1.02] tracking-[-0.035em] sm:text-5xl">{thread.title}</h3>
+      <dl className="mt-8 border-t border-border">
+        <div className="grid gap-2 border-b border-border py-5 sm:grid-cols-[6.5rem_1fr]">
+          <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">Question</dt>
           <dd className="text-sm leading-6 text-muted-foreground">{thread.question}</dd>
         </div>
-        <div className="grid gap-2 sm:grid-cols-[6.5rem_1fr]">
-          <dt className="font-mono text-xs uppercase tracking-[0.1em] text-primary">My role</dt>
+        <div className="grid gap-2 border-b border-border py-5 sm:grid-cols-[6.5rem_1fr]">
+          <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">My role</dt>
           <dd className="text-sm leading-6 text-muted-foreground">{thread.contribution}</dd>
         </div>
-        <div className="grid gap-2 sm:grid-cols-[6.5rem_1fr]">
-          <dt className="font-mono text-xs uppercase tracking-[0.1em] text-primary">Outcome</dt>
+        <div className="grid gap-2 border-b border-border py-5 sm:grid-cols-[6.5rem_1fr]">
+          <dt className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">Evidence</dt>
           <dd className="text-sm leading-6 text-foreground/82">{thread.outcome}</dd>
         </div>
       </dl>
-      <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-4 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+      <div className="mt-6 flex flex-wrap gap-2">
         {thread.methods.map((method) => (
-          <span key={method}>{method}</span>
+          <Badge key={method} variant="outline">{method}</Badge>
         ))}
       </div>
       {thread.proofHref && thread.proofLabel ? (
@@ -760,90 +796,90 @@ function ResearchCopy({
 
 function PublicationsSection() {
   return (
-    <section id="publications" data-slot="publications" className="section-wrap border-t border-border">
+    <section id="publications" data-slot="publications" className="monograph-section section-wrap border-t border-border">
       <SectionHeader
         index="02"
-        eyebrow="Publications"
-        title="Selected materials publications, organized by contribution and evidence."
-        body="The computational-materials record comes first. Interdisciplinary scholarship and conference contributions remain available without diluting the core research narrative."
+        eyebrow="Selected record"
+        title="Work that can be opened, read, and challenged."
+        body="Peer-reviewed materials research leads the record. Every selected work links to its source."
       />
-      <Tabs defaultValue="selected" className="mt-10 flex-col">
-        <div className="pb-2">
-          <TabsList variant="line" className="line-tabs-list grid h-auto w-full max-w-2xl grid-cols-3 gap-2 p-0">
-            <TabsTrigger value="selected" className="min-h-11 min-w-0 px-1 text-xs sm:px-3 sm:text-sm">
-              <span className="sm:hidden">Research</span>
-              <span className="hidden sm:inline">Selected research</span>
-            </TabsTrigger>
-            <TabsTrigger value="additional" className="min-h-11 min-w-0 px-1 text-xs sm:px-3 sm:text-sm">
-              <span className="sm:hidden">Scholarship</span>
-              <span className="hidden sm:inline">Additional scholarship</span>
-            </TabsTrigger>
-            <TabsTrigger value="conferences" className="min-h-11 min-w-0 px-1 text-xs sm:px-3 sm:text-sm">
-              Conferences
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        <TabsContent value="selected" className="mt-7">
-          <PublicationGrid items={selectedMaterialsPublications} />
-        </TabsContent>
-        <TabsContent value="additional" className="mt-7">
-          <PublicationGrid items={additionalScholarship} />
-        </TabsContent>
-        <TabsContent value="conferences" className="mt-7">
-          <div className="divide-y divide-border border-y border-border">
-            {conferenceItems.map((item) => (
-              <div key={`${item.venue}-${item.title}`} className="group grid gap-5 py-7 transition-colors hover:bg-muted/35 sm:grid-cols-[10rem_1fr] sm:px-4">
-                <div>
-                  <p className="font-mono text-xs text-muted-foreground">{item.year}</p>
-                  <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
+      <div className="mt-12 sm:mt-16">
+        <PublicationGrid items={selectedMaterialsPublications} />
+      </div>
+      <Accordion type="single" collapsible className="publication-index mt-8 border-b border-border">
+        <AccordionItem value="additional-record">
+          <AccordionTrigger className="min-h-20 py-4 text-left hover:no-underline">
+            <span className="grid w-full grid-cols-[3rem_1fr_auto] items-center gap-4 pr-4">
+              <span className="font-serif text-2xl font-normal text-primary/45">04</span>
+              <span className="grid gap-1">
+                <span className="font-serif text-xl font-medium">Additional scholarship</span>
+                <span className="text-sm font-normal text-muted-foreground">Philosophy, thesis research, and interdisciplinary work</span>
+              </span>
+              <span className="hidden font-mono text-[0.68rem] font-normal uppercase tracking-[0.1em] text-muted-foreground sm:block">{additionalScholarship.length} works</span>
+            </span>
+          </AccordionTrigger>
+          <AccordionContent className="pb-8">
+            <PublicationGrid items={additionalScholarship} compact />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="conference-record">
+          <AccordionTrigger className="min-h-20 py-4 text-left hover:no-underline">
+            <span className="grid w-full grid-cols-[3rem_1fr_auto] items-center gap-4 pr-4">
+              <span className="font-serif text-2xl font-normal text-primary/45">05</span>
+              <span className="grid gap-1">
+                <span className="font-serif text-xl font-medium">Conference record</span>
+                <span className="text-sm font-normal text-muted-foreground">Selected talks, posters, and research meetings</span>
+              </span>
+              <span className="hidden font-mono text-[0.68rem] font-normal uppercase tracking-[0.1em] text-muted-foreground sm:block">{conferenceItems.length} entries</span>
+            </span>
+          </AccordionTrigger>
+          <AccordionContent className="pb-8">
+            <div className="border-t border-border">
+              {conferenceItems.map((item, index) => (
+                <div key={`${item.venue}-${item.title}`} className="grid gap-4 border-b border-border py-6 sm:grid-cols-[4rem_9rem_1fr]">
+                  <span className="font-serif text-2xl text-primary/45">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{item.year}</p>
+                    <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
+                  </div>
+                  <div>
+                    <h3 className="max-w-4xl text-base font-semibold leading-snug">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.details}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="max-w-4xl text-lg font-semibold leading-snug tracking-tight">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.details}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </section>
   )
 }
 
-function PublicationGrid({ items }: { items: typeof journalArticles }) {
+function PublicationGrid({ items, compact = false }: { items: typeof journalArticles; compact?: boolean }) {
   return (
-    <div className="divide-y divide-border border-y border-border">
-      {items.map((item) => (
-        <article key={item.title} className="publication-row group grid gap-5 py-7 transition-colors hover:bg-muted/35 sm:grid-cols-[10rem_1fr_auto] sm:items-start sm:px-4">
+    <div className="border-t border-border">
+      {items.map((item, index) => (
+        <article key={item.title} data-reveal className="publication-row group grid gap-5 border-b border-border py-8 transition-colors sm:grid-cols-[4rem_9rem_1fr_auto] sm:items-start sm:py-10">
+          <span className="font-serif text-3xl leading-none text-primary/35">{String(index + 1).padStart(2, "0")}</span>
           <div>
-            <p className="font-mono text-xs text-muted-foreground">{item.year}</p>
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{item.year}</p>
             <p className="mt-2 text-sm font-medium text-primary">{item.venue}</p>
           </div>
           <div>
-            <div className="mb-3 flex flex-wrap gap-2">
-              <Badge variant="secondary">{item.contribution}</Badge>
-              <Badge variant="outline">{item.kind}</Badge>
-            </div>
-            <h3 className="max-w-4xl text-xl font-semibold leading-snug tracking-tight">{item.title}</h3>
+            <p className="mb-3 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{item.contribution} · {item.kind}</p>
+            <h3 className={`${compact ? "text-lg" : "font-serif text-2xl sm:text-3xl"} max-w-4xl font-medium leading-snug tracking-[-0.02em]`}>{item.title}</h3>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">{item.citation}</p>
-            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
-              <span className="font-mono text-xs text-foreground">{item.doi}</span>
-              {item.tags.map((tag) => (
-                <span key={tag} className="text-xs text-muted-foreground">
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <p className="mt-4 font-mono text-[0.68rem] text-foreground">{item.doi}</p>
           </div>
-          <Button asChild variant="outline" size="sm" className="publication-open min-h-11 shrink-0 px-4">
+          <Button asChild variant="ghost" size="icon" className="publication-open size-11 shrink-0" aria-label={`Open publication: ${item.title}`}>
             <a
               href={item.href}
               target="_blank"
               rel="noreferrer"
               aria-label={`Open publication: ${item.title} (opens in a new tab)`}
             >
-              Open publication
-              <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+              <ArrowUpRight aria-hidden="true" />
             </a>
           </Button>
         </article>
@@ -1256,13 +1292,13 @@ function BlogComments({ post }: { post: DisplayBlogPost }) {
 
 function CVSection() {
   return (
-    <section id="cv" data-slot="cv" className="cv-shell border-y border-border bg-muted/55">
+    <section id="cv" data-slot="cv" className="cv-shell border-y border-border bg-muted/45">
       <div className="section-wrap">
-        <div className="grid gap-8 border-b border-border pb-10 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="grid gap-8 border-b border-border pb-12 lg:grid-cols-[1fr_auto] lg:items-end">
           <SectionHeader
             index="04"
-            eyebrow="Curriculum vitae"
-            title="Education, technical methods, and recognition."
+            eyebrow="Working practice"
+            title="Methods deep enough for the physics; systems disciplined enough for the evidence."
           />
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Button asChild size="lg" className="min-h-11 w-full px-5 sm:w-auto">
@@ -1280,40 +1316,38 @@ function CVSection() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Education</p>
+        <div className="mt-12 grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+          <div data-reveal>
+            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-primary">Methods and tools</p>
             <div className="mt-6 border-t border-border">
-              {educationItems.map((item, index) => (
-                <article key={item.school} className="grid gap-4 border-b border-border py-7 sm:grid-cols-[5rem_1fr]">
-                  <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-primary">{item.school}</p>
-                    <h3 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.025em]">{item.degree}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{item.meta}</p>
-                    <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground">{item.body}</p>
-                  </div>
-                </article>
+              {skillGroups.map((group, index) => (
+                <div key={group.label} className="grid gap-3 border-b border-border py-6 sm:grid-cols-[3rem_10rem_1fr]">
+                  <span className="font-serif text-2xl text-primary/40">{String(index + 1).padStart(2, "0")}</span>
+                  <h3 className="text-sm font-semibold">{group.label}</h3>
+                  <p className="text-sm leading-6 text-muted-foreground">{group.items.join(", ")}</p>
+                </div>
               ))}
             </div>
           </div>
 
           <div className="flex flex-col gap-12">
             <div>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Methods and tools</p>
+              <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-primary">Selected capabilities</p>
               <div className="mt-6 border-t border-border">
-                {skillGroups.map((group, index) => (
-                  <div key={group.label} className="grid gap-3 border-b border-border py-5 sm:grid-cols-[2rem_9rem_1fr]">
-                    <span className="font-mono text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
-                    <h3 className="text-sm font-semibold">{group.label}</h3>
-                    <p className="text-sm leading-6 text-muted-foreground">{group.items.join(", ")}</p>
+                {proofPoints.map((proof, index) => (
+                  <div key={proof.label} className="grid gap-1 border-b border-border py-5 sm:grid-cols-[2.5rem_1fr]">
+                    <span className="font-mono text-[0.68rem] text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3 className="text-sm font-semibold">{proof.value}</h3>
+                      <p className="mt-1 text-sm leading-6 text-muted-foreground">{proof.label}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
             <div>
-              <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-primary">Recognition</p>
+              <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-primary">Recognition</p>
               <ol className="mt-6 border-t border-border">
                 {awards.map((award, index) => (
                   <li key={award} className="grid grid-cols-[2rem_1fr] gap-3 border-b border-border py-4 text-sm font-medium leading-6">
@@ -1332,28 +1366,51 @@ function CVSection() {
 
 function ExperienceSection() {
   return (
-    <section id="experience" data-slot="experience" className="section-wrap border-t border-border">
+    <section id="experience" data-slot="experience" className="monograph-section section-wrap border-t border-border">
       <SectionHeader
         index="03"
-        eyebrow="Experience"
-        title="Research, teaching, and workflow ownership."
-        body="Experience across first-principles simulation, experimental materials, scientific computing, and instruction."
+        eyebrow="Trajectory"
+        title="Nsukka → Durham → Washington, DC."
+        body="A path from theoretical physics to thin-film experiments, then into first-principles nanomaterials and computational research workflows."
       />
-      <Accordion type="single" collapsible defaultValue="howard" className="mt-10 border-y border-border">
+      <ol data-reveal className="career-trajectory relative mt-12 border-y border-border sm:mt-16">
+        {[...educationItems].reverse().map((item, index) => (
+          <li key={item.school} className="career-stop grid gap-4 border-b border-border py-8 last:border-b-0 sm:grid-cols-[5rem_13rem_1fr] sm:py-10">
+            <div className="career-stop__node relative flex items-start">
+              <span className="grid size-8 place-items-center border border-primary bg-background font-serif text-sm text-primary">{String(index + 1).padStart(2, "0")}</span>
+            </div>
+            <div>
+              <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">{item.school}</p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.meta}</p>
+            </div>
+            <div>
+              <h3 className="font-serif text-2xl font-medium leading-tight tracking-[-0.025em] sm:text-3xl">{item.degree}</h3>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div className="mt-16 grid gap-8 lg:grid-cols-[0.38fr_1fr] lg:gap-16">
+        <div data-reveal>
+          <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-primary">Appointments</p>
+          <h3 className="mt-4 max-w-[12ch] font-serif text-4xl font-medium leading-none tracking-[-0.035em]">Research, teaching, and workflow ownership.</h3>
+        </div>
+        <Accordion type="single" collapsible defaultValue="howard" className="border-t border-border">
         {experienceItems.map((item, index) => (
           <AccordionItem
             key={item.role + item.place}
             value={index === 0 ? "howard" : item.place}
-            className="border-b border-border bg-transparent shadow-none last:border-b-0"
+            className="border-b border-border bg-transparent shadow-none"
           >
-            <AccordionTrigger className="rounded-none border-0 px-0 py-6 text-left hover:no-underline focus-visible:ring-2 sm:px-4 sm:py-7">
-              <div className="grid gap-1 sm:grid-cols-[15rem_1fr] sm:gap-8">
-                <span className="font-mono text-xs font-normal uppercase tracking-[0.16em] text-primary">{item.place}</span>
-                <span className="text-lg font-semibold">{item.role}</span>
+            <AccordionTrigger className="rounded-none border-0 px-0 py-6 text-left hover:no-underline focus-visible:ring-2 sm:py-7">
+              <div className="grid gap-1 sm:grid-cols-[11rem_1fr] sm:gap-8">
+                <span className="font-mono text-[0.68rem] font-normal uppercase tracking-[0.12em] text-primary">{item.place}</span>
+                <span className="font-serif text-xl font-medium">{item.role}</span>
                 <span className="text-sm font-normal text-muted-foreground sm:col-start-2">{item.period}</span>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-0 pb-7 sm:pl-[17rem] sm:pr-12">
+            <AccordionContent className="px-0 pb-7 sm:pl-[13rem] sm:pr-12">
               <ul className="grid max-w-3xl gap-3 text-sm leading-6 text-muted-foreground">
                 {item.bullets.map((bullet) => (
                   <li key={bullet} className="grid grid-cols-[0.6rem_1fr] gap-3">
@@ -1365,7 +1422,8 @@ function ExperienceSection() {
             </AccordionContent>
           </AccordionItem>
         ))}
-      </Accordion>
+        </Accordion>
+      </div>
     </section>
   )
 }
@@ -1374,30 +1432,45 @@ function ContactSection() {
   const [emailCopied, setEmailCopied] = useState(false)
 
   async function copyEmail() {
-    await navigator.clipboard.writeText(emailAddress)
+    let copied: boolean
+
+    try {
+      await navigator.clipboard.writeText(emailAddress)
+      copied = true
+    } catch {
+      const helper = document.createElement("textarea")
+      helper.value = emailAddress
+      helper.setAttribute("readonly", "")
+      helper.style.position = "fixed"
+      helper.style.opacity = "0"
+      document.body.appendChild(helper)
+      helper.select()
+      copied = document.execCommand("copy")
+      helper.remove()
+    }
+
+    if (!copied) return
     setEmailCopied(true)
     window.setTimeout(() => setEmailCopied(false), 2200)
   }
 
   return (
-    <section data-slot="contact" className="contact-shell bg-foreground text-background">
-      <div id="contact" className="mx-auto grid max-w-[86rem] scroll-mt-20 gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:items-end lg:px-8 lg:py-28">
+    <section id="contact" data-slot="contact" className="contact-shell scroll-mt-20">
+      <div className="mx-auto grid max-w-[90rem] gap-14 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:px-10 lg:py-32">
         <div className="max-w-4xl">
           <div className="flex items-center gap-4">
-            <span className="font-mono text-xs font-semibold text-on-dark-accent">05</span>
-            <span className="h-px w-10 bg-background/20" aria-hidden="true" />
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-background/68">Contact</p>
+            <span className="font-serif text-4xl text-primary">05</span>
+            <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Correspondence</p>
           </div>
-          <h2 tabIndex={-1} className="destination-heading mt-7 max-w-3xl text-4xl font-semibold leading-[1.02] tracking-[-0.035em] sm:text-6xl">
-            Open to computational materials and scientific-software opportunities.
+          <h2 tabIndex={-1} className="destination-heading mt-7 max-w-3xl font-serif text-5xl font-medium leading-[0.95] tracking-[-0.045em] sm:text-7xl">
+            Bring me the material question that refuses an easy answer.
           </h2>
-          <p className="mt-7 max-w-2xl text-base leading-7 text-background/72">
-            If your group is working on electronic-structure methods, nanoscale spectroscopy, or reproducible
-            HPC workflows, I would be glad to discuss where my experience can contribute.
+          <p className="mt-8 max-w-2xl text-base leading-7 text-muted-foreground">
+            I am open to computational-materials research, doctoral collaborations, and roles involving electronic structure, spectroscopy, or HPC workflows.
           </p>
         </div>
         <div className="flex flex-col gap-3 lg:items-stretch">
-          <Button asChild size="lg" className="min-h-11 bg-primary px-5 text-primary-foreground hover:bg-primary/90">
+          <Button asChild size="lg" className="min-h-11 px-5">
             <a href={`mailto:${emailAddress}`}>
               <Mail data-icon="inline-start" aria-hidden="true" />
               Email Wisdom
@@ -1407,7 +1480,7 @@ function ContactSection() {
             type="button"
             variant="outline"
             size="lg"
-            className="min-h-11 border-background/25 bg-transparent px-5 text-background hover:bg-background/10 hover:text-background"
+            className="min-h-11 px-5"
             onClick={() => void copyEmail()}
           >
             {emailCopied ? <Check data-icon="inline-start" aria-hidden="true" /> : <Copy data-icon="inline-start" aria-hidden="true" />}
@@ -1416,33 +1489,33 @@ function ContactSection() {
           <span className="sr-only" aria-live="polite">
             {emailCopied ? "Email address copied to clipboard." : ""}
           </span>
-          <Button asChild variant="ghost" size="lg" className="min-h-11 text-background hover:bg-background/10 hover:text-background">
+          <Button asChild variant="ghost" size="lg" className="min-h-11">
             <a href={resumePdfHref} download>
               <Download data-icon="inline-start" aria-hidden="true" />
               Download résumé (PDF)
             </a>
           </Button>
-          <Button asChild variant="ghost" size="lg" className="min-h-11 text-background hover:bg-background/10 hover:text-background">
+          <Button asChild variant="ghost" size="lg" className="min-h-11">
             <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer">
               <ExternalLink data-icon="inline-start" aria-hidden="true" />
               GitHub
             </a>
           </Button>
-          <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-background/65">
+          <p className="mt-3 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">
             Silver Spring, Maryland · {phoneNumber}
           </p>
         </div>
       </div>
-      <footer className="mx-auto flex max-w-[86rem] flex-col gap-3 border-t border-background/15 px-4 py-8 text-sm text-background/62 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <footer className="mx-auto flex max-w-[90rem] flex-col gap-3 border-t border-border px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
         <p>Wisdom Benson | Physics, computational materials, and spectroscopy</p>
         <div className="flex flex-wrap gap-x-5 gap-y-2">
-          <a href={blogHref} className="transition-colors hover:text-background">
+          <a href={blogHref} className="inline-flex min-h-11 items-center transition-colors hover:text-foreground">
             Writing
           </a>
-          <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer" className="transition-colors hover:text-background">
+          <a href="https://github.com/WisdomBenson" target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center transition-colors hover:text-foreground">
             GitHub
           </a>
-          <a href={sectionHref("top")} className="inline-flex items-center gap-2 rounded-sm transition-colors hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <a href={sectionHref("top")} className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Back to top
             <ArrowUpRight className="size-4" aria-hidden="true" />
           </a>
@@ -1468,14 +1541,13 @@ function SectionHeader({
   const Heading = headingLevel
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[0.72fr_2.28fr] lg:gap-12">
-      <div className="flex items-center gap-4 lg:items-start">
-        {index ? <span className="font-mono text-xs font-semibold text-primary">{index}</span> : null}
-        {index ? <span className="mt-2 hidden h-px flex-1 bg-border lg:block" aria-hidden="true" /> : null}
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-primary">{eyebrow}</p>
+    <div data-reveal className="section-heading grid gap-7 lg:grid-cols-[0.58fr_1.42fr] lg:gap-16">
+      <div className="flex items-start gap-4">
+        {index ? <span className="font-serif text-4xl leading-none text-primary/40">{index}</span> : null}
+        <p className="mt-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-primary">{eyebrow}</p>
       </div>
       <div className="max-w-4xl">
-        <Heading tabIndex={-1} className="destination-heading text-3xl font-semibold leading-[1.05] tracking-[-0.035em] text-foreground sm:text-5xl">{title}</Heading>
+        <Heading tabIndex={-1} className="destination-heading font-serif text-4xl font-medium leading-[0.98] tracking-[-0.04em] text-foreground sm:text-6xl">{title}</Heading>
         {body ? <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">{body}</p> : null}
       </div>
     </div>
