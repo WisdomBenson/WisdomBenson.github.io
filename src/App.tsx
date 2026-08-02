@@ -63,7 +63,8 @@ const responsiveSrcSet = (srcSet: string) =>
     })
     .join(", ")
 const sectionHref = (id: string) => `${import.meta.env.BASE_URL}#${id}`
-const resumeHref = fromBase("wisdom-benson-resume.docx")
+const resumePdfHref = fromBase("wisdom-benson-resume.pdf")
+const resumeDocxHref = fromBase("wisdom-benson-resume.docx")
 const blogHref = fromBase("blog/")
 const githubIssuesApi = "https://api.github.com/repos/WisdomBenson/WisdomBenson.github.io/issues"
 const approvedBlogAuthors = new Set(["wisdombenson", "wisemanking001"])
@@ -457,7 +458,7 @@ function SiteHeader() {
         </NavigationMenu>
         <div className="hidden items-center gap-2 lg:flex">
           <Button asChild variant="ghost">
-            <a href={resumeHref}>
+            <a href={resumePdfHref} download>
               <Download data-icon="inline-start" aria-hidden="true" />
               Résumé
             </a>
@@ -513,9 +514,9 @@ function SiteHeader() {
                     </a>
                   </Button>
                   <Button asChild variant="outline">
-                    <a href={resumeHref} onClick={() => setMobileMenuOpen(false)}>
+                    <a href={resumePdfHref} download onClick={() => setMobileMenuOpen(false)}>
                       <Download data-icon="inline-start" aria-hidden="true" />
-                      Resume
+                      Résumé (PDF)
                     </a>
                   </Button>
                 </div>
@@ -553,11 +554,11 @@ function HeroSection() {
             I connect first-principles simulation, Raman spectroscopy, high-performance computing, and
             reproducible scientific workflows to understand nanoscale materials.
           </p>
-          <p className="mt-5 max-w-[62ch] border-l-2 border-primary pl-4 text-sm leading-6 text-foreground/82 sm:mt-6">
+          <p className="mt-4 max-w-[62ch] border-l-2 border-primary pl-4 text-sm leading-6 text-foreground/82 sm:mt-6">
             Open to research collaborations and opportunities in computational materials, spectroscopy,
             and scientific software.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+          <div className="mt-4 flex flex-col gap-3 sm:mt-8 sm:flex-row">
             <Button asChild size="lg" className="group min-h-11 px-5">
               <a href={sectionHref("research")}>
                 Explore research
@@ -569,9 +570,9 @@ function HeroSection() {
               </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-h-11 px-5">
-              <a href={resumeHref}>
+              <a href={resumePdfHref} download>
                 <Download data-icon="inline-start" aria-hidden="true" />
-                Download résumé
+                Download résumé (PDF)
               </a>
             </Button>
           </div>
@@ -1263,12 +1264,20 @@ function CVSection() {
             eyebrow="Curriculum vitae"
             title="Education, technical methods, and recognition."
           />
-          <Button asChild size="lg" className="min-h-11 w-full px-5 sm:w-auto">
-            <a href={resumeHref}>
-              <Download data-icon="inline-start" aria-hidden="true" />
-              Download résumé
-            </a>
-          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Button asChild size="lg" className="min-h-11 w-full px-5 sm:w-auto">
+              <a href={resumePdfHref} download>
+                <Download data-icon="inline-start" aria-hidden="true" />
+                Download résumé (PDF)
+              </a>
+            </Button>
+            <Button asChild variant="ghost" className="min-h-11">
+              <a href={resumeDocxHref} download>
+                <FileText data-icon="inline-start" aria-hidden="true" />
+                Editable DOCX
+              </a>
+            </Button>
+          </div>
         </div>
 
         <div className="mt-12 grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
@@ -1408,9 +1417,9 @@ function ContactSection() {
             {emailCopied ? "Email address copied to clipboard." : ""}
           </span>
           <Button asChild variant="ghost" size="lg" className="min-h-11 text-background hover:bg-background/10 hover:text-background">
-            <a href={resumeHref}>
+            <a href={resumePdfHref} download>
               <Download data-icon="inline-start" aria-hidden="true" />
-              Download résumé
+              Download résumé (PDF)
             </a>
           </Button>
           <Button asChild variant="ghost" size="lg" className="min-h-11 text-background hover:bg-background/10 hover:text-background">
