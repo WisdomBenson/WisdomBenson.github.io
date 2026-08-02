@@ -100,6 +100,15 @@ type DisplayBlogPost = BlogPost & {
   rawBody: string
 }
 
+type ConferenceItem = {
+  title: string
+  venue: string
+  year: string
+  details: string
+  href?: string
+  sourceLabel?: string
+}
+
 const proofPoints = [
   { value: "First author", label: "AIP Advances · ZnO quantum dots · 2026" },
   { value: "First author", label: "JPCS · mixed Sn-Pb perovskites · 2026" },
@@ -246,7 +255,23 @@ const bookChapters = [
 const selectedMaterialsPublications = [journalArticles[0], journalArticles[1], bookChapters[0]]
 const additionalScholarship = [journalArticles[2], journalArticles[3], journalArticles[4]]
 
-const conferenceItems = [
+const conferenceItems: ConferenceItem[] = [
+  {
+    title: "Quantifying Surface-Driven Band-Edge Control in ZnO Quantum Dots Using the GW Approximation and Density Functional Theory",
+    venue: "2026 MRS Spring Meeting & Exhibit",
+    year: "2026",
+    details: "Presented on April 29, 2026, in Symposium QT03: Quantum Information Generation and Processing.",
+    href: "https://www.mrs.org/docs/default-source/meetings-events/spring-meetings/2026/2026-mrs-spring-meeting-program.pdf",
+    sourceLabel: "View MRS program",
+  },
+  {
+    title: "Spectroscopic Characterization and Modeling and Simulation of Zinc Oxide and Zinc Sulfide Quantum Dots",
+    venue: "APS Global Physics Summit",
+    year: "2026",
+    details: "First-author contribution; presented by PI Prabhakar Misra at the APS Global Physics Summit on March 20, 2026.",
+    href: "https://meetings-archive.aps.org/smt/2026/mar-y17/8/",
+    sourceLabel: "View APS abstract",
+  },
   {
     title: "Spin-orbit coupling and piezoelectric properties of zinc oxide quantum dots using first-principles calculations",
     venue: "APS Global Physics Summit",
@@ -801,7 +826,7 @@ function PublicationsSection() {
         index="02"
         eyebrow="Selected record"
         title="Work that can be opened, read, and challenged."
-        body="Peer-reviewed materials research leads the record. Every selected work links to its source."
+        body="Peer-reviewed materials research leads the record. Every selected work links to its source. Two new manuscripts are currently under editorial review."
       />
       <div className="mt-12 sm:mt-16">
         <PublicationGrid items={selectedMaterialsPublications} />
@@ -845,6 +870,19 @@ function PublicationsSection() {
                   <div>
                     <h3 className="max-w-4xl text-base font-semibold leading-snug">{item.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.details}</p>
+                    {item.href ? (
+                      <Button asChild variant="link" size="sm" className="mt-3 h-auto border-0 px-0 py-1 text-muted-foreground hover:text-foreground">
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${item.sourceLabel ?? "View official record"} (opens in a new tab)`}
+                        >
+                          {item.sourceLabel ?? "View official record"}
+                          <ArrowUpRight aria-hidden="true" />
+                        </a>
+                      </Button>
+                    ) : null}
                   </div>
                 </div>
               ))}
