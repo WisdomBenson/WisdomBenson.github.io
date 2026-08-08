@@ -23,7 +23,7 @@ export function HeroSection() {
     <section id="top" className="border-b">
       <div className="site-shell grid gap-10 py-10 md:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-20">
         <motion.div
-          className="lg:col-span-7"
+          className="min-w-0 lg:col-span-7"
           initial={reduceMotion ? false : { opacity: 0, y: 18 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -51,10 +51,9 @@ export function HeroSection() {
             </Button>
           </div>
 
-          <div className="mt-10 border-y py-4 font-mono text-[0.68rem] leading-6 tracking-[0.09em] text-muted-foreground">
-            {affiliations.map((affiliation, index) => (
+          <div className="mt-10 flex flex-wrap gap-x-4 gap-y-1 border-y py-4 font-mono text-[0.68rem] leading-6 tracking-[0.09em] text-muted-foreground">
+            {affiliations.map((affiliation) => (
               <span key={affiliation} className="whitespace-nowrap">
-                {index > 0 ? <span aria-hidden="true"> · </span> : null}
                 {affiliation}
               </span>
             ))}
@@ -62,7 +61,7 @@ export function HeroSection() {
         </motion.div>
 
         <motion.div
-          className="lg:col-span-5"
+          className="min-w-0 lg:col-span-5"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.985 }}
           animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.08 }}
