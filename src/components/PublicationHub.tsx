@@ -1,7 +1,6 @@
 "use client"
 
 import { useDeferredValue, useMemo, useState } from "react"
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight, BookOpenText, Copy, Search, SearchX } from "lucide-react"
 import { toast } from "sonner"
 
@@ -87,8 +86,6 @@ type PublicationListProps = {
 }
 
 function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
-  const reduceMotion = useReducedMotion()
-
   if (items.length === 0) {
     return (
       <Empty className="min-h-64 border-b">
@@ -105,34 +102,29 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
 
   return (
     <ol className="divide-y border-b">
-      <AnimatePresence initial={false} mode="popLayout">
-        {items.map((publication, index) => (
-          <motion.li
-            layout
-            key={publication.id}
-            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="grid gap-5 py-8 lg:grid-cols-[3.5rem_1fr_auto] lg:gap-8"
-          >
-            <span className="font-mono text-xs text-muted-foreground">
-              {String(index + 1).padStart(2, "0")}
-            </span>
+      {items.map((publication, index) => (
+        <li
+          key={publication.id}
+          className="grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-8 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 lg:gap-x-8"
+        >
+          <span className="pt-1 font-mono text-xs text-muted-foreground">
+            {String(index + 1).padStart(2, "0")}
+          </span>
 
-            <article className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{publication.type}</Badge>
-                <span className="font-mono text-xs text-muted-foreground">{publication.year}</span>
-              </div>
-              <h3 className="mt-4 max-w-4xl text-balance text-xl font-semibold leading-tight tracking-[-0.03em] sm:text-2xl">
-                {publication.title}
-              </h3>
-              <AuthorList authors={publication.authors} />
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">{publication.venue}</p>
+          <article className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">{publication.type}</Badge>
+              <span className="font-mono text-xs text-muted-foreground">{publication.year}</span>
+            </div>
+            <h3 className="mt-4 max-w-4xl text-balance text-xl font-semibold leading-tight tracking-[-0.03em] sm:text-2xl">
+              {publication.title}
+            </h3>
+            <AuthorList authors={publication.authors} />
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{publication.venue}</p>
 
+            <div className="mt-5 flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               {publication.doi ? (
-                <div className="mt-5 flex flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
                   <a
                     href={publication.recordUrl}
                     target="_blank"
@@ -151,23 +143,26 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
                   href={publication.recordUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-quantum hover:text-foreground"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-quantum hover:text-foreground"
                 >
                   Thesis record
                   <ArrowUpRight className="size-4" aria-hidden="true" />
                 </a>
               )}
-            </article>
 
-            <div className="lg:pt-1">
-              <Button variant="outline" size="sm" onClick={() => onCite(publication)}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit shrink-0"
+                onClick={() => onCite(publication)}
+              >
                 <BookOpenText data-icon="inline-start" aria-hidden="true" />
                 Cite / BibTeX
               </Button>
             </div>
-          </motion.li>
-        ))}
-      </AnimatePresence>
+          </article>
+        </li>
+      ))}
     </ol>
   )
 }
@@ -219,7 +214,7 @@ export function PublicationHub() {
         <Tabs
           value={activeFilter}
           onValueChange={(value) => setActiveFilter(value as FilterValue)}
-          className="mt-10"
+          className="mt-10 flex-col"
         >
           <div className="grid gap-5 border-y py-5 xl:grid-cols-[1fr_22rem] xl:items-end">
             <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-5 gap-y-2">
