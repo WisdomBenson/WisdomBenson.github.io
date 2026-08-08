@@ -50,52 +50,52 @@
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
-  --primary: #4f46e5;
+  --primary: #0369a1;
   --primary-foreground: #ffffff;
-  --secondary: #eef2ff;
-  --secondary-foreground: #312e81;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
   --muted: #eef2f6;
   --muted-foreground: #5d6878;
-  --accent: #e0e7ff;
-  --accent-foreground: #3730a3;
+  --accent: #e0f2fe;
+  --accent-foreground: #0c4a6e;
   --destructive: #dc2626;
   --border: #dbe2ea;
   --input: #cbd5e1;
-  --ring: #4f46e5;
+  --ring: #0369a1;
   --quantum: #0369a1;
   --quantum-foreground: #f0f9ff;
   --quantum-muted: #e0f2fe;
-  --philosophy: #9a5b00;
-  --philosophy-foreground: #fffdf5;
-  --philosophy-muted: #fef3c7;
+  --philosophy: #7c3aed;
+  --philosophy-foreground: #ffffff;
+  --philosophy-muted: #ede9fe;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #0b0f17;
+  --background: #090d16;
   --foreground: #f8fafc;
-  --card: #161b26;
+  --card: #111726;
   --card-foreground: #f8fafc;
-  --popover: #161b26;
+  --popover: #111726;
   --popover-foreground: #f8fafc;
   --primary: #38bdf8;
   --primary-foreground: #07131b;
-  --secondary: #1d2533;
+  --secondary: #172033;
   --secondary-foreground: #dbeafe;
-  --muted: #1b2230;
+  --muted: #151d2d;
   --muted-foreground: #a3adbd;
   --accent: #17283a;
   --accent-foreground: #bae6fd;
   --destructive: #f87171;
-  --border: #2b3444;
+  --border: #1e293b;
   --input: #3a4658;
   --ring: #38bdf8;
   --quantum: #38bdf8;
   --quantum-foreground: #07131b;
   --quantum-muted: #102b3d;
-  --philosophy: #fbbf24;
-  --philosophy-foreground: #1b1200;
-  --philosophy-muted: #382a0c;
+  --philosophy: #a78bfa;
+  --philosophy-foreground: #120b24;
+  --philosophy-muted: #251d3b;
 }
 
 * {
@@ -115,17 +115,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  content: "";
-  background:
-    radial-gradient(circle at 18% 4%, color-mix(in srgb, var(--quantum) 10%, transparent) 0, transparent 29rem),
-    radial-gradient(circle at 86% 18%, color-mix(in srgb, var(--philosophy) 8%, transparent) 0, transparent 25rem);
 }
 
 ::selection {
@@ -162,14 +151,6 @@ a {
 
 .text-balance {
   text-wrap: balance;
-}
-
-.surface-grid {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--border) 32%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--border) 32%, transparent) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, black, transparent 90%);
 }
 
 .skip-link {

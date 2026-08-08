@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUp, ArrowUpRight, Check, Copy, Download, Mail } from "lucide-react"
+import { ArrowUp, ArrowUpRight, Copy, Download, Mail } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -24,14 +24,12 @@ export function ContactFooter() {
   return (
     <footer id="contact" className="section-block">
       <div className="site-shell">
-        <div className="relative overflow-hidden rounded-2xl border bg-card p-6 sm:p-10 lg:p-12">
-          <div className="absolute -right-20 -top-20 size-72 rounded-full bg-quantum/10 blur-3xl" aria-hidden="true" />
-          <div className="absolute -bottom-24 left-1/3 size-64 rounded-full bg-philosophy/8 blur-3xl" aria-hidden="true" />
-          <div className="relative grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <div className="border-y py-10 lg:py-12">
+          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
-              <p className="eyebrow text-quantum">Open correspondence</p>
+              <p className="eyebrow text-quantum">Contact</p>
               <h2 className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-                Work across models, materials, and meaning.
+                Research collaboration and academic contact
               </h2>
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
                 Open to computational-materials collaborations, doctoral research conversations, speaking invitations, and carefully framed philosophical exchange.
@@ -39,18 +37,27 @@ export function ContactFooter() {
             </div>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
               <Button className="min-h-11 justify-between" asChild>
-                <a href={`mailto:${profile.email}`}><span className="inline-flex items-center gap-2"><Mail className="size-4" aria-hidden="true" /> Email Wisdom</span><ArrowUpRight className="size-4" aria-hidden="true" /></a>
+                <a href={`mailto:${profile.email}`}>
+                  <Mail data-icon="inline-start" aria-hidden="true" />
+                  Email Wisdom
+                  <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                </a>
               </Button>
               <Button variant="outline" className="min-h-11 justify-between" onClick={copyEmail}>
-                <span className="inline-flex items-center gap-2"><Copy className="size-4" aria-hidden="true" /> Copy email</span><Check className="size-4" aria-hidden="true" />
+                <Copy data-icon="inline-start" aria-hidden="true" />
+                Copy email
               </Button>
               <Button variant="outline" className="min-h-11 justify-between sm:col-span-2 lg:col-span-1" asChild>
-                <a href={profile.resume} download><span className="inline-flex items-center gap-2"><Download className="size-4" aria-hidden="true" /> Résumé PDF</span><ArrowUpRight className="size-4" aria-hidden="true" /></a>
+                <a href={profile.resume} download>
+                  <Download data-icon="inline-start" aria-hidden="true" />
+                  Résumé PDF
+                  <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                </a>
               </Button>
             </div>
           </div>
 
-          <div className="relative mt-14 grid gap-6 border-t pt-6 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="mt-14 grid gap-6 border-t pt-6 md:grid-cols-[1fr_auto] md:items-end">
             <div>
               <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">Find the work elsewhere</p>
               <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">

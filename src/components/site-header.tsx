@@ -34,7 +34,7 @@ export function SiteHeader() {
           <span className="min-w-0 leading-tight">
             <span className="block truncate text-sm font-semibold tracking-[-0.02em]">{profile.name}</span>
             <span className="hidden truncate font-mono text-[0.61rem] uppercase tracking-[0.16em] text-muted-foreground sm:block">
-              Models · Materials · Meaning
+              PHYSICS · PHILOSOPHY
             </span>
           </span>
         </a>
@@ -51,7 +51,7 @@ export function SiteHeader() {
           <ThemeToggle />
           <Button className="hidden sm:inline-flex" size="sm" asChild>
             <a href={`mailto:${profile.email}`}>
-              Collaborate <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+              Contact <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
             </a>
           </Button>
 

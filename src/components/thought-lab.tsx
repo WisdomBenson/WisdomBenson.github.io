@@ -1,4 +1,4 @@
-import { ArrowUpRight, BookOpenText, Clock3, Scale, Sparkles } from "lucide-react"
+import { ArrowUpRight, BookOpenText, Clock3, FileText, Scale } from "lucide-react"
 
 import { Reveal } from "@/components/reveal"
 import { Badge } from "@/components/ui/badge"
@@ -9,7 +9,7 @@ const essays = [
     type: "Published essay",
     title: "Romantic exclusivity as structural necessity",
     description: "A reading path through Kantian respect, Schelerian value, and Schopenhauerian metaphysics—and the pressure each places on exclusivity.",
-    meta: "8 min field guide",
+    meta: "8 min essay guide",
     href: "/thought-lab/romantic-exclusivity/",
     icon: Scale,
   },
@@ -19,7 +19,7 @@ const essays = [
     description: "A short inquiry into abstraction, explanatory success, and the difference between controlling a system and understanding it.",
     meta: "5 min note",
     href: "/thought-lab/model-and-meaning/",
-    icon: Sparkles,
+    icon: FileText,
   },
 ]
 
@@ -30,10 +30,10 @@ export function ThoughtLab() {
         <Reveal className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="eyebrow text-philosophy">
-              <BookOpenText className="size-3.5" aria-hidden="true" /> Thought lab
+              <BookOpenText className="size-3.5" aria-hidden="true" /> Philosophy &amp; Essays
             </p>
             <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">
-              Precision is not only a scientific virtue.
+              Value, agency, and metaphysical structure
             </h2>
           </div>
           <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
