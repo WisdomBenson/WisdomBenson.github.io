@@ -20,8 +20,8 @@ export function HeroSection() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section id="top" className="border-b">
-      <div className="site-shell grid gap-10 py-10 md:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-20">
+    <section id="top" className="pb-4 pt-6 sm:pb-6">
+      <div className="editorial-panel site-shell grid gap-10 p-6 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-12 lg:p-14">
         <motion.div
           className="min-w-0 lg:col-span-7"
           initial={reduceMotion ? false : { opacity: 0, y: 18 }}
@@ -29,7 +29,7 @@ export function HeroSection() {
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
           <Badge variant="outline">Howard University · Physics PhD Researcher</Badge>
-          <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
             Quantum Matter &amp; Metaphysical Inquiry
           </h1>
           <p className="mt-7 max-w-[65ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
@@ -66,7 +66,7 @@ export function HeroSection() {
           animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.08 }}
         >
-          <Card className="overflow-hidden py-0">
+          <Card className="editorial-card overflow-hidden py-0">
             <CardContent className="relative aspect-[4/5] p-0">
               <Image
                 src="/assets/wisdom-benson-portrait.jpeg"
@@ -77,7 +77,7 @@ export function HeroSection() {
                 className="object-cover object-[50%_24%] grayscale-[8%] transition-[filter,transform] duration-500 hover:scale-[1.01] hover:grayscale-0"
               />
             </CardContent>
-            <CardFooter className="grid gap-5 border-t px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
+            <CardFooter className="grid gap-5 border-t bg-card px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
               <div>
                 <p className="text-lg font-semibold tracking-[-0.025em]">{profile.name}</p>
                 <p className="mt-1 text-sm text-muted-foreground">Condensed Matter Physics · Philosophical Metaphysics</p>

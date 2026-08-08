@@ -25,8 +25,8 @@ const essays = [
 
 export function ThoughtLab() {
   return (
-    <section id="philosophy" className="section-block border-b">
-      <div className="site-shell">
+    <section id="philosophy" className="section-block">
+      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
         <Reveal className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="eyebrow text-philosophy">
@@ -46,7 +46,7 @@ export function ThoughtLab() {
             const Icon = essay.icon
             return (
               <Reveal key={essay.title} delay={index * 0.07}>
-                <article className="group flex min-h-[25rem] flex-col overflow-hidden rounded-2xl border bg-card p-6 sm:p-8">
+                <article className="editorial-card group flex min-h-[25rem] flex-col overflow-hidden p-6 sm:p-8">
                   <div className="flex items-center justify-between">
                     <span className="grid size-11 place-items-center rounded-xl bg-philosophy-muted text-philosophy">
                       <Icon className="size-5" aria-hidden="true" />

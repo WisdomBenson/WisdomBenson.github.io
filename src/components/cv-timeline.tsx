@@ -25,8 +25,8 @@ function TimelineList({ items }: { items: ReadonlyArray<{ period: string; school
 
 export function CVTimeline() {
   return (
-    <section id="cv" className="section-block border-b">
-      <div className="site-shell">
+    <section id="cv" className="section-block">
+      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
         <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
           <div>
             <p className="eyebrow text-quantum">Curriculum vitae</p>
@@ -42,13 +42,13 @@ export function CVTimeline() {
 
         <Tabs defaultValue="experience" className="mt-12 flex-col">
           <TabsList className="h-auto w-full justify-start overflow-x-auto rounded-none border-b bg-transparent p-0">
-            <TabsTrigger value="experience" className="h-11 flex-none rounded-none border-0 px-4 data-active:bg-transparent data-active:text-quantum">
+            <TabsTrigger value="experience" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <BriefcaseBusiness data-icon="inline-start" aria-hidden="true" /> Experience
             </TabsTrigger>
-            <TabsTrigger value="education" className="h-11 flex-none rounded-none border-0 px-4 data-active:bg-transparent data-active:text-quantum">
+            <TabsTrigger value="education" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <GraduationCap data-icon="inline-start" aria-hidden="true" /> Education
             </TabsTrigger>
-            <TabsTrigger value="conferences" className="h-11 flex-none rounded-none border-0 px-4 data-active:bg-transparent data-active:text-quantum">
+            <TabsTrigger value="conferences" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <CalendarDays data-icon="inline-start" aria-hidden="true" /> Conferences
             </TabsTrigger>
           </TabsList>
@@ -77,7 +77,7 @@ export function CVTimeline() {
         </Tabs>
 
         <div className="mt-12 grid gap-3 md:grid-cols-2">
-          <div className="rounded-2xl border bg-card p-6">
+          <div className="editorial-card p-6">
             <p className="eyebrow text-muted-foreground">Computational toolkit</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {["Quantum ESPRESSO", "WEST / PDEP-GW", "SIESTA", "Python", "C++", "MATLAB", "LaTeX", "SDSC Expanse"].map((skill) => (
@@ -85,7 +85,7 @@ export function CVTimeline() {
               ))}
             </div>
           </div>
-          <div className="rounded-2xl border bg-card p-6">
+          <div className="editorial-card p-6">
             <p className="eyebrow text-muted-foreground">Recognition</p>
             <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
               <li>APS Student Ambassador · 2026–2027 cohort</li>

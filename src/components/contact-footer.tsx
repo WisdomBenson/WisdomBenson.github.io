@@ -24,7 +24,7 @@ export function ContactFooter() {
   return (
     <footer id="contact" className="section-block">
       <div className="site-shell">
-        <div className="border-y py-10 lg:py-12">
+        <div className="editorial-panel p-6 sm:p-10 lg:p-12">
           <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
             <div>
               <p className="eyebrow text-quantum">Contact</p>

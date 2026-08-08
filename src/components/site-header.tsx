@@ -2,7 +2,6 @@
 
 import { ArrowUpRight, Menu } from "lucide-react"
 
-import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -25,7 +24,7 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/78 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 border-b border-white/15 bg-background/95 backdrop-blur-xl">
       <div className="site-shell flex h-16 items-center justify-between gap-4">
         <a href="#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
           <span className="grid size-9 place-items-center rounded-lg bg-foreground font-mono text-[0.66rem] font-bold tracking-tight text-background transition-transform group-hover:-rotate-3">
@@ -48,7 +47,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1">
-          <ThemeToggle />
           <Button className="hidden sm:inline-flex" size="sm" asChild>
             <a href={`mailto:${profile.email}`}>
               Contact <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
@@ -61,7 +59,7 @@ export function SiteHeader() {
                 <Menu aria-hidden="true" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-background/96 backdrop-blur-xl">
+            <SheetContent side="right" className="editorial-panel rounded-none border-y-0 border-r-0">
               <SheetHeader className="border-b px-6 py-6">
                 <SheetTitle>{profile.name}</SheetTitle>
                 <SheetDescription>{profile.descriptor}</SheetDescription>

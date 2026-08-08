@@ -42,7 +42,7 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
         onOpenChange(nextOpen)
       }}
     >
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="editorial-panel p-6 sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>BibTeX citation</DialogTitle>
           <DialogDescription>{publication?.title}</DialogDescription>
@@ -50,14 +50,14 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
 
         <pre
           data-slot="bibtex-code"
-          className="max-h-[55vh] overflow-auto rounded-lg border bg-muted p-4 font-mono text-xs leading-6"
+          className="max-h-[55vh] overflow-auto rounded-xl border border-foreground/15 bg-foreground p-4 font-mono text-xs leading-6 text-background"
           tabIndex={0}
           aria-label="BibTeX entry"
         >
           <code>{publication?.bibtex}</code>
         </pre>
 
-        <DialogFooter>
+        <DialogFooter className="-mx-6 -mb-6 p-6">
           <Button onClick={copyBibTeX} disabled={!publication}>
             {copyState === "copied" ? (
               <Check data-icon="inline-start" aria-hidden="true" />
