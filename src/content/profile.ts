@@ -27,7 +27,7 @@ export const affiliations = [
 ] as const
 
 export const metrics = [
-  { value: "06", label: "Scholarly works" },
+  { value: "07", label: "Research records" },
   { value: "05", label: "Conference records" },
   { value: "02", label: "Under review" },
 ] as const
@@ -98,7 +98,8 @@ export const conferences = [
   {
     year: "2023",
     venue: "Triangle Student Research Competition",
-    title: "Tin-Lead Alloy Perovskite Thin Films: Stability and Efficiency Across Lead-Tin and Halide Ratios",
-    detail: "11th annual competition",
+    title: "Mixed-Cation Tin-Lead Alloy Perovskites for Photovoltaic Applications: Bandgap Tuning & Photoluminescence Mapping",
+    detail: "Poster presentation · North Carolina Central University · November 2023",
+    href: "https://www.researchgate.net/publication/375279550_Wisdom_TSRC_2023_Poster",
   },
 ] as const

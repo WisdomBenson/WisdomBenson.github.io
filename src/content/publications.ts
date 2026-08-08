@@ -13,6 +13,7 @@ export type Publication = {
   doi?: string
   href: string
   pdf?: string
+  pdfLabel?: string
   scholar: string
   philPeople?: string
   bibtex: string
@@ -135,6 +136,31 @@ export const publications: Publication[] = [
   school = {North Carolina Central University},
   year = {2024},
   note = {ProQuest publication 31237299}
+}`,
+  },
+  {
+    id: "tsrc-2023-perovskite-poster",
+    title: "Mixed-Cation Tin-Lead Alloy Perovskites for Photovoltaic Applications: Bandgap Tuning & Photoluminescence Mapping",
+    authors: "Wisdom Benson",
+    venue: "Triangle Student Research Competition (TSRC 2023)",
+    year: 2023,
+    kind: "Conference poster · Presenter",
+    domain: "quantum",
+    abstract: "Lead halide perovskite solar cells hold substantial promise due to low cost and high efficiency. This research examines stability and efficiency improvements from alloying tin with lead using SnF₂ and SnI₂ sources. Photoluminescence spectroscopy shows bandgap tuning across the near-infrared region, while confocal PL mapping reveals local bandgap variations associated with compositional fluctuations.",
+    tags: ["Perovskites", "Photovoltaics", "PL spectroscopy", "Bandgap tuning", "Nanotechnology"],
+    doi: "10.13140/RG.2.2.12618.54720",
+    href: "https://doi.org/10.13140/RG.2.2.12618.54720",
+    pdf: "https://www.researchgate.net/publication/375279550_Wisdom_TSRC_2023_Poster",
+    pdfLabel: "Poster",
+    scholar: scholarSearch("Mixed-Cation Tin-Lead Alloy Perovskites for Photovoltaic Applications"),
+    bibtex: `@conference{benson2023tsrc,
+  author = {Benson, Wisdom},
+  title = {Mixed-Cation Tin-Lead Alloy Perovskite Thin Films for Photovoltaics},
+  booktitle = {Triangle Student Research Competition (TSRC 2023)},
+  year = {2023},
+  month = {November},
+  doi = {10.13140/RG.2.2.12618.54720},
+  note = {Poster Presentation}
 }`,
   },
   {

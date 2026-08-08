@@ -184,7 +184,7 @@ export function PublicationHub() {
                 {publication.pdf ? (
                   <Button variant="outline" size="sm" asChild>
                     <a href={publication.pdf} target="_blank" rel="noreferrer">
-                      PDF <FileDown data-icon="inline-end" aria-hidden="true" />
+                      {publication.pdfLabel ?? "PDF"} <FileDown data-icon="inline-end" aria-hidden="true" />
                     </a>
                   </Button>
                 ) : null}
