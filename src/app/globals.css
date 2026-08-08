@@ -1,0 +1,225 @@
+@config "../../tailwind.config.mjs";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/jetbrains-mono";
+@import "katex/dist/katex.min.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-quantum: var(--quantum);
+  --color-quantum-foreground: var(--quantum-foreground);
+  --color-quantum-muted: var(--quantum-muted);
+  --color-philosophy: var(--philosophy);
+  --color-philosophy-foreground: var(--philosophy-foreground);
+  --color-philosophy-muted: var(--philosophy-muted);
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.875rem;
+  --background: #f8fafc;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2ff;
+  --secondary-foreground: #312e81;
+  --muted: #eef2f6;
+  --muted-foreground: #5d6878;
+  --accent: #e0e7ff;
+  --accent-foreground: #3730a3;
+  --destructive: #dc2626;
+  --border: #dbe2ea;
+  --input: #cbd5e1;
+  --ring: #4f46e5;
+  --quantum: #0369a1;
+  --quantum-foreground: #f0f9ff;
+  --quantum-muted: #e0f2fe;
+  --philosophy: #9a5b00;
+  --philosophy-foreground: #fffdf5;
+  --philosophy-muted: #fef3c7;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0b0f17;
+  --foreground: #f8fafc;
+  --card: #161b26;
+  --card-foreground: #f8fafc;
+  --popover: #161b26;
+  --popover-foreground: #f8fafc;
+  --primary: #38bdf8;
+  --primary-foreground: #07131b;
+  --secondary: #1d2533;
+  --secondary-foreground: #dbeafe;
+  --muted: #1b2230;
+  --muted-foreground: #a3adbd;
+  --accent: #17283a;
+  --accent-foreground: #bae6fd;
+  --destructive: #f87171;
+  --border: #2b3444;
+  --input: #3a4658;
+  --ring: #38bdf8;
+  --quantum: #38bdf8;
+  --quantum-foreground: #07131b;
+  --quantum-muted: #102b3d;
+  --philosophy: #fbbf24;
+  --philosophy-foreground: #1b1200;
+  --philosophy-muted: #382a0c;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(circle at 18% 4%, color-mix(in srgb, var(--quantum) 10%, transparent) 0, transparent 29rem),
+    radial-gradient(circle at 86% 18%, color-mix(in srgb, var(--philosophy) 8%, transparent) 0, transparent 25rem);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--quantum) 35%, transparent);
+}
+
+a {
+  text-underline-offset: 0.22em;
+}
+
+[id] {
+  scroll-margin-top: 6.5rem;
+}
+
+.site-shell {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+}
+
+.section-block {
+  padding-block: clamp(4.5rem, 8vw, 7rem);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.surface-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--border) 32%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--border) 32%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-160%);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  padding: 0.75rem 1rem;
+  font-weight: 650;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.prose-lab {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.prose-lab h1,
+.prose-lab h2,
+.prose-lab h3 {
+  color: var(--foreground);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.prose-lab h1 { margin-block: 1rem 2rem; font-size: clamp(2.25rem, 7vw, 4.5rem); line-height: 0.98; }
+.prose-lab h2 { margin-block: 3rem 1rem; font-size: clamp(1.6rem, 4vw, 2.25rem); }
+.prose-lab h3 { margin-block: 2rem 0.75rem; font-size: 1.25rem; }
+.prose-lab p { margin-block: 1.1rem; color: var(--muted-foreground); }
+.prose-lab strong { color: var(--foreground); }
+.prose-lab a { color: var(--philosophy); text-decoration: underline; }
+.prose-lab blockquote { margin-block: 2rem; border-left: 2px solid var(--philosophy); padding-left: 1.25rem; color: var(--foreground); }
+.prose-lab code { border-radius: 0.35rem; background: var(--muted); padding: 0.15rem 0.35rem; font-family: var(--font-mono); font-size: 0.88em; }
+.prose-lab .katex-display { overflow-x: auto; padding-block: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

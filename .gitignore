@@ -10,8 +10,14 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
+out
+output
+.playwright-cli
+.expect
 .qa
 *.local
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

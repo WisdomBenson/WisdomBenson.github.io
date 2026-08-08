@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy portfolio to GitHub Pages
 
 on:
   pull_request:
@@ -38,17 +38,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint site
+      - name: Lint
         run: pnpm lint
 
-      - name: Build site
+      - name: Type-check
+        run: pnpm typecheck
+
+      - name: Build static export
         run: pnpm build
 
       - name: Upload GitHub Pages artifact
         if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: ./dist
+          path: ./out
 
   deploy:
     needs: build
