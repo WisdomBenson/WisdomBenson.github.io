@@ -88,7 +88,7 @@ type PublicationListProps = {
 function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
   if (items.length === 0) {
     return (
-      <Empty className="min-h-64 border-b">
+      <Empty className="editorial-card mt-4 min-h-64">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <SearchX aria-hidden="true" />
@@ -101,11 +101,11 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
   }
 
   return (
-    <ol className="divide-y border-b">
+    <ol className="grid gap-3 pt-4">
       {items.map((publication, index) => (
         <li
           key={publication.id}
-          className="grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-8 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 lg:gap-x-8"
+          className="editorial-card grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 p-5 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 sm:p-6 lg:gap-x-8"
         >
           <span className="pt-1 font-mono text-xs text-muted-foreground">
             {String(index + 1).padStart(2, "0")}
@@ -197,8 +197,8 @@ export function PublicationHub() {
   const activeCount = recordsFor(activeFilter).length
 
   return (
-    <section id="publications" className="section-block border-b">
-      <div className="site-shell">
+    <section id="publications" className="section-block">
+      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <p className="eyebrow text-quantum">Publications &amp; Posters</p>
@@ -219,7 +219,11 @@ export function PublicationHub() {
           <div className="grid gap-5 border-y py-5 xl:grid-cols-[1fr_22rem] xl:items-end">
             <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-5 gap-y-2">
               {filters.map((filter) => (
-                <TabsTrigger key={filter.value} value={filter.value} className="h-9 flex-none px-0">
+                <TabsTrigger
+                  key={filter.value}
+                  value={filter.value}
+                  className="h-9 flex-none px-0 data-[state=active]:text-quantum data-[state=active]:after:bg-quantum data-[state=active]:after:opacity-100"
+                >
                   {filter.label}
                   <span className="font-mono text-[0.68rem] text-muted-foreground">({filter.count})</span>
                 </TabsTrigger>

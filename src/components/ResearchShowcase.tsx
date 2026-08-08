@@ -23,8 +23,8 @@ const evidenceFigures = [
 
 export function ResearchShowcase() {
   return (
-    <section id="research" className="section-block border-b">
-      <div className="site-shell">
+    <section id="research" className="section-block">
+      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <p className="eyebrow text-quantum">Research Overview</p>
@@ -40,8 +40,8 @@ export function ResearchShowcase() {
         <div className="mt-12 grid gap-10 lg:grid-cols-2">
           {evidenceFigures.map((figure, index) => (
             <Reveal key={figure.plate} delay={index * 0.08}>
-              <figure data-slot="evidence-figure" className="border-t pt-4">
-                <div className="relative aspect-[7/6] overflow-hidden border bg-card">
+              <figure data-slot="evidence-figure" className="editorial-card overflow-hidden p-3 sm:p-4">
+                <div className="relative aspect-[7/6] overflow-hidden rounded-xl border bg-card">
                   <Image
                     src={figure.src}
                     alt={figure.alt}
@@ -50,7 +50,7 @@ export function ResearchShowcase() {
                     className="object-contain transition-transform duration-500 hover:scale-[1.01]"
                   />
                 </div>
-                <figcaption className="grid gap-3 border-b py-5 sm:grid-cols-[6rem_1fr]">
+                <figcaption className="grid gap-3 px-1 pb-2 pt-5 sm:grid-cols-[6rem_1fr]">
                   <span className="font-mono text-xs text-quantum">{figure.plate}</span>
                   <div>
                     <h3 className="text-lg font-semibold tracking-[-0.025em]">{figure.title}</h3>
