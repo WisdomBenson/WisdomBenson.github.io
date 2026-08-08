@@ -26,12 +26,6 @@ export const affiliations = [
   { label: "PhilPeople", note: "Philosophy profile", active: true },
 ] as const
 
-export const metrics = [
-  { value: "07", label: "Research records" },
-  { value: "05", label: "Conference records" },
-  { value: "02", label: "Under review" },
-] as const
-
 export const education = [
   {
     period: "2024—2029",

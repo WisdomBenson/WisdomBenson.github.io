@@ -60,7 +60,7 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
     <main className="site-shell section-block">
       <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
         <Button variant="ghost" asChild>
-          <Link href="/#philosophy"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Thought lab</Link>
+          <Link href="/#philosophy"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Philosophy &amp; Essays</Link>
         </Button>
         <div className="flex items-center gap-2">
           <span className="font-mono text-xs text-muted-foreground">{readingTime}</span>
