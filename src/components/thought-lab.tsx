@@ -1,4 +1,4 @@
-import { ArrowUpRight, BookOpenText, Clock3, FileText, Scale } from "lucide-react"
+import { ArrowUpRight, BookOpenText, BriefcaseBusiness, Building2, Clock3, FileText, Scale } from "lucide-react"
 
 import { Reveal } from "@/components/reveal"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +20,22 @@ const essays = [
     meta: "5 min note",
     href: "/thought-lab/model-and-meaning/",
     icon: FileText,
+  },
+  {
+    type: "Essay",
+    title: "AI in our workplace",
+    description: "A concise argument for equipping workers with AI rather than using automation to sever people from the value they help create.",
+    meta: "2 min essay",
+    href: "/thought-lab/ai-in-our-workplace/",
+    icon: BriefcaseBusiness,
+  },
+  {
+    type: "Essay",
+    title: "AI Utopia or Dystopia? The Answer Will Be Written in Employment Contracts",
+    description: "An evidence-led argument that employment, access, and institutional incentives—not capability alone—will determine how AI changes work.",
+    meta: "12 min essay",
+    href: "/thought-lab/ai-utopia-or-dystopia/",
+    icon: Building2,
   },
 ]
 
@@ -45,8 +61,8 @@ export function ThoughtLab() {
           {essays.map((essay, index) => {
             const Icon = essay.icon
             return (
-              <Reveal key={essay.title} delay={index * 0.07}>
-                <article className="editorial-card group flex min-h-[25rem] flex-col overflow-hidden p-6 sm:p-8">
+              <Reveal key={essay.title} delay={index * 0.07} className="h-full">
+                <article className="editorial-card group flex h-full min-h-[25rem] flex-col overflow-hidden p-6 sm:p-8">
                   <div className="flex items-center justify-between">
                     <span className="grid size-11 place-items-center rounded-xl bg-philosophy-muted text-philosophy">
                       <Icon className="size-5" aria-hidden="true" />
