@@ -7,6 +7,23 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { conferences, education, experience, profile } from "@/content/profile"
 
+const recognitions = [
+  {
+    label: "APS Student Ambassador",
+    period: "2025–2026 cohort",
+    certificate: "/assets/certificates/aps-student-ambassador-2025-2026.pdf",
+  },
+  {
+    label: "APS Student Ambassador",
+    period: "2026–2027 cohort",
+    certificate: "/assets/certificates/aps-student-ambassador-2026-2027.pdf",
+  },
+  { label: "APS Advocacy Champion", period: "2025–present" },
+  { label: "NCCU International Student Award", period: "2024" },
+  { label: "MSc Physics with Honors", period: "2024" },
+  { label: "BSc Physics with Honors", period: "2021" },
+] as const
+
 function TimelineList({ items }: { items: ReadonlyArray<{ period: string; school?: string; degree?: string; role?: string; place?: string; detail: string }> }) {
   return (
     <ol className="relative border-l">
@@ -87,11 +104,25 @@ export function CVTimeline() {
           </div>
           <div className="editorial-card p-6">
             <p className="eyebrow text-muted-foreground">Recognition</p>
-            <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
-              <li>APS Student Ambassador · 2026–2027 cohort</li>
-              <li>NCCU International Student Award · 2024</li>
-              <li>MSc Physics with Honors · 2024</li>
-              <li>BSc Physics with Honors · 2021</li>
+            <ul className="mt-5 flex flex-col gap-3 text-sm leading-6 text-muted-foreground">
+              {recognitions.map((recognition) => (
+                <li key={`${recognition.label}-${recognition.period}`}>
+                  {"certificate" in recognition ? (
+                    <a
+                      href={recognition.certificate}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${recognition.label} ${recognition.period} certificate (PDF)`}
+                      className="group inline-flex items-center gap-1.5 rounded-sm font-medium text-foreground underline-offset-4 transition-colors hover:text-quantum hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      {recognition.label} · {recognition.period}
+                      <ArrowUpRight className="size-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <span>{recognition.label} · {recognition.period}</span>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
