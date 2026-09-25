@@ -19,6 +19,11 @@ const recognitions = [
     certificate: "/assets/certificates/aps-student-ambassador-2026-2027.pdf",
   },
   { label: "APS Advocacy Champion", period: "2025–present" },
+  {
+    label: "Optica Reviewer Certification Course",
+    period: "2026",
+    certificate: "/assets/certificates/optica-reviewer-certification-2026.pdf",
+  },
   { label: "NCCU International Student Award", period: "2024" },
   { label: "MSc Physics with Honors", period: "2024" },
   { label: "BSc Physics with Honors", period: "2021" },
