@@ -52,10 +52,10 @@ export function CVTimeline() {
         <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
           <div>
             <p className="eyebrow text-quantum">Curriculum vitae</p>
-            <h2 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">I work across theory and experiment.</h2>
+            <h2 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">A trajectory built across theory and experiment.</h2>
           </div>
           <div className="flex flex-col items-start gap-4 lg:items-end">
-            <p className="max-w-xl text-base leading-7 text-muted-foreground">I list my education, research and teaching roles, conference contributions, and awards here.</p>
+            <p className="max-w-xl text-base leading-7 text-muted-foreground">Academic formation, active research roles, and public conference contributions—presented as evidence, not decoration.</p>
             <Button variant="outline" className="min-h-10" asChild>
               <a href={profile.resume} download><Download data-icon="inline-start" aria-hidden="true" /> Download résumé</a>
             </Button>
@@ -100,7 +100,7 @@ export function CVTimeline() {
 
         <div className="mt-12 grid gap-3 md:grid-cols-2">
           <div className="editorial-card p-6">
-            <p className="eyebrow text-muted-foreground">Tools I use</p>
+            <p className="eyebrow text-muted-foreground">Computational toolkit</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {["Quantum ESPRESSO", "WEST / PDEP-GW", "SIESTA", "Python", "C++", "MATLAB", "LaTeX", "SDSC Expanse"].map((skill) => (
                 <Badge key={skill} variant="secondary" className="h-7">{skill}</Badge>

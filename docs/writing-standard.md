@@ -1,35 +1,32 @@
 # Website writing standard
 
-I use first-person, clear English for my website. I base this project style on ASD-STE100, Issue 9, with the adaptations below.
+Preserve the author's voice, the substance of the argument, and the distinctive character of each piece. Clear English supports that purpose; mechanical simplification must not flatten it.
 
 ## Voice and scope
 
-- I use “I,” “me,” and “my” for my work, views, and biography. I use “we” only when it identifies actual collaborators.
-- I keep navigation, action labels, alt text, names, publication titles, author lists, quotations, and bibliographic records in their appropriate form.
-- I keep published titles, citations, equations, dates, measurements, authorship roles, uncertainty, and source links accurate.
-- I apply this policy to authored web text and page descriptions. Linked papers, certificates, archived blog issues, and downloadable documents retain their source wording.
+- Use first person when personal experience, responsibility, or conviction matters. Do not require “I,” “me,” or “my” in every paragraph, description, heading, or caption.
+- Let the subject of a sentence carry the argument: researchers, institutions, employers, evidence, concepts, or methods. Vary sentence openings naturally.
+- Keep essays expressive and argued. Preserve conceptual distinctions, concrete examples, qualifications, and deliberate contrasts.
+- Use concise descriptive language for navigation, research captions, CV entries, and publication summaries. These do not need personal pronouns.
+- Author-supplied wording takes priority over automated style suggestions. Restore or quote that text faithfully when requested; do not silently rewrite it to satisfy a metric.
+- Preserve published titles, author lists, citations, quotations, equations, dates, measurements, authorship roles, uncertainty, and source links.
+- Linked papers, certificates, archived blog issues, and downloadable documents retain their source wording.
 
-## Clear English
+## Clarity without uniformity
 
-- I use one main topic per paragraph, with no more than six sentences.
-- I limit descriptive sentences to 25 words. I use short, direct instructions for interface actions.
-- I prefer active verbs, concrete subjects, American English spelling, and consistent terms.
-- I explain an abbreviation when readers first need it. I keep necessary scientific terms instead of replacing them with imprecise everyday words.
-- I identify opinions as my views. I attribute reported findings to their sources and retain their limits.
-- I remove unnecessary metaphors, repeated slogans, inflated claims, and accidental invisible characters.
-
-## Technical terms
-
-I retain subject-specific terms such as quantum dot, passivation, phonon, perovskite, density functional theory (DFT), GW approximation, Raman spectrum, and self-consistent-field (SCF) coordinates. I also retain names such as Quantum ESPRESSO, WEST/PDEP-GW, SIESTA, Kant, Scheler, and Schopenhauer. These terms need contextual review; this list does not confer STE approval on other uses or parts of speech.
+- Prefer concrete subjects, precise verbs, consistent technical terms, and readable paragraphs.
+- Explain abbreviations when readers need them, while retaining necessary scientific and philosophical vocabulary.
+- Review long sentences for clarity, but keep length when it serves the argument. A 25-word sentence guideline or six-sentence paragraph guideline is advisory, not a publication limit.
+- Keep opinions, reported findings, and inferences distinguishable. Attribute findings and retain their limits.
+- Preserve meaningful variation in rhythm. Do not turn each paragraph into a repeated “I think,” “I use,” or “I want” template.
+- Remove accidental invisible characters and formatting debris without stripping legitimate notation or punctuation.
 
 ## Checks before publication
 
-I run `pnpm check:copy`, `pnpm lint`, `pnpm typecheck`, and `pnpm build`. The deployment workflow runs the copy check before it publishes the site.
+Run `pnpm check:copy`, `pnpm lint`, `pnpm typecheck`, and `pnpm build`. The deployment workflow checks page descriptions and selected text-integrity problems. Sentence and paragraph counts are editorial notes only.
 
-The copy checker checks authored paragraph text and selected prose fields. It excludes headings, list items, upstream UI primitives, and bibliographic records from personal-voice requirements. It checks first-person markers, sentence length, paragraph length, and selected text-hygiene problems. It cannot establish grammar, word meanings, complete runtime coverage, factual accuracy, or formal ASD-STE100 compliance. I review those matters manually, including interface states and metadata.
+The checker cannot assess authorial meaning, argument quality, grammar, complete runtime coverage, or factual accuracy. Review the rendered pages in context, including summaries, metadata, captions, and interface states. Check reading-time labels after substantial text changes.
 
-## Standard reference and adaptation
+## Relationship to Simplified Technical English
 
-ASD-STE100 has both writing rules and a controlled dictionary. Short sentences alone do not establish compliance. I use a first-person portfolio adaptation, including philosophical argument and technical vocabulary. I describe it as **STE-based first-person English**, not certified or fully validated ASD-STE100.
-
-Official references: [ASD-STE100](https://www.asd-ste100.org/), [current standard and downloads](https://asd-ste100.org/STE_downloads.html), and [frequently asked questions](https://www.asd-ste100.org/STE_faq.html).
+ASD-STE100 can inform clarity in technical descriptions. It must not be used as a blanket template for philosophical essays or as a reason to override supplied prose. This website makes no claim of formal ASD-STE100 compliance.

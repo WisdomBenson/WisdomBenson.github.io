@@ -1,34 +1,34 @@
 export const metadata = {
   title: "What a Model Leaves Out",
-  description: "I examine how assumptions in scientific models affect prediction, explanation, and the limits of a claim.",
+  description: "A short note on abstraction, explanatory success, and scientific understanding.",
 }
 
 <p className="eyebrow text-philosophy">Research note · Models and meaning</p>
 
 # What a model leaves out
 
-I must decide what to leave out before I can calculate a result. I choose a boundary, fix some degrees of freedom, and approximate interactions. I also choose which observable will test the model.
+Every successful calculation begins with an act of exclusion. We choose a boundary, freeze some degrees of freedom, approximate an interaction, and decide which observable will count as evidence that the model has done its job.
 
-I accept that models are incomplete. A model must select the features that matter for a question. I worry when accurate predictions make me forget the assumptions that made them possible.
+The tension is not that models are incomplete. A model without exclusions would be the world repeated, not the world understood. The tension is that predictive control can tempt us to forget which exclusions made that control possible.
 
 ## Abstraction is a scientific achievement
 
-I treat a finite cluster, a pseudopotential, and a convergence threshold as deliberate choices in computational materials physics. Each choice sets a limit on what I can ask the model to explain.
+In computational materials physics, a finite cluster, a pseudopotential, or a convergence threshold is not an embarrassment to be hidden. Each is a disciplined decision about which structure matters for the question at hand.
 
-For a simple confinement model, I can write:
+For a simple confinement picture, one might write
 
 $$E_g(r)=E_{g,\mathrm{bulk}}+\frac{A}{r^2}-\frac{B}{r}.$$
 
-I use this equation to describe the competition between confinement and Coulombic effects. It makes that comparison clear by leaving out other details.
+The equation is useful because it refuses detail. It isolates a competition between confinement and Coulombic effects. Its clarity comes from what it leaves out.
 
 ## Prediction is not yet explanation
 
-I can reproduce a band edge with a model and still identify the wrong mechanism. Surface states, passivation, finite-size strain, and numerical choices can give similar results for different reasons. I therefore need convergence tests, structural checks, and comparisons with experiment.
+A model may reproduce a band edge while misidentifying the mechanism. Surface states, passivation, finite-size strain, or numerical choices can produce similar outputs for different reasons. This is why a persuasive workflow needs more than a final number: it needs convergence tests, structural checks, and contact with experiment.
 
-I treat agreement between a model and a measurement as evidence of success. To explain that success, I must also examine which alternative explanations the evidence excludes.
+The philosophical point is modest. Agreement between model and measurement is evidence of success, but the meaning of that success depends on which alternatives were ruled out.
 
 ## The boundary is part of the result
 
-I state the limits of a claim as carefully as the claim itself. A conceptual widget is not a DFT calculation. A converged calculation does not, by itself, explain an experiment. A useful approximation does not give a complete picture of a system.
+Good scientific communication states the boundary of a claim with the same care used to state the claim itself. A conceptual widget is not a DFT calculation. A converged calculation is not automatically an experimental explanation. A useful approximation is not a literal picture of the system.
 
-I use these distinctions to show what the evidence supports and where uncertainty remains.
+These distinctions do not weaken a result. They tell the reader exactly what the result has earned.

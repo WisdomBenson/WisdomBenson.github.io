@@ -207,7 +207,7 @@ export function PublicationHub() {
             </h2>
           </div>
           <p className="max-w-[65ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
-            I list seven records from my work in condensed matter physics, computational modeling, materials research, and philosophical metaphysics.
+            Seven records across condensed matter physics, computational modeling, materials research, and philosophical metaphysics.
           </p>
         </div>
 

@@ -30,10 +30,10 @@ export function HeroSection() {
         >
           <Badge variant="outline">Howard University · Physics PhD Researcher</Badge>
           <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-            I study quantum matter and philosophy.
+            Quantum Matter &amp; Metaphysical Inquiry
           </h1>
           <p className="mt-7 max-w-[65ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-            I study finite semiconductor nanostructures, with a focus on zinc oxide (ZnO) quantum dots. I use density functional theory (DFT) and the GW approximation. I also write about value, agency, and metaphysics through the work of Kant, Scheler, and Schopenhauer.
+            My research examines finite semiconductor nanostructures, with a focus on zinc oxide (ZnO) quantum dots and first-principles DFT/GW methods. In philosophy, I explore value, agency, and metaphysical structure through Kant, Scheler, and Schopenhauer.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">

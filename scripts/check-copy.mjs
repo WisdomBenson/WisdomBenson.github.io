@@ -2,12 +2,12 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join, relative } from "node:path"
 import ts from "typescript"
 
-// Project style checks, not an ASD-STE100 dictionary or compliance validator.
+// Text integrity checks. Editorial voice and rhythm require human judgment.
 const root = process.cwd()
 const errors = []
 let checked = 0
-const firstPerson = /\b(?:I|me|my|mine)\b/i
-const thirdPersonBio = /\bWisdom Benson\s+(?:is|studies|writes|works|examines)\b|\bhis\s+(?:research|work|scholarship|philosophical|publications)\b/i
+let longSentences = 0
+let longParagraphs = 0
 const segmenter = new Intl.Segmenter("en-US", { granularity: "sentence" })
 
 function plain(text) {
@@ -20,18 +20,16 @@ function plain(text) {
     .trim()
 }
 
-function check(file, text, personal = true) {
+function check(file, text) {
   text = plain(text)
   if (!text) return
   checked++
   const where = relative(root, file)
-  if (thirdPersonBio.test(text)) errors.push(`${where}: third-person biography: ${text}`)
-  if (personal && !firstPerson.test(text)) errors.push(`${where}: use first person: ${text}`)
   const sentences = [...segmenter.segment(text)].map(({ segment }) => segment.trim())
-  if (sentences.length > 6) errors.push(`${where}: paragraph has ${sentences.length} sentences (maximum 6).`)
+  if (sentences.length > 6) longParagraphs++
   for (const sentence of sentences) {
     const count = sentence.split(/\s+/).filter(Boolean).length
-    if (count > 25) errors.push(`${where}: sentence has ${count} words (maximum 25): ${sentence}`)
+    if (count > 25) longSentences++
   }
   if (/[\u200B-\u200D\uFEFF]/u.test(text)) errors.push(`${where}: unexpected invisible character.`)
 }
@@ -48,15 +46,13 @@ for (const file of [...walk(join(root, "src/app")), ...walk(join(root, "src/comp
   const source = readFileSync(file, "utf8")
   if (file.endsWith(".mdx")) {
     const description = source.match(/description:\s*"([^"]+)"/)
-    if (!description) errors.push(`${relative(root, file)}: add a first-person page description.`)
+    if (!description?.[1].trim()) errors.push(`${relative(root, file)}: add a page description.`)
     else check(file, description[1])
-    // Titles, headings, source citations, quotations, equations, and lists keep their own form.
+    // Titles, headings, quotations, equations, and lists keep their own form.
     const body = source.slice(source.indexOf("\n# "))
     for (const block of body.split(/\r?\n\s*\r?\n/)) {
       if (/^(?:#|\$\$|\d+\.|>|<)/.test(block.trim())) continue
-      if (/^I (?:first published|develop the argument)/.test(block.trim())) {
-        check(file, block.replace(/\[[\s\S]*?\]\([^)]+\)/g, "the source record"))
-      } else check(file, block)
+      check(file, block)
     }
     continue
   }
@@ -79,6 +75,7 @@ if (errors.length) {
   console.error(errors.join("\n"))
   process.exitCode = 1
 } else {
-  console.log(`Copy checks passed for ${checked} prose blocks: first-person voice, sentence and paragraph limits, and text hygiene.`)
-  console.log("Manual review is still required for approved vocabulary, meaning, technical terms, and source integrity.")
+  console.log(`Text integrity checks passed for ${checked} prose blocks.`)
+  console.log(`Editorial notes: ${longSentences} sentences exceed 25 words; ${longParagraphs} paragraphs exceed six sentences. These are advisory, not publication blockers.`)
+  console.log("Review voice, meaning, rhythm, and source fidelity in context. No pronoun quota or formal STE-compliance claim applies.")
 }

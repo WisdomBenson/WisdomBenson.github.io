@@ -5,11 +5,11 @@ import { Reveal } from "@/components/reveal"
 const evidenceFigures = [
   {
     plate: "Plate 01",
-    title: "Coordinate maps of passivated ZnO quantum dots",
+    title: "ZnO Quantum Dot Coordinate Map & Orbital Passivation Model",
     src: "/assets/zno-qd-coordinate-map-1400.webp",
     alt: "Four-panel coordinate map comparing hydroxyl- and acetate-passivated zinc oxide quantum dots",
     caption:
-      "I show xy-projected coordinates for ligand-passivated ZnO quantum dots in four surface models: OH-low, OH-high, acetate-low, and acetate-high. Dashed lines mark schematic row and column indices. Selected labels give indices from the self-consistent-field (SCF) coordinates.",
+      "xy-projected coordinate indexing for ligand-passivated ZnO quantum dots under OH-low, OH-high, acetate-low, and acetate-high surface models. Dashed guides mark schematic row and column indices; selected labels report indices derived from the SCF coordinates.",
   },
   {
     plate: "Plate 02",
@@ -17,7 +17,7 @@ const evidenceFigures = [
     src: "/assets/raman-spectrum-488nm-rt-1400.webp",
     alt: "Raman spectrum of zinc oxide quantum dot sample 7B measured at room temperature using 488 nanometer excitation",
     caption:
-      "I show measured Raman intensity for ZnO quantum dot sample 7B from approximately 80 to 1200 cm⁻¹. The measurement used 488 nm excitation at room temperature. I do not assign vibrational modes beyond the information in the source figure.",
+      "Measured Raman intensity for ZnO QD 7B from approximately 80 to 1200 cm⁻¹ under 488 nm excitation at room temperature. The plotted trace is presented without assigning vibrational modes beyond the information contained in the source figure.",
   },
 ] as const
 
@@ -27,13 +27,13 @@ export function ResearchShowcase() {
       <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
         <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
-            <p className="eyebrow text-quantum">My research</p>
+            <p className="eyebrow text-quantum">Research Overview</p>
             <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
-              I compare calculations with measured spectra.
+              Evidence from finite structures and measured spectra
             </h2>
           </div>
           <p className="max-w-[65ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
-            I combine electronic-structure calculations for finite ZnO systems with Raman and optical measurements. I also study how composition affects the response of lead–tin alloy perovskites.
+            The research combines electronic-structure calculations for finite ZnO systems with Raman and optical measurements, while related work examines composition-dependent response in lead–tin alloy perovskites.
           </p>
         </Reveal>
 

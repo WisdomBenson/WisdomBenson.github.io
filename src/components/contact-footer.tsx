@@ -29,10 +29,10 @@ export function ContactFooter() {
             <div>
               <p className="eyebrow text-quantum">Contact</p>
               <h2 className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-                Discuss research with me.
+                Research collaboration and academic contact
               </h2>
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-                I welcome collaborations in computational materials research, discussions about doctoral research, invitations to speak, and discussions about philosophy.
+                Open to computational-materials collaborations, doctoral research conversations, speaking invitations, and carefully framed philosophical exchange.
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">

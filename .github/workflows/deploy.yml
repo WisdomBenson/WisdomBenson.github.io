@@ -41,7 +41,7 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Check first-person website copy
+      - name: Check website text integrity
         run: pnpm check:copy
 
       - name: Type-check

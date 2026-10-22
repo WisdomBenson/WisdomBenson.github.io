@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     template: "%s — Wisdom Benson",
   },
   description:
-    "I study quantum materials with first-principles methods. I also write about value, personhood, and metaphysics.",
+    "Wisdom Benson studies quantum materials with first-principles methods and writes on value, personhood, and metaphysical structure.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
     title: "Wisdom Benson — Quantum Physics & Philosophy",
-    description: "I study quantum materials through computation and spectroscopy. I also write about philosophical metaphysics.",
+    description: "Research across quantum materials, computation, spectroscopy, and philosophical metaphysics.",
     images: ["/assets/social-preview.png"],
     type: "website",
   },
