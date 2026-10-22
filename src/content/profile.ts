@@ -13,7 +13,7 @@ export const profile = {
     linkedin: "https://www.linkedin.com/in/wisdom-benson-228461247",
     researchGate: "https://www.researchgate.net/profile/Wisdom-Benson",
     philPeople: "https://philpeople.org/profiles/wisdom-benson",
-    googleScholar: "https://scholar.google.com/scholar?q=%22Wisdom+Benson%22",
+    googleScholar: "https://scholar.google.com/citations?user=vxn6NxwAAAAJ&hl=en&oi=ao",
     philPapers: "https://philpapers.org/rec/BENREA-14",
     audiomack: "https://audiomack.com/search?q=Wisdom%20Benson",
   },
