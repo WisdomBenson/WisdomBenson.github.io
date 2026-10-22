@@ -78,9 +78,9 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
           <article ref={articleRef} className="prose-lab min-w-0 max-w-3xl">
             {children}
             <div className="mt-16 border-t pt-8">
-              <p className="eyebrow text-philosophy"><Check className="size-3.5" aria-hidden="true" /> About the author</p>
+              <p className="eyebrow text-philosophy"><Check className="size-3.5" aria-hidden="true" /> About me</p>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                {profile.name} is a physics PhD researcher at Howard University and a philosophical writer working across materials, models, value, and metaphysics.
+                I am {profile.name}, a physics PhD researcher at Howard University. I study materials and models. I also write about value and metaphysics.
               </p>
             </div>
           </article>

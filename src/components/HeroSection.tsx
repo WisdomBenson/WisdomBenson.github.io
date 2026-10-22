@@ -30,21 +30,21 @@ export function HeroSection() {
         >
           <Badge variant="outline">Howard University · Physics PhD Researcher</Badge>
           <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-            Quantum Matter &amp; Metaphysical Inquiry
+            I study quantum matter and philosophy.
           </h1>
           <p className="mt-7 max-w-[65ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-            Wisdom Benson studies finite semiconductor nanostructures, with current work on ZnO quantum dots and first-principles DFT/GW workflows. His philosophical scholarship examines value, agency, and metaphysical structure through Kantian, Schelerian, and Schopenhauerian traditions.
+            I study finite semiconductor nanostructures, with a focus on zinc oxide (ZnO) quantum dots. I use density functional theory (DFT) and the GW approximation. I also write about value, agency, and metaphysics through the work of Kant, Scheler, and Schopenhauer.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">
             <Button size="lg" asChild>
               <a href="#publications">
-                View Publications
+                Read my publications
                 <ArrowDownRight data-icon="inline-end" aria-hidden="true" />
               </a>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <a href="#philosophy">Philosophy Essays</a>
+              <a href="#philosophy">Read my essays</a>
             </Button>
             <Button size="lg" variant="ghost" asChild>
               <a href="#contact">Contact</a>

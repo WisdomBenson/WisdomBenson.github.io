@@ -1,7 +1,7 @@
 export const profile = {
   name: "Wisdom Benson",
   mark: "WHB",
-  descriptor: "Quantum Physics Researcher & Philosophical Writer",
+  descriptor: "I study quantum physics and write about philosophy.",
   affiliation: "Howard University",
   email: "wisdom.benson@bison.howard.edu",
   phone: "+1 984-312-9015",
@@ -31,19 +31,19 @@ export const education = [
     period: "2024—2029",
     school: "Howard University",
     degree: "PhD in Physics",
-    detail: "First-principles modeling of finite semiconductor nanostructures for quantum sensing, computing, and storage.",
+    detail: "I model finite semiconductor nanostructures from first principles. I study their possible uses in quantum sensing, computing, and storage.",
   },
   {
     period: "2022—2024",
     school: "North Carolina Central University",
     degree: "MSc in Physics",
-    detail: "Synthesis and optical characterization of triple-cation tin-lead alloy perovskite thin films.",
+    detail: "I made triple-cation tin-lead alloy perovskite thin films and measured their optical properties.",
   },
   {
     period: "2017—2021",
     school: "University of Nigeria, Nsukka",
     degree: "BSc in Physics, Honors",
-    detail: "Density-functional-theory research on methylammonium lead iodide perovskite.",
+    detail: "I used density functional theory to study methylammonium lead iodide perovskite.",
   },
 ] as const
 
@@ -52,13 +52,13 @@ export const experience = [
     period: "2024—Present",
     role: "Graduate Research & Teaching Assistant",
     place: "Howard University",
-    detail: "Quantum ESPRESSO and WEST/PDEP-GW workflows on SDSC Expanse and Argonne CNM resources; electronic structure, phonons, passivation, and frontier levels in ZnO quantum dots.",
+    detail: "I use Quantum ESPRESSO and WEST/PDEP-GW on SDSC Expanse and Argonne CNM resources. I study electronic structure, phonons, surface passivation, and frontier energy levels in ZnO quantum dots.",
   },
   {
     period: "2022—2024",
     role: "Graduate Research & Teaching Assistant",
     place: "North Carolina Central University",
-    detail: "Perovskite thin-film synthesis, optical characterization, statistical analysis, practical laboratory teaching, and undergraduate mentoring.",
+    detail: "I made perovskite thin films, measured their optical properties, and analyzed the data. I also taught laboratory classes and mentored undergraduate students.",
   },
 ] as const
 
@@ -67,33 +67,33 @@ export const conferences = [
     year: "2026",
     venue: "MRS Spring Meeting & Exhibit",
     title: "Quantifying Surface-Driven Band-Edge Control in ZnO Quantum Dots Using the GW Approximation and Density Functional Theory",
-    detail: "Symposium QT03 · Presented April 29, 2026",
+    detail: "I presented this work at Symposium QT03 on April 29, 2026.",
     href: "https://www.mrs.org/docs/default-source/meetings-events/spring-meetings/2026/2026-mrs-spring-meeting-program.pdf",
   },
   {
     year: "2026",
     venue: "APS Global Physics Summit",
     title: "Spectroscopic Characterization and Modeling and Simulation of Zinc Oxide and Zinc Sulfide Quantum Dots",
-    detail: "First author · Presented by PI Prabhakar Misra · March 20, 2026",
+    detail: "I am the first author. My principal investigator, Prabhakar Misra, presented this work on March 20, 2026.",
     href: "https://meetings-archive.aps.org/smt/2026/mar-y17/8/",
   },
   {
     year: "2025",
     venue: "APS Global Physics Summit",
     title: "Spin-Orbit Coupling and Piezoelectric Properties of Zinc Oxide Quantum Dots Using First-Principles Calculations",
-    detail: "Coauthor · Presented by Prabhakar Misra · March 18, 2025",
+    detail: "I am a coauthor. Prabhakar Misra presented this work on March 18, 2025.",
   },
   {
     year: "2024",
     venue: "PREM",
     title: "Investigating the Optical Properties of Multiple-Cation Tin-Lead Alloy Perovskite Thin Films",
-    detail: "Presented April 2024",
+    detail: "I presented this work in April 2024.",
   },
   {
     year: "2023",
     venue: "Triangle Student Research Competition",
     title: "Mixed-Cation Tin-Lead Alloy Perovskites for Photovoltaic Applications: Bandgap Tuning & Photoluminescence Mapping",
-    detail: "Poster presentation · North Carolina Central University · November 2023",
+    detail: "I presented this poster at North Carolina Central University in November 2023.",
     href: "https://www.researchgate.net/publication/375279550_Wisdom_TSRC_2023_Poster",
   },
 ] as const

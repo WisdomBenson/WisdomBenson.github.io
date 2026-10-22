@@ -8,7 +8,7 @@ const essays = [
   {
     type: "Published essay",
     title: "Romantic exclusivity as structural necessity",
-    description: "A reading path through Kantian respect, Schelerian value, and Schopenhauerian metaphysics—and the pressure each places on exclusivity.",
+    description: "I examine romantic exclusivity through Kantian respect, Schelerian value, and Schopenhauerian metaphysics.",
     meta: "8 min essay guide",
     href: "/thought-lab/romantic-exclusivity/",
     icon: Scale,
@@ -16,7 +16,7 @@ const essays = [
   {
     type: "Research note",
     title: "What a model leaves out",
-    description: "A short inquiry into abstraction, explanatory success, and the difference between controlling a system and understanding it.",
+    description: "I ask how the assumptions in a model affect what its predictions can explain.",
     meta: "5 min note",
     href: "/thought-lab/model-and-meaning/",
     icon: FileText,
@@ -24,7 +24,7 @@ const essays = [
   {
     type: "Essay",
     title: "AI in our workplace",
-    description: "A concise argument for equipping workers with AI rather than using automation to sever people from the value they help create.",
+    description: "I argue that employers should give workers AI tools and a fair share of the gains from their work.",
     meta: "2 min essay",
     href: "/thought-lab/ai-in-our-workplace/",
     icon: BriefcaseBusiness,
@@ -32,7 +32,7 @@ const essays = [
   {
     type: "Essay",
     title: "AI Utopia or Dystopia? The Answer Will Be Written in Employment Contracts",
-    description: "An evidence-led argument that employment, access, and institutional incentives—not capability alone—will determine how AI changes work.",
+    description: "I examine how employment decisions, access to AI, and institutional incentives shape work.",
     meta: "12 min essay",
     href: "/thought-lab/ai-utopia-or-dystopia/",
     icon: Building2,
@@ -53,7 +53,7 @@ export function ThoughtLab() {
             </h2>
           </div>
           <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
-            The philosophical work asks what our concepts commit us to: in love, value, agency, and the explanations we accept as complete.
+            I ask what love, value, and agency require of us. I also examine when an explanation gives us enough reason to accept it.
           </p>
         </Reveal>
 

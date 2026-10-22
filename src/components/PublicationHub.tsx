@@ -94,7 +94,7 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
             <SearchX aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>No matching publications</EmptyTitle>
-          <EmptyDescription>Try a title, co-author, DOI, venue, or broader keyword.</EmptyDescription>
+          <EmptyDescription>Search by title, author, DOI, journal, conference, or keyword.</EmptyDescription>
         </EmptyHeader>
       </Empty>
     )
@@ -190,7 +190,7 @@ export function PublicationHub() {
       await navigator.clipboard.writeText(publication.doi)
       toast.success("DOI copied", { description: publication.doi })
     } catch {
-      toast.error("DOI could not be copied")
+      toast.error("Cannot copy the DOI. Select the DOI link to open the record.")
     }
   }
 
@@ -203,11 +203,11 @@ export function PublicationHub() {
           <div className="lg:col-span-7">
             <p className="eyebrow text-quantum">Publications &amp; Posters</p>
             <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
-              Research and scholarship
+              My publications and posters
             </h2>
           </div>
           <p className="max-w-[65ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
-            Seven records across condensed matter physics, computational modeling, materials research, and philosophical metaphysics.
+            I list seven records from my work in condensed matter physics, computational modeling, materials research, and philosophical metaphysics.
           </p>
         </div>
 

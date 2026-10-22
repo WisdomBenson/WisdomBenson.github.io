@@ -29,17 +29,17 @@ export function ContactFooter() {
             <div>
               <p className="eyebrow text-quantum">Contact</p>
               <h2 className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-                Research collaboration and academic contact
+                Discuss research with me.
               </h2>
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-                Open to computational-materials collaborations, doctoral research conversations, speaking invitations, and carefully framed philosophical exchange.
+                I welcome collaborations in computational materials research, discussions about doctoral research, invitations to speak, and discussions about philosophy.
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
               <Button className="min-h-11 justify-between" asChild>
                 <a href={`mailto:${profile.email}`}>
                   <Mail data-icon="inline-start" aria-hidden="true" />
-                  Email Wisdom
+                  Email me
                   <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -59,7 +59,7 @@ export function ContactFooter() {
 
           <div className="mt-14 grid gap-6 border-t pt-6 md:grid-cols-[1fr_auto] md:items-end">
             <div>
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">Find the work elsewhere</p>
+              <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">Find my work elsewhere</p>
               <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
                 {profileLinks.map((link) => (
                   <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="text-sm text-muted-foreground transition-colors hover:text-foreground">

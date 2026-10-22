@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "check:copy": "node scripts/check-copy.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

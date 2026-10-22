@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowUpRight, Menu } from "lucide-react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,18 +16,18 @@ import {
 import { profile } from "@/content/profile"
 
 const navigation = [
-  { label: "Research", href: "#research" },
-  { label: "Philosophy", href: "#philosophy" },
-  { label: "Publications", href: "#publications" },
-  { label: "CV", href: "#cv" },
-  { label: "Contact", href: "#contact" },
+  { label: "Research", href: "/#research" },
+  { label: "Philosophy", href: "/#philosophy" },
+  { label: "Publications", href: "/#publications" },
+  { label: "CV", href: "/#cv" },
+  { label: "Contact", href: "/#contact" },
 ]
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/15 bg-background/95 backdrop-blur-xl">
       <div className="site-shell flex h-16 items-center justify-between gap-4">
-        <a href="#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
+        <Link href="/#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
           <span className="grid size-9 place-items-center rounded-lg bg-foreground font-mono text-[0.66rem] font-bold tracking-tight text-background transition-transform group-hover:-rotate-3">
             {profile.mark}
           </span>
@@ -36,12 +37,12 @@ export function SiteHeader() {
               PHYSICS · PHILOSOPHY
             </span>
           </span>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => (
             <Button key={item.href} variant="ghost" size="sm" asChild>
-              <a href={item.href}>{item.label}</a>
+              <Link href={item.href}>{item.label}</Link>
             </Button>
           ))}
         </nav>
@@ -67,13 +68,13 @@ export function SiteHeader() {
               <nav className="flex flex-col px-3" aria-label="Mobile navigation">
                 {navigation.map((item, index) => (
                   <SheetClose key={item.href} asChild>
-                    <a
+                    <Link
                       href={item.href}
                       className="flex min-h-14 items-center justify-between border-b px-3 text-base font-medium"
                     >
                       {item.label}
                       <span className="font-mono text-xs text-muted-foreground">0{index + 1}</span>
-                    </a>
+                    </Link>
                   </SheetClose>
                 ))}
               </nav>
