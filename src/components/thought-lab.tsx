@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button"
 
 const essays = [
   {
-    type: "Published essay",
+    type: "Peer-reviewed article",
     title: "Romantic exclusivity as structural necessity",
-    description: "A reading path through Kantian respect, Schelerian value, and Schopenhauerian metaphysics—and the pressure each places on exclusivity.",
-    meta: "3 min essay guide",
-    href: "/thought-lab/romantic-exclusivity/",
+    description: "The original article in Philosophies 10(5), 102 (2025): a Kantian–Scheler–Schopenhauer synthesis of romantic exclusivity.",
+    meta: "Full article · PDF",
+    href: "/assets/articles/philosophies-10-00102.pdf",
     icon: Scale,
   },
   {
@@ -75,7 +75,7 @@ export function ThoughtLab() {
                   <p className="mt-5 max-w-xl flex-1 text-base leading-7 text-muted-foreground">{essay.description}</p>
                   <div className="mt-8 flex items-center justify-between border-t pt-5">
                     <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Clock3 className="size-3.5" aria-hidden="true" /> {essay.meta}
+                      {essay.type === "Peer-reviewed article" ? <BookOpenText className="size-3.5" aria-hidden="true" /> : <Clock3 className="size-3.5" aria-hidden="true" />} {essay.meta}
                     </span>
                     <Button variant="ghost" asChild>
                       <a href={essay.href}>
