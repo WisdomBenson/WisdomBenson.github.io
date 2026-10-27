@@ -23,7 +23,6 @@ export const affiliations = [
   { label: "Howard University", note: "Physics PhD researcher", active: true },
   { label: "APS Physics", note: "Student Ambassador", active: true },
   { label: "NCCU", note: "MSc Physics alumnus", active: false },
-  { label: "PhilPeople", note: "Philosophy profile", active: true },
 ] as const
 
 export const education = [
