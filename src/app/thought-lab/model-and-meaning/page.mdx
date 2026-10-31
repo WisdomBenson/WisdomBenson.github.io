@@ -1,34 +1,26 @@
+import Image from "next/image"
+
+
 export const metadata = {
-  title: "What a Model Leaves Out",
-  description: "A short note on abstraction, explanatory success, and scientific understanding.",
+  title: "What a Model Leaves Out: From Quantum Dots to the Future of Work",
+  description: "Controlling a physical system differs fundamentally from understanding it.",
 }
 
-<p className="eyebrow text-philosophy">Research note · Models and meaning</p>
 
-# What a model leaves out
+<div data-slot="model-essay-source" className="whitespace-pre-wrap">
 
-Every successful calculation begins with an act of exclusion. We choose a boundary, freeze some degrees of freedom, approximate an interaction, and decide which observable will count as evidence that the model has done its job.
+<Image src="/assets/essays/what-a-model-leaves-out-portrait.png" alt="Portrait of Wisdom H. Benson" width={945} height={1262} className="h-auto max-w-full" style={{ width: 234 }} priority />
 
-The tension is not that models are incomplete. A model without exclusions would be the world repeated, not the world understood. The tension is that predictive control can tempt us to forget which exclusions made that control possible.
+<h1>{"What a Model Leaves Out: From Quantum Dots to the Future of Work"}</h1>
 
-## Abstraction is a scientific achievement
+<p>{"By Wisdom H. Benson, PhD. Researcher in Condensed Matter Physics at Howard University and APS Student Ambassador (2025-2027)."}</p>
 
-In computational materials physics, a finite cluster, a pseudopotential, or a convergence threshold is not an embarrassment to be hidden. Each is a disciplined decision about which structure matters for the question at hand.
+<p>{"Controlling a physical system differs fundamentally from understanding it. At Howard University and earlier during my master’s work at North Carolina Central University, my research has focused on the exact points where textbook material models often break down. This problem appears when we tune mixed-cation tin-lead perovskites for near-infrared solar cells or model magnetohydrodynamic fluid flow in permeable microchannels. It becomes even sharper when we run first-principle calculations zinc oxide (ZnO) quantum dots using San Diego Supercomputer Center (SDSC Expanse) and Argonne National Laboratory’s center for Nanoscale Materials (CNM), every equation has strict limits. In our recent "}<em>{"AIP Advances"}</em>{" study and chapter 11 of CRC Press’s "}<em>{"Nanoelectronics"}</em>{", we showed that researchers cannot simply divide the electric dipole of a finite quantum dot by an arbitrary simulation box volume to predict its electronic and piezoelectric behavior because it creates arbitrary normalization. Getting the physics right at the nanoscale means explicitly accounting for surface chemistry and finite boundaries because reliable physical interpretation depends on strict numerical validation and direct experimental controls."}</p>
 
-For a simple confinement picture, one might write
+<p>{"In our day-to-day workflows with VASP, Quantum ESPRESSO and SIESTA, and in many-body perturbation methods like WEST/GW, we hold the inorganic ZnO code fixed while comparing different surface hydroxyl terminations along a defined axial deformation path, we calculate the total dipole derivation of the isolated neutral cluster alongside selected Zn-O vibrational mode frequencies. We then test those modes assignments against room temperature Raman spectra recorded under controlled laser power to rule out sample heating. Before comparing it with literature, we check electron counts, explicit spin states, converged energy cutoffs and vacuum cell isolation. When a calculated difference between two surface terminations falls inside our numerical resolution envelope, we report as unresolved and state the bound. Reporting the exact boundaries of a model builds reproducible scientific knowledge. "}</p>
 
-$$E_g(r)=E_{g,\mathrm{bulk}}+\frac{A}{r^2}-\frac{B}{r}.$$
+<p>{"This same question, which asks what our concepts commits us to? Drives my writing in philosophy. In my 2025 paper in "}<em>{"Philosophies"}</em>{", I brought together Immanuel Kant’s unity of consciousness, Max Scheler’s phenomenology of value, and Arthur Schopenhauer’s metaphysics of the Will to examine romantic exclusivity. Contemporary discussions often treat human commitment as a loose social habit, yet enlightenment thinkers link Kant shows that unified consciousness requires stable single, coherent, and rational rules across time. For Scheler, higher personal value appears through sustained, undivided emotional attention. Examining what our concepts require shows that enduring human commitment functions as a structural necessity that keeps moral agency and personal depth intact."}</p>
 
-The equation is useful because it refuses detail. It isolates a competition between confinement and Coulombic effects. Its clarity comes from what it leaves out.
+<p>{"Public debates over artificial intelligence in the workplace suffer from a similar blind spot. Commentators frequently ask whether AI will deliver an economic utopia or a dystopia, treating software capabilities as the sole variable that matters. In practice, employment contracts, institutional incentives, and resource access will decide how AI changes human work. Employers can write workplace contracts that equip workers with AI tools and keep people connect directly to the value that they help create. Whether we are calculating the dipole response of a ZnO cluster, examining human agency, or drafting workplace rules for AI, a model captures only part of the picture.  Understanding a complex system requires us to examine their boundary conditions, test our assumptions against evidence, and take responsibility for the structures that we build."}</p>
 
-## Prediction is not yet explanation
-
-A model may reproduce a band edge while misidentifying the mechanism. Surface states, passivation, finite-size strain, or numerical choices can produce similar outputs for different reasons. This is why a persuasive workflow needs more than a final number: it needs convergence tests, structural checks, and contact with experiment.
-
-The philosophical point is modest. Agreement between model and measurement is evidence of success, but the meaning of that success depends on which alternatives were ruled out.
-
-## The boundary is part of the result
-
-Good scientific communication states the boundary of a claim with the same care used to state the claim itself. A conceptual widget is not a DFT calculation. A converged calculation is not automatically an experimental explanation. A useful approximation is not a literal picture of the system.
-
-These distinctions do not weaken a result. They tell the reader exactly what the result has earned.
+</div>
