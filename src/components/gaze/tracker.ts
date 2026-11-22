@@ -3,7 +3,7 @@ export type TrackingSample = { face: boolean; x?: number; y?: number }
 
 type Bridge = {
   start: (stream: MediaStream, sample: (sample: TrackingSample) => void, error: () => void) => Promise<void>
-  record: (x: number, y: number) => void
+  record: (x: number, y: number) => boolean
   clear: () => void
   pause: () => void
   resume: () => Promise<void>
@@ -93,6 +93,12 @@ export function createTracker(sample: (sample: TrackingSample) => void, error: (
   return {
     ready, stop, pause,
     clear: () => bridge?.clear(),
-    record: (point: Point) => bridge?.record(point.x, point.y),
+    record: (point: Point) => bridge?.record(point.x, point.y) ?? false,
+    preview(video: HTMLVideoElement) {
+      video.muted = true
+      video.srcObject = stream ?? null
+      void video.play().catch(() => {})
+      return () => { video.srcObject = null }
+    },
   }
 }

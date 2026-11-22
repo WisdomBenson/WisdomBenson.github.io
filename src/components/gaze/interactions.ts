@@ -1,7 +1,7 @@
 import type { Point } from "./tracker"
 
-export const EDGE_FRACTION = 0.13
-const EDGE_DWELL = 400
+export const EDGE_FRACTION = 0.18
+const EDGE_DWELL = 350
 const HIT_PADDING = 80
 const HALF_DEAD_ZONE = 50
 const MIN_SIZE = 180
@@ -38,7 +38,9 @@ function separate(target: Target, other: Target) {
   }
 }
 
-export function createInteractions() {
+type EdgeDirection = -1 | 0 | 1
+
+export function createInteractions(showEdge: (direction: EdgeDirection, progress: number, scrolling: boolean) => void) {
   const elements = [...document.querySelectorAll<HTMLElement>("[data-gaze-target]")]
   const resize = new ResizeObserver(invalidate)
   elements.forEach(element => resize.observe(element))
@@ -51,10 +53,10 @@ export function createInteractions() {
   let latch: { element: HTMLElement; exitAt?: number } | undefined
   let dwell = 0
   let lastExit: number | undefined
-  let edge = 0
+  let edge: EdgeDirection = 0
   let edgeSince = 0
   let blockedUntil = 0
-  let edgeInterrupted = false
+  let interruptedEdge: EdgeDirection = 0
 
   function invalidate() {
     dirty = true
@@ -106,11 +108,12 @@ export function createInteractions() {
   function reset() {
     clearDwell()
     edge = 0
+    showEdge(0, 0, false)
   }
 
   function interrupt() {
     blockedUntil = performance.now() + 650
-    edgeInterrupted = true
+    if (edge) interruptedEdge = edge
     reset()
   }
 
@@ -122,9 +125,11 @@ export function createInteractions() {
     if (dirty) refresh()
 
     const controls = document.querySelector("[data-gaze-controls]")?.getBoundingClientRect()
-    const valid = point && point.x >= 0 && point.x < innerWidth && point.y >= 0 && point.y < innerHeight && !(controls && contains(controls, point))
-    const band = valid && canScroll ? point.y < innerHeight * EDGE_FRACTION ? -1 : point.y > innerHeight * (1 - EDGE_FRACTION) ? 1 : 0 : 0
-    if (!band && valid) edgeInterrupted = false
+    const withinWidth = point && point.x >= 0 && point.x < innerWidth
+    const valid = withinWidth && point.y >= 0 && point.y < innerHeight && !(controls && contains(controls, point))
+    // The regression can overshoot the viewport vertically near either edge.
+    const band = withinWidth && canScroll ? point.y <= innerHeight * EDGE_FRACTION ? -1 : point.y >= innerHeight * (1 - EDGE_FRACTION) ? 1 : 0 : 0
+    if (withinWidth && band !== interruptedEdge) interruptedEdge = 0
     if (latch) {
       const { element } = latch
       const previous = targets.find(target => target.element === element)
@@ -136,7 +141,7 @@ export function createInteractions() {
         latch.exitAt = undefined
       }
     }
-    const nextEdge = edgeInterrupted ? 0 : band
+    const nextEdge = band === interruptedEdge ? 0 : band
     if (nextEdge !== edge) {
       edge = nextEdge
       edgeSince = time
@@ -146,13 +151,18 @@ export function createInteractions() {
     if (lastExit !== undefined && time - lastExit > BLINK) clearDwell()
 
     if (edge) {
-      if (time - edgeSince > EDGE_DWELL) {
-        const available = edge < 0 ? window.scrollY : document.documentElement.scrollHeight - innerHeight - window.scrollY
-        if (available > 0) window.scrollBy({ top: edge * Math.min(available, 350 * delta / 1000), behavior: "instant" })
+      const elapsed = time - edgeSince
+      const available = edge < 0 ? window.scrollY : document.documentElement.scrollHeight - innerHeight - window.scrollY
+      const scrolling = elapsed > EDGE_DWELL && available > 0
+      showEdge(edge, Math.min(1, elapsed / EDGE_DWELL), scrolling)
+      if (scrolling) {
+        const deltaY = edge * Math.min(available, 350 * delta / 1000)
+        window.scrollBy({ top: deltaY, behavior: "instant" })
       }
       return
     }
 
+    showEdge(0, 0, false)
     if (!target || (current && target.element !== current)) return
     if (current !== target.element) {
       current = target.element

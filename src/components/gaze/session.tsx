@@ -1,20 +1,29 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import type { CSSProperties } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { createInteractions } from "./interactions"
+import { Toggle } from "@/components/ui/toggle"
+import { createInteractions, EDGE_FRACTION } from "./interactions"
 import { createTracker } from "./tracker"
 import type { Point, TrackingSample } from "./tracker"
 
 const CALIBRATION = [[15, 21], [50, 21], [85, 21], [15, 50], [50, 50], [85, 50], [15, 77], [50, 77], [85, 77]]
 const VALIDATION = [[29, 33], [71, 35], [70, 66], [32, 67]]
 const SPEEDS = [600, 800, 1000, 1200]
+const TRAINING_SAMPLES = 7
+const TRAINING_SAMPLE_SPACING = 75
+const TRAINING_SETTLE = 120
+const TRAINING_ATTEMPT = 1050
+const VALIDATION_SETTLE = 260
+const VALIDATION_DURATION = 720
+const EDGE_STYLE = { "--gaze-band-height": (EDGE_FRACTION * 100) + "%" } as CSSProperties
 type Stage = "starting" | "calibration" | "validation" | "result" | "tracking"
 type Grade = "Good" | "Fair" | "Poor"
 type Result = { grade: Grade; median?: number; maximum?: number; note?: string }
-type Capture = { point: Point; start: number; count: number; errors: number[] }
+type Capture = { point: Point; start: number; nextSample: number; errors: number[] }
 
 function median(values: number[]) {
   const sorted = [...values].sort((a, b) => a - b)
@@ -24,11 +33,10 @@ function median(values: number[]) {
 
 function grade(errors: number[]): Result {
   const typical = median(errors)
-  const maximum = Math.max(...errors)
   return {
-    grade: typical <= 80 && maximum <= 120 ? "Good" : typical <= 140 && maximum <= 220 ? "Fair" : "Poor",
-    median: Math.round(typical),
-    maximum: Math.round(maximum),
+    grade: typical <= 180 ? "Good" : typical <= 260 ? "Fair" : "Poor",
+    median: Math.ceil(typical * 10) / 10,
+    maximum: Math.ceil(Math.max(...errors) * 10) / 10,
   }
 }
 
@@ -41,7 +49,9 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
   const [busy, setBusy] = useState(false)
   const [hint, setHint] = useState("")
   const [result, setResult] = useState<Result>({ grade: "Poor" })
-  const [reduced, setReduced] = useState(false)
+  const [showDot, setShowDot] = useState(false)
+  const gazeDot = useRef<HTMLDivElement>(null)
+  const edgeBands = useRef<HTMLDivElement>(null)
   const backend = useRef<ReturnType<typeof createTracker>>(null)
   const interactions = useRef<ReturnType<typeof createInteractions>>(null)
   const continueButton = useRef<HTMLButtonElement>(null)
@@ -50,7 +60,7 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
   const live = useRef({
     stage: "starting" as Stage, index: 0, speed: 800, paused: false,
     deadline: 0, lastFace: 0, updated: 0, estimate: null as Point | null,
-    capture: null as Capture | null, errors: [] as number[], grade: "Poor" as Grade,
+    capture: null as Capture | null, samplesAtDot: 0, errors: [] as number[], grade: "Poor" as Grade,
   })
 
   const enter = useCallback((next: Stage) => {
@@ -58,6 +68,8 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
     data.stage = next
     data.index = 0
     data.capture = null
+    data.samplesAtDot = 0
+    if (next === "tracking") data.estimate = null
     setIndex(0)
     setBusy(false)
     setHint("")
@@ -107,7 +119,21 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
   useEffect(() => {
     const data = live.current
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)")
-    const registry = createInteractions()
+    const registry = createInteractions((direction, progress, scrolling) => {
+      const bands = edgeBands.current
+      if (!bands) return
+      if (!direction) {
+        if (bands.dataset.gazeEdge) {
+          delete bands.dataset.gazeEdge
+          bands.removeAttribute("data-gaze-scrolling")
+          bands.style.removeProperty("--gaze-edge-progress")
+        }
+        return
+      }
+      bands.dataset.gazeEdge = direction < 0 ? "up" : "down"
+      bands.toggleAttribute("data-gaze-scrolling", scrolling)
+      bands.style.setProperty("--gaze-edge-progress", String(progress))
+    })
     interactions.current = registry
     let frame = 0
     let previous = performance.now()
@@ -141,13 +167,16 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
       }
 
       const capture = data.capture
-      if (!capture || !sample.face || now - capture.start < 180) return
-      if (data.stage === "calibration" && capture.count < 4) {
-        // Keep all nine targets in the 50-sample WebGazer window.
-        backend.current?.record(capture.point)
-        capture.count++
-      } else if (point && data.stage === "validation") {
-        capture.errors.push(Math.hypot(point.x - capture.point.x, point.y - capture.point.y))
+      if (!capture || !sample.face) return
+      if (data.stage === "calibration" && data.samplesAtDot < TRAINING_SAMPLES && now >= capture.nextSample) {
+        // Use a fresh camera frame for each recording, and keep partial bursts
+        // at the same dot if the reader needs to retry or pause.
+        if (backend.current?.record(capture.point)) {
+          data.samplesAtDot++
+          capture.nextSample = now + TRAINING_SAMPLE_SPACING
+        }
+      } else if (data.stage === "validation" && data.estimate && now - capture.start >= VALIDATION_SETTLE) {
+        capture.errors.push(Math.hypot(data.estimate.x - capture.point.x, data.estimate.y - capture.point.y))
       }
     }
 
@@ -166,11 +195,13 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
         showResult({ grade: "Poor", note: "The 42-second setup window ended before accuracy could be verified." })
       }
       const capture = data.capture
-      if (capture && now - capture.start >= 660) {
+      const validation = data.stage === "validation"
+      const burstComplete = !validation && data.samplesAtDot === TRAINING_SAMPLES
+      const duration = validation ? VALIDATION_DURATION : TRAINING_ATTEMPT
+      if (capture && (burstComplete || now - capture.start >= duration)) {
         data.capture = null
         setBusy(false)
-        const validation = data.stage === "validation"
-        if ((validation ? capture.errors.length : capture.count) < 3) {
+        if (validation ? capture.errors.length < 3 : !burstComplete) {
           setHint("Hold your gaze on the dot and try again. Make sure your face is evenly lit.")
         } else {
           setHint("")
@@ -178,6 +209,7 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
           const last = validation ? VALIDATION.length : CALIBRATION.length
           if (data.index + 1 < last) {
             data.index++
+            data.samplesAtDot = 0
             setIndex(data.index)
           } else if (validation) {
             showResult(grade(data.errors))
@@ -195,8 +227,18 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
         displayed = next
         setStatus(next)
       }
-      if (data.stage === "tracking" && monitoring && elapsed < 1000) {
-        registry.step(now - data.updated < 260 ? data.estimate : null, now, delta, data.speed, data.grade !== "Poor", !motion.matches)
+      const tracking = data.stage === "tracking" && monitoring && elapsed < 1000
+      const point = tracking && now - data.updated < 260 ? data.estimate : null
+      if (gazeDot.current) {
+        gazeDot.current.hidden = !point
+        if (point) {
+          const x = Math.max(0, Math.min(innerWidth - 1, point.x))
+          const y = Math.max(0, Math.min(innerHeight - 1, point.y))
+          gazeDot.current.style.transform = "translate3d(" + x + "px, " + y + "px, 0) translate(-50%, -50%)"
+        }
+      }
+      if (tracking) {
+        registry.step(point, now, delta, data.speed, data.grade !== "Poor", !motion.matches)
       } else {
         registry.reset()
       }
@@ -214,8 +256,12 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
       registry.reset()
     }
 
+    function interruptTracking() {
+      if (data.stage === "tracking") registry.interrupt()
+    }
+
     function keyboard(event: KeyboardEvent) {
-      registry.interrupt()
+      interruptTracking()
       if (event.key === "Escape") {
         event.preventDefault()
         event.stopPropagation()
@@ -224,7 +270,6 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
     }
 
     function updateMotion() {
-      setReduced(motion.matches)
       registry.reset()
     }
 
@@ -253,9 +298,9 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
     })
     document.documentElement.dataset.gazeActive = ""
     document.addEventListener("visibilitychange", hide)
-    window.addEventListener("wheel", registry.interrupt, { passive: true })
-    window.addEventListener("touchstart", registry.interrupt, { passive: true })
-    window.addEventListener("pointerdown", registry.interrupt, { passive: true })
+    window.addEventListener("wheel", interruptTracking, { passive: true })
+    window.addEventListener("touchstart", interruptTracking, { passive: true })
+    window.addEventListener("pointerdown", interruptTracking, { passive: true })
     window.addEventListener("keydown", keyboard, true)
     window.addEventListener("pagehide", stopOnExit)
     motion.addEventListener("change", updateMotion)
@@ -269,9 +314,9 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
       registry.stop()
       interactions.current = null
       document.removeEventListener("visibilitychange", hide)
-      window.removeEventListener("wheel", registry.interrupt)
-      window.removeEventListener("touchstart", registry.interrupt)
-      window.removeEventListener("pointerdown", registry.interrupt)
+      window.removeEventListener("wheel", interruptTracking)
+      window.removeEventListener("touchstart", interruptTracking)
+      window.removeEventListener("pointerdown", interruptTracking)
       window.removeEventListener("keydown", keyboard, true)
       window.removeEventListener("pagehide", stopOnExit)
       motion.removeEventListener("change", updateMotion)
@@ -284,17 +329,35 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
     if (stage === "validation" || stage === "calibration") targetButton.current?.focus()
   }, [stage])
 
+  const attachPreview = useCallback((video: HTMLVideoElement | null) => {
+    if (video) return backend.current?.preview(video)
+  }, [])
+
   function measure() {
     const data = live.current
     const dot = targetButton.current
     if (!dot || data.capture || data.paused) return
     const box = dot.getBoundingClientRect()
-    data.capture = { point: { x: box.x + box.width / 2, y: box.y + box.height / 2 }, start: performance.now(), count: 0, errors: [] }
+    const start = performance.now()
+    data.capture = {
+      point: { x: box.x + box.width / 2, y: box.y + box.height / 2 },
+      start,
+      nextSample: start + TRAINING_SETTLE,
+      errors: [],
+    }
     setBusy(true)
   }
 
+  const showingEdges = stage === "tracking" && !paused
   const controls = (
-    <div data-gaze-controls="" role="region" aria-label="Gaze controls" className="gaze-controls flex w-max max-w-[calc(100%-2rem)] flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground shadow-lg">
+    <div
+      data-gaze-controls=""
+      data-gaze-edge-layout={showingEdges ? "" : undefined}
+      style={EDGE_STYLE}
+      role="region"
+      aria-label="Gaze controls"
+      className="gaze-controls flex w-max max-w-[calc(100%-2rem)] flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground shadow-lg"
+    >
       <span role="status" className="min-w-24 px-2 font-medium text-primary">{status}</span>
       <Button ref={pauseButton} size="sm" variant="ghost" onClick={togglePause} disabled={stage === "starting"}>{paused ? "Resume" : "Pause"}</Button>
       <Button size="sm" variant="ghost" onClick={restart} disabled={stage === "starting"}>Recalibrate</Button>
@@ -311,7 +374,17 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
         </SelectContent>
       </Select>
       <Button size="sm" variant="ghost" onClick={() => { restart(); if (stage !== "starting") setHint("Calibration cleared. Follow the dots to build a new model.") }} disabled={stage === "starting"}>Clear calibration</Button>
+      {stage === "tracking" && (
+        <Toggle size="sm" variant="outline" pressed={showDot} onPressedChange={setShowDot}>
+          Show gaze dot
+        </Toggle>
+      )}
       <Button size="sm" onClick={() => finish()}>Stop</Button>
+      {stage === "tracking" && (
+        <p role="status" className="hidden basis-full text-center text-xs text-muted-foreground motion-reduce:block">
+          Scroll paused: reduced motion
+        </p>
+      )}
     </div>
   )
 
@@ -319,12 +392,13 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
   if (stage === "tracking") {
     return (
       <>
-        {!reduced && !paused && (
-          <div aria-hidden="true" className="gaze-edges">
+        {showingEdges && (
+          <div ref={edgeBands} aria-hidden="true" className="gaze-edges" style={EDGE_STYLE}>
             <span>Look here to scroll up</span>
             <span>Look here to scroll down</span>
           </div>
         )}
+        {showDot && <div ref={gazeDot} aria-hidden="true" className="gaze-debug-dot" hidden />}
         {controls}
       </>
     )
@@ -350,6 +424,25 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
           </DialogDescription>
         </div>
 
+        {stage === "calibration" && (
+          <figure className="pointer-events-none absolute right-4 top-4 w-[clamp(6rem,10vw,9rem)] rounded-lg border border-border bg-card p-1.5">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-muted">
+              <video
+                ref={attachPreview}
+                aria-label="Local camera preview"
+                autoPlay
+                muted
+                playsInline
+                className="size-full -scale-x-100 object-cover"
+              />
+              <div aria-hidden="true" className="absolute inset-x-[24%] inset-y-[12%] rounded-[45%] border-2 border-dashed border-primary-foreground/80 shadow-sm" />
+            </div>
+            <figcaption className="mt-1.5 text-center text-xs text-muted-foreground">
+              {paused ? "Camera paused" : status === "Face lost" ? "Center your face" : "Local camera preview"}
+            </figcaption>
+          </figure>
+        )}
+
         {stage === "result" ? (
           <div className="absolute left-1/2 top-1/2 flex w-[min(28rem,90%)] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4 text-center">
             <p role="status" className="font-serif text-4xl text-primary">{result.grade}</p>
@@ -357,7 +450,10 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
             {result.note && <p className="text-sm text-muted-foreground">{result.note}</p>}
             {result.grade === "Poor" && <p className="text-sm text-muted-foreground">Coarse scrolling and highlights are available. Dwell expansion is off.</p>}
             <p className="text-sm text-muted-foreground">If the estimate drifts, face an even light, reduce glare on glasses, and keep a steady distance.</p>
-            <Button ref={continueButton} onClick={() => { enter("tracking"); interactions.current?.invalidate() }}>Continue</Button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button variant="outline" onClick={restart}>Recalibrate</Button>
+              <Button ref={continueButton} onClick={() => { enter("tracking"); interactions.current?.invalidate() }}>Continue</Button>
+            </div>
           </div>
         ) : (
           <>
@@ -368,10 +464,11 @@ export function GazeSession({ onStop }: { onStop: (message?: string) => void }) 
               aria-label={checking ? "Record validation point" : "Record calibration point"}
               aria-disabled={busy || paused}
               data-gaze-point=""
-              className="absolute size-14 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4 ring-primary/20 focus-visible:ring-4 focus-visible:ring-ring/70"
+              className="absolute size-14 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4 ring-primary/20 transition-none focus-visible:ring-4 focus-visible:ring-ring/70 active:not-aria-[haspopup]:-translate-y-1/2"
               style={{ left: x + "%", top: y + "%" }}
             >
               <span aria-hidden="true" className="size-2 rounded-full bg-primary-foreground" />
+              {busy && <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full border-2 border-primary/60 motion-safe:animate-pulse motion-safe:[animation-duration:450ms]" />}
             </Button>
             <div className="absolute inset-x-0 bottom-[12vh] flex flex-col items-center gap-1 px-5 text-center">
               <p className="text-sm tabular-nums text-primary" role="status">{index + 1} of {points.length}{busy ? " · Hold your gaze" : ""}</p>

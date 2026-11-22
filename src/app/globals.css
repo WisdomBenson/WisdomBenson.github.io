@@ -298,6 +298,23 @@ a {
   transform: translateX(-50%);
 }
 
+[data-gaze-controls][data-gaze-edge-layout] {
+  bottom: calc(var(--gaze-band-height) + 0.5rem);
+}
+
+.gaze-debug-dot {
+  position: fixed;
+  z-index: 46;
+  inset: 0 auto auto 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 2px solid var(--primary-foreground);
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+  pointer-events: none;
+}
+
 .gaze-setup {
   display: block;
   inset: 0;
@@ -326,9 +343,10 @@ a {
   pointer-events: none;
 }
 
-.gaze-edges span {
+.gaze-edges > span {
+  position: relative;
   display: flex;
-  height: 13%;
+  height: var(--gaze-band-height);
   justify-content: center;
   padding: 0.5rem;
   background: color-mix(in srgb, var(--quantum-muted) 50%, transparent);
@@ -336,14 +354,50 @@ a {
   font-size: 0.75rem;
 }
 
-.gaze-edges :first-child {
+.gaze-edges > :first-child {
   align-items: end;
   border-bottom: 1px solid var(--border);
 }
 
-.gaze-edges :last-child {
+.gaze-edges > :last-child {
   align-items: start;
   border-top: 1px solid var(--border);
+}
+
+.gaze-edges[data-gaze-edge="up"] > :first-child,
+.gaze-edges[data-gaze-edge="down"] > :last-child {
+  background: color-mix(in srgb, var(--quantum-muted) 90%, transparent);
+  font-weight: 600;
+}
+
+.gaze-edges[data-gaze-edge="up"] > :first-child::after,
+.gaze-edges[data-gaze-edge="down"] > :last-child::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: var(--primary);
+  transform: scaleX(var(--gaze-edge-progress, 0));
+  transform-origin: center;
+}
+
+.gaze-edges[data-gaze-edge="down"] > :last-child::after {
+  inset: 0 0 auto;
+}
+
+.gaze-edges[data-gaze-scrolling][data-gaze-edge="up"] > :first-child,
+.gaze-edges[data-gaze-scrolling][data-gaze-edge="down"] > :last-child {
+  background: color-mix(in srgb, var(--primary) 14%, var(--quantum-muted));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gaze-edges {
+    display: none;
+  }
+
+  [data-gaze-controls][data-gaze-edge-layout] {
+    bottom: 1rem;
+  }
 }
 
 [data-gaze-active] [data-gaze-grid] {

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "check:copy": "node scripts/check-copy.mjs",
+    "test:gaze": "node scripts/test-gaze.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -43,6 +44,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.3.0",
+    "playwright": "1.65.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2"
   }
