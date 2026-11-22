@@ -1,8 +1,23 @@
 import type { Metadata } from "next"
+import { Newsreader, Plus_Jakarta_Sans } from "next/font/google"
 
 import { ThemeProvider } from "@/components/theme-provider"
 
 import "./globals.css"
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wisdombenson.github.io"),
@@ -25,7 +40,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${newsreader.variable} ${jakarta.variable}`} suppressHydrationWarning>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>

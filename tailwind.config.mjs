@@ -19,7 +19,8 @@ const config = {
         philosophy: "var(--philosophy)",
       },
       fontFamily: {
-        sans: ["Geist Variable", "ui-sans-serif", "system-ui"],
+        serif: ["var(--font-newsreader)", "Iowan Old Style", "Palatino Linotype", "Georgia", "serif"],
+        sans: ["var(--font-jakarta)", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono Variable", "ui-monospace", "monospace"],
       },
     },

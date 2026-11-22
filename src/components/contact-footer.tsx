@@ -27,58 +27,91 @@ export function ContactFooter() {
   }
 
   return (
-    <footer id="contact" className="section-block">
+    <footer id="contact" className="surface-band border-b-0 pt-16 sm:pt-24">
       <div className="site-shell">
-        <div className="editorial-panel p-6 sm:p-10 lg:p-12">
-          <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-            <div>
-              <p className="eyebrow text-quantum">Contact</p>
-              <h2 className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
-                Research collaboration and academic contact
-              </h2>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
-                Open to computational-materials collaborations, doctoral research conversations, speaking invitations, and carefully framed philosophical exchange.
-              </p>
-            </div>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
-              <p className="mb-2 select-all wrap-anywhere text-sm font-medium sm:col-span-2 lg:col-span-1">{profile.email}</p>
-              <Button className="min-h-11 justify-between" asChild>
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
+            <p className="eyebrow text-quantum">Contact</p>
+            <h2 className="mt-3 max-w-2xl text-balance font-serif text-3xl font-normal leading-[1.1] tracking-[-0.015em] text-foreground sm:text-5xl">
+              Research collaboration and academic contact
+            </h2>
+            <p className="mt-5 max-w-[54ch] text-base leading-7 text-muted-foreground">
+              Open to computational-materials collaborations, doctoral research conversations, speaking invitations, and carefully framed philosophical exchange.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:col-span-5">
+            <p className="select-all wrap-anywhere text-sm font-medium text-foreground">
+              {profile.email}
+            </p>
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
+              <Button
+                className="h-11 justify-between rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:col-span-2 lg:col-span-1"
+                asChild
+              >
                 <a href={`mailto:${profile.email}`}>
-                  <Mail data-icon="inline-start" aria-hidden="true" />
-                  Email me
-                  <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-2.5">
+                    <Mail className="size-4" aria-hidden="true" />
+                    Email me
+                  </span>
+                  <ArrowUpRight className="size-4 opacity-80" aria-hidden="true" />
                 </a>
               </Button>
-              <Button variant="outline" className="min-h-11 justify-between" onClick={copyEmail}>
-                <Copy data-icon="inline-start" aria-hidden="true" />
-                Copy email
+              <Button
+                variant="outline"
+                className="h-11 justify-between rounded-xl border-border bg-card px-4 text-sm font-medium text-foreground shadow-none hover:border-primary/40 hover:bg-card hover:text-primary"
+                onClick={copyEmail}
+              >
+                <span className="inline-flex items-center gap-2.5">
+                  <Copy className="size-4" aria-hidden="true" />
+                  Copy email
+                </span>
               </Button>
-              <Button variant="outline" className="min-h-11 justify-between sm:col-span-2 lg:col-span-1" asChild>
+              <Button
+                variant="outline"
+                className="h-11 justify-between rounded-xl border-border bg-card px-4 text-sm font-medium text-foreground shadow-none hover:border-primary/40 hover:bg-card hover:text-primary"
+                asChild
+              >
                 <a href={profile.resume} download>
-                  <Download data-icon="inline-start" aria-hidden="true" />
-                  CV PDF
-                  <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-2.5">
+                    <Download className="size-4" aria-hidden="true" />
+                    CV PDF
+                  </span>
+                  <ArrowUpRight className="size-4 text-muted-foreground" aria-hidden="true" />
                 </a>
               </Button>
             </div>
           </div>
+        </div>
 
-          <div className="mt-14 grid gap-6 border-t pt-6 md:grid-cols-[1fr_auto] md:items-end">
-            <div>
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">Find my work elsewhere</p>
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-                {profileLinks.map((link) => (
-                  <a key={link.label} href={link.href} target="_blank" rel="noreferrer" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-                    {link.label}
-                  </a>
-                ))}
-              </div>
+        <div className="mt-14 grid gap-6 border-t border-border/80 py-8 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p className="text-[0.68rem] uppercase tracking-[0.14em] text-muted-foreground">
+              Find my work elsewhere
+            </p>
+            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+              {profileLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </a>
+              ))}
             </div>
-            <div className="text-sm text-muted-foreground md:text-right">
-              <p className="font-medium text-foreground">{profile.affiliation}</p>
-              <p className="mt-1">{profile.department}</p>
-              <a href="#top" className="mt-2 inline-flex items-center gap-1.5 hover:text-foreground">Back to top <ArrowUp className="size-3.5" aria-hidden="true" /></a>
-            </div>
+          </div>
+          <div className="text-sm text-muted-foreground md:text-right">
+            <p className="font-medium text-foreground">{profile.affiliation}</p>
+            <p className="mt-0.5">{profile.department}</p>
+            <a
+              href="#top"
+              className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+            >
+              Back to top <ArrowUp className="size-3.5" aria-hidden="true" />
+            </a>
           </div>
         </div>
 
