@@ -48,7 +48,7 @@ export function createInteractions() {
   let targets: Target[] = []
   let dirty = true
   let current: HTMLElement | undefined
-  let latched: HTMLElement | undefined
+  let latch: { element: HTMLElement; exitAt?: number } | undefined
   let dwell = 0
   let lastExit: number | undefined
   let edge = 0
@@ -125,17 +125,27 @@ export function createInteractions() {
     const valid = point && point.x >= 0 && point.x < innerWidth && point.y >= 0 && point.y < innerHeight && !(controls && contains(controls, point))
     const band = valid && canScroll ? point.y < innerHeight * EDGE_FRACTION ? -1 : point.y > innerHeight * (1 - EDGE_FRACTION) ? 1 : 0 : 0
     if (!band && valid) edgeInterrupted = false
-    if (point && latched) {
-      const previous = targets.find(target => target.element === latched)
-      if (!previous || !contains(previous.hit, point)) latched = undefined
+    if (latch) {
+      const { element } = latch
+      const previous = targets.find(target => target.element === element)
+      // A blink provides no evidence that the reader looked away from the card.
+      if (point && (!previous || !contains(previous.hit, point))) {
+        latch.exitAt ??= time
+        if (time - latch.exitAt > BLINK) latch = undefined
+      } else {
+        latch.exitAt = undefined
+      }
     }
     const nextEdge = edgeInterrupted ? 0 : band
     if (nextEdge !== edge) {
       edge = nextEdge
       edgeSince = time
     }
+    const target = valid && !edge ? nearest(point) : undefined
+    if (current && target?.element !== current) lastExit ??= time
+    if (lastExit !== undefined && time - lastExit > BLINK) clearDwell()
+
     if (edge) {
-      clearDwell()
       if (time - edgeSince > EDGE_DWELL) {
         const available = edge < 0 ? window.scrollY : document.documentElement.scrollHeight - innerHeight - window.scrollY
         if (available > 0) window.scrollBy({ top: edge * Math.min(available, 350 * delta / 1000), behavior: "instant" })
@@ -143,13 +153,7 @@ export function createInteractions() {
       return
     }
 
-    const target = valid ? nearest(point) : undefined
-    if (current && target?.element !== current) {
-      lastExit ??= time
-      if (time - lastExit <= BLINK) return
-      clearDwell()
-    }
-    if (!target) return
+    if (!target || (current && target.element !== current)) return
     if (current !== target.element) {
       current = target.element
       current.setAttribute("data-gaze-hover", "")
@@ -160,7 +164,7 @@ export function createInteractions() {
       lastExit = undefined
     }
 
-    if (!canExpand || latched === current || target.trigger.getAttribute("aria-expanded") !== "false") {
+    if (!canExpand || latch?.element === current || target.trigger.getAttribute("aria-expanded") !== "false") {
       current.style.removeProperty("--gaze-progress")
       dwell = 0
       return
@@ -169,7 +173,7 @@ export function createInteractions() {
     dwell += delta
     if (dwell >= GRACE) current.style.setProperty("--gaze-progress", String(Math.min(1, (dwell - GRACE) / speed)))
     if (dwell >= GRACE + speed) {
-      latched = current
+      latch = { element: current }
       current.style.removeProperty("--gaze-progress")
       target.trigger.click()
       invalidate()
