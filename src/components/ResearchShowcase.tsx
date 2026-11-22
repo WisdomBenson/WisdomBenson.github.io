@@ -41,8 +41,8 @@ export function ResearchShowcase() {
         </Reveal>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-2">
-          {evidenceFigures.map((figure, index) => (
-            <Reveal key={figure.plate} className="min-w-0" delay={index * 0.08}>
+          {evidenceFigures.map((figure) => (
+            <Reveal key={figure.plate} className="h-full min-w-0">
               <figure
                 data-slot="evidence-figure"
                 className="flex h-full flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-[0_12px_36px_-22px_rgba(28,27,24,0.14)] sm:p-5"
