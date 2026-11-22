@@ -4,3 +4,8 @@
 *.pdf binary
 *.png binary
 *.webp binary
+
+# Keep the pinned runtime and attribution byte-for-byte.
+public/vendor/webgazer/webgazer.js -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
+public/vendor/webgazer/WEBGAZER-NOTICE.md -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
+public/vendor/webgazer/mediapipe/** -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
