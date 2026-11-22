@@ -1,12 +1,10 @@
 "use client"
 
-import { useDeferredValue, useMemo, useState } from "react"
+import { useDeferredValue, useMemo, useRef, useState } from "react"
 import { ArrowUpRight, BookOpenText, Copy, Search, SearchX } from "lucide-react"
 import { toast } from "sonner"
 
 import { BibTeXModal } from "@/components/BibTeXModal"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyDescription,
@@ -22,6 +20,8 @@ import {
   type Publication,
   type PublicationCategory,
 } from "@/data/publications"
+
+const publicationsByYear = [...publications].sort((first, second) => second.year - first.year)
 
 type FilterValue = "all" | PublicationCategory
 
@@ -63,9 +63,9 @@ function matchesSearch(publication: Publication, query: string) {
 
 function AuthorList({ authors }: { authors: readonly string[] }) {
   return (
-    <p className="mt-3 text-sm leading-6 text-muted-foreground">
+    <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
       {authors.map((author, index) => {
-        const isWisdomBenson = author === "W. Benson" || author === "W. H. Benson"
+        const isWisdomBenson = author === "W. H. Benson"
         const punctuation = index === authors.length - 1 ? "" : index === authors.length - 2 ? " & " : ", "
 
         return (
@@ -81,14 +81,14 @@ function AuthorList({ authors }: { authors: readonly string[] }) {
 
 type PublicationListProps = {
   items: readonly Publication[]
-  onCite: (publication: Publication) => void
+  onCite: (publication: Publication, trigger: HTMLButtonElement) => void
   onCopyDoi: (publication: Publication) => void
 }
 
 function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
   if (items.length === 0) {
     return (
-      <Empty className="editorial-card mt-4 min-h-64">
+      <Empty className="mt-6 min-h-56 rounded-2xl border border-dashed border-border/90 bg-card/60">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <SearchX aria-hidden="true" />
@@ -101,64 +101,75 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
   }
 
   return (
-    <ol className="grid gap-3 pt-4">
+    <ol className="divide-y divide-border/80 border-b border-border/80">
       {items.map((publication, index) => (
         <li
           key={publication.id}
-          className="editorial-card grid w-full min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-x-3 p-4 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 sm:p-6 lg:gap-x-8"
+          className="grid w-full min-w-0 gap-y-1.5 py-5 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-2 sm:py-7 lg:grid-cols-[6rem_minmax(0,1fr)] lg:gap-x-8"
         >
-          <span className="pt-1 font-mono text-xs text-muted-foreground">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+          <div className="flex items-baseline gap-2.5 pt-1 font-mono text-xs text-muted-foreground sm:flex-col sm:gap-1">
+            <span className="font-medium text-foreground">{publication.year}</span>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+          </div>
 
           <article className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline">{publication.type}</Badge>
-              <span className="font-mono text-xs text-muted-foreground">{publication.year}</span>
-            </div>
-            <h3 className="mt-4 max-w-4xl text-balance text-xl font-semibold leading-tight tracking-[-0.03em] sm:text-2xl">
-              {publication.title}
+            <p className="text-[0.68rem] uppercase tracking-[0.13em] text-quantum">
+              {publication.type}
+            </p>
+            <h3 className="mt-2 max-w-4xl text-balance font-serif text-xl font-medium leading-snug tracking-[-0.01em] text-foreground sm:text-[1.45rem]">
+              <a
+                href={publication.recordUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="transition-colors hover:text-primary"
+              >
+                {publication.title}
+              </a>
             </h3>
             <AuthorList authors={publication.authors} />
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">{publication.venue}</p>
+            <p className="mt-0.5 text-sm italic leading-6 text-muted-foreground">{publication.venue}</p>
 
-            <div className="mt-5 flex min-w-0 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
               {publication.doi ? (
-                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <>
                   <a
                     href={publication.recordUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="break-all font-mono text-xs text-quantum underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
+                    className="inline-flex items-center gap-1 break-all text-primary underline decoration-primary/35 underline-offset-4 transition-colors hover:decoration-primary"
                   >
                     {publication.doi}
+                    <ArrowUpRight className="size-3.5 shrink-0" aria-hidden="true" />
                   </a>
-                  <Button variant="ghost" size="xs" onClick={() => onCopyDoi(publication)}>
-                    <Copy data-icon="inline-start" aria-hidden="true" />
+                  <button
+                    type="button"
+                    onClick={() => onCopyDoi(publication)}
+                    className="inline-flex items-center gap-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Copy className="size-3.5" aria-hidden="true" />
                     Copy DOI
-                  </Button>
-                </div>
+                  </button>
+                </>
               ) : (
                 <a
                   href={publication.recordUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-quantum hover:text-foreground"
+                  className="inline-flex items-center gap-1 font-medium text-primary underline decoration-primary/35 underline-offset-4 transition-colors hover:decoration-primary"
                 >
                   Thesis record
-                  <ArrowUpRight className="size-4" aria-hidden="true" />
+                  <ArrowUpRight className="size-3.5" aria-hidden="true" />
                 </a>
               )}
 
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-fit shrink-0"
-                onClick={() => onCite(publication)}
+              <button
+                type="button"
+                onClick={(event) => onCite(publication, event.currentTarget)}
+                className="inline-flex items-center gap-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <BookOpenText data-icon="inline-start" aria-hidden="true" />
+                <BookOpenText className="size-3.5" aria-hidden="true" />
                 Cite / BibTeX
-              </Button>
+              </button>
             </div>
           </article>
         </li>
@@ -171,10 +182,11 @@ export function PublicationHub() {
   const [activeFilter, setActiveFilter] = useState<FilterValue>("all")
   const [query, setQuery] = useState("")
   const [selectedPublication, setSelectedPublication] = useState<Publication | null>(null)
+  const citationTrigger = useRef<HTMLButtonElement>(null)
   const deferredQuery = useDeferredValue(query)
 
   const searchResults = useMemo(
-    () => publications.filter((publication) => matchesSearch(publication, deferredQuery)),
+    () => publicationsByYear.filter((publication) => matchesSearch(publication, deferredQuery)),
     [deferredQuery],
   )
 
@@ -198,15 +210,15 @@ export function PublicationHub() {
 
   return (
     <section id="publications" className="section-block">
-      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
+      <div className="site-shell">
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <p className="eyebrow text-quantum">Publications &amp; Posters</p>
-            <h2 className="mt-4 max-w-3xl text-balance text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
-              My publications and posters
+            <h2 className="mt-3 max-w-2xl text-balance font-serif text-3xl font-normal leading-[1.12] tracking-[-0.015em] text-foreground sm:text-5xl">
+              Selected publications and posters
             </h2>
           </div>
-          <p className="max-w-[65ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
+          <p className="max-w-[56ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
             Seven records across condensed matter physics, computational modeling, materials research, and philosophical metaphysics.
           </p>
         </div>
@@ -216,34 +228,33 @@ export function PublicationHub() {
           onValueChange={(value) => setActiveFilter(value as FilterValue)}
           className="mt-10 flex-col"
         >
-          <div className="grid gap-5 border-y py-5 xl:grid-cols-[1fr_22rem] xl:items-end">
-            <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-5 gap-y-2">
+          <div className="grid gap-5 border-b border-border/80 pb-4 xl:grid-cols-[1fr_20rem] xl:items-end">
+            <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-3 gap-y-2 p-0 sm:gap-x-6">
               {filters.map((filter) => (
                 <TabsTrigger
                   key={filter.value}
                   value={filter.value}
-                  className="h-9 flex-none px-0 data-[state=active]:text-quantum data-[state=active]:after:bg-quantum data-[state=active]:after:opacity-100"
+                  className="h-10 flex-none rounded-none border-0 px-0 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground after:inset-x-0 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:after:bottom-0 data-[state=active]:after:h-[2px] data-[state=active]:after:bg-primary data-[state=active]:after:opacity-100"
                 >
                   {filter.label}
-                  <span className="font-mono text-[0.68rem] text-muted-foreground">({filter.count})</span>
+                  <span className="text-[0.7rem]">({filter.count})</span>
                 </TabsTrigger>
               ))}
             </TabsList>
 
-            <label className="grid gap-2">
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">
-                Search records
-              </span>
-              <span className="relative">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Title, author, DOI, or keyword"
-                  className="pl-9"
-                  type="search"
-                />
-              </span>
+            <label className="relative block">
+              <span className="sr-only">Search publications</span>
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search title, author, DOI, keyword..."
+                className="h-10 rounded-full border-border/90 bg-card pl-9 text-sm shadow-none focus-visible:border-primary"
+                type="search"
+              />
             </label>
           </div>
 
@@ -252,10 +263,13 @@ export function PublicationHub() {
           </p>
 
           {filters.map((filter) => (
-            <TabsContent key={filter.value} value={filter.value}>
+            <TabsContent key={filter.value} value={filter.value} className="mt-0">
               <PublicationList
                 items={recordsFor(filter.value)}
-                onCite={setSelectedPublication}
+                onCite={(publication, trigger) => {
+                  citationTrigger.current = trigger
+                  setSelectedPublication(publication)
+                }}
                 onCopyDoi={copyDoi}
               />
             </TabsContent>
@@ -266,6 +280,12 @@ export function PublicationHub() {
       <BibTeXModal
         publication={selectedPublication}
         open={selectedPublication !== null}
+        onCloseAutoFocus={(event) => {
+          if (citationTrigger.current?.isConnected) {
+            event.preventDefault()
+            citationTrigger.current.focus()
+          }
+        }}
         onOpenChange={(open) => {
           if (!open) setSelectedPublication(null)
         }}

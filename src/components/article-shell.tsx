@@ -1,35 +1,44 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowLeft, Check, Copy, Share2 } from "lucide-react"
-import Link from "next/link"
+import { ArrowLeft, BookOpenText, Copy, Share2 } from "lucide-react"
+import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
-import { Button } from "@/components/ui/button"
+import { essays } from "@/content/essays"
 import { profile } from "@/content/profile"
 
 type TocItem = { id: string; label: string; level: 2 | 3 }
 
 export function ArticleShell({ children }: { children: React.ReactNode }) {
-  const articleRef = useRef<HTMLElement>(null)
+  const pathname = usePathname()
+  const canonicalPath = pathname.endsWith("/") ? pathname : pathname + "/"
+  const readingTimeMinutes = essays.find((essay) => essay.href === canonicalPath)?.readingTimeMinutes
+  const articleRef = useRef<HTMLDivElement>(null)
   const [toc, setToc] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState("")
-  const [readingTime, setReadingTime] = useState("")
 
   useEffect(() => {
     const article = articleRef.current
     if (!article) return
 
     const headings = Array.from(article.querySelectorAll<HTMLHeadingElement>("h2, h3"))
+    const requestedId = window.location.hash.slice(1)
     const items = headings.map((heading, index) => {
+      const needsId = !heading.id
       const id = heading.id || `section-${index + 1}`
       heading.id = id
-      return { id, label: heading.textContent || `Section ${index + 1}`, level: heading.tagName === "H2" ? 2 : 3 } as TocItem
+      // Static HTML cannot scroll to a fragment whose ID is assigned here.
+      if (needsId && id === requestedId) heading.scrollIntoView({ behavior: "instant" })
+      return {
+        id,
+        label: heading.textContent || `Section ${index + 1}`,
+        level: heading.tagName === "H2" ? 2 : 3,
+      } as TocItem
     })
 
+    if (items.length < 2) return
     setToc(items)
-    const words = (article.textContent || "").trim().split(/\s+/).length
-    setReadingTime(`${Math.max(1, Math.ceil(words / 220))} min read`)
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -44,56 +53,90 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
   }, [])
 
   async function copyLink() {
-    await navigator.clipboard.writeText(window.location.href)
-    toast.success("Article link copied")
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.success("Article link copied")
+    } catch {
+      toast.error("Could not copy the link. You can copy it from the address bar.")
+    }
   }
 
   async function share() {
     if (navigator.share) {
-      await navigator.share({ title: document.title, url: window.location.href })
+      try {
+        await navigator.share({ title: document.title, url: window.location.href })
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) await copyLink()
+      }
       return
     }
     await copyLink()
   }
 
   return (
-    <main className="site-shell section-block">
-      <div className="editorial-panel p-6 sm:p-10 lg:p-12">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
-          <Button variant="ghost" asChild>
-            <Link href="/#philosophy"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Philosophy &amp; Essays</Link>
-          </Button>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-muted-foreground">{readingTime}</span>
-            <Button variant="outline" size="icon" onClick={copyLink} aria-label="Copy article link">
-              <Copy aria-hidden="true" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={share} aria-label="Share article">
-              <Share2 aria-hidden="true" />
-            </Button>
-          </div>
+    <main id="main-content" className="site-shell pb-16 pt-10 sm:pb-24 sm:pt-14">
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-border/80 pb-5">
+        <a
+          href="/thought-lab/"
+          className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          <ArrowLeft
+            className="size-4 transition-transform group-hover:-translate-x-0.5"
+            aria-hidden="true"
+          />
+          Philosophy &amp; Essays
+        </a>
+        <div className="flex items-center gap-3">
+          {readingTimeMinutes !== undefined && (
+            <span data-slot="reading-time" className="text-xs text-muted-foreground">
+              {readingTimeMinutes} min read
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={copyLink}
+            aria-label="Copy article link"
+            className="inline-flex size-8 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Copy className="size-3.5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={share}
+            aria-label="Share article"
+            className="inline-flex size-8 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Share2 className="size-3.5" aria-hidden="true" />
+          </button>
         </div>
+      </div>
 
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_16rem]">
-          <article ref={articleRef} className="prose-lab min-w-0 max-w-3xl">
+      <div className="article-layout grid gap-12 xl:gap-16">
+        <article className="prose-lab min-w-0 max-w-[68ch]">
+          <div ref={articleRef} data-slot="article-body">
             {children}
-            <div className="mt-16 border-t pt-8">
-              <p className="eyebrow text-philosophy"><Check className="size-3.5" aria-hidden="true" /> About me</p>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                I am {profile.name}, a physics PhD researcher at Howard University and a philosophical writer working across materials, models, value, and metaphysics.
-              </p>
-            </div>
-          </article>
+          </div>
+          <div className="mt-16 border-t border-border/80 pt-8">
+            <p className="eyebrow text-philosophy">
+              <BookOpenText className="size-3.5" aria-hidden="true" /> About the author
+            </p>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              I am {profile.name}, a physics PhD researcher at Howard University and a philosophical writer working across materials, models, value, and metaphysics.
+            </p>
+          </div>
+        </article>
 
+        {toc.length >= 2 && (
           <aside className="hidden lg:block">
-            <nav className="sticky top-24 border-l pl-5" aria-label="Table of contents">
+            <nav className="sticky top-24 border-l border-border/80 pl-5" aria-label="Table of contents">
               <p className="eyebrow text-muted-foreground">On this page</p>
-              <ol className="mt-5 space-y-3">
+              <ol className="mt-5 flex flex-col gap-3">
                 {toc.map((item) => (
                   <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
                     <a
                       href={`#${item.id}`}
-                      className={`block text-sm leading-5 transition-colors ${activeId === item.id ? "text-philosophy" : "text-muted-foreground hover:text-foreground"}`}
+                      aria-current={activeId === item.id ? "location" : undefined}
+                      className="block text-sm leading-5 text-muted-foreground transition-colors hover:text-foreground aria-[current=location]:font-medium aria-[current=location]:text-primary"
                     >
                       {item.label}
                     </a>
@@ -102,7 +145,7 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
               </ol>
             </nav>
           </aside>
-        </div>
+        )}
       </div>
     </main>
   )

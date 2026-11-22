@@ -1,94 +1,75 @@
-import { ArrowUpRight, BookOpenText, BriefcaseBusiness, Building2, Clock3, FileText, Scale } from "lucide-react"
+import { ArrowRight, ArrowUpRight, BookOpenText } from "lucide-react"
 
 import { Reveal } from "@/components/reveal"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-
-const essays = [
-  {
-    type: "Peer-reviewed article",
-    title: "Romantic exclusivity as structural necessity",
-    description: "The original article in Philosophies 10(5), 102 (2025): a Kantian–Scheler–Schopenhauer synthesis of romantic exclusivity.",
-    meta: "Full article · PDF",
-    href: "/assets/articles/philosophies-10-00102.pdf",
-    icon: Scale,
-  },
-  {
-    type: "Essay",
-    title: "What a Model Leaves Out: From Quantum Dots to the Future of Work",
-    description: "Controlling a physical system differs fundamentally from understanding it.",
-    meta: "3 min essay",
-    href: "/thought-lab/model-and-meaning/",
-    icon: FileText,
-  },
-  {
-    type: "Essay",
-    title: "AI in our workplace",
-    description: "A concise argument for equipping workers with AI rather than using automation to sever people from the value they help create.",
-    meta: "2 min essay",
-    href: "/thought-lab/ai-in-our-workplace/",
-    icon: BriefcaseBusiness,
-  },
-  {
-    type: "Essay",
-    title: "AI Utopia or Dystopia? The Answer Will Be Written in Employment Contracts",
-    description: "An evidence-led argument that employment, access, and institutional incentives—not capability alone—will determine how AI changes work.",
-    meta: "7 min essay",
-    href: "/thought-lab/ai-utopia-or-dystopia/",
-    icon: Building2,
-  },
-]
+import { essays } from "@/content/essays"
+import { cn } from "@/lib/utils"
 
 export function ThoughtLab() {
   return (
-    <section id="philosophy" className="section-block">
-      <div className="editorial-panel site-shell p-6 sm:p-10 lg:p-12">
-        <Reveal className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
+    <section id="philosophy" className="surface-band section-block">
+      <div className="site-shell">
+        <Reveal className="grid gap-6 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
             <p className="eyebrow text-philosophy">
               <BookOpenText className="size-3.5" aria-hidden="true" /> Philosophy &amp; Essays
             </p>
-            <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">
+            <h2 className="mt-3 max-w-2xl text-balance font-serif text-3xl font-normal leading-[1.12] tracking-[-0.015em] text-foreground sm:text-5xl">
               Value, agency, and metaphysical structure
             </h2>
           </div>
-          <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
+          <p className="max-w-[56ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
             The philosophical work asks what our concepts commit us to: in love, value, agency, and the explanations we accept as complete.
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-3 lg:grid-cols-2">
-          {essays.map((essay, index) => {
-            const Icon = essay.icon
-            return (
-              <Reveal key={essay.title} delay={index * 0.07} className="h-full">
-                <article className="editorial-card group flex h-full min-h-[18rem] flex-col overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-11 place-items-center rounded-xl bg-philosophy-muted text-philosophy">
-                      <Icon className="size-5" aria-hidden="true" />
-                    </span>
-                    <Badge variant="outline" className="text-philosophy">{essay.type}</Badge>
-                  </div>
-                  <h3 className="mt-8 max-w-lg text-balance text-2xl font-semibold leading-[1.02] tracking-[-0.05em] sm:mt-16 sm:text-3xl md:text-4xl">
-                    {essay.title}
-                  </h3>
-                  <p className="mt-5 max-w-xl flex-1 text-base leading-7 text-muted-foreground">{essay.description}</p>
-                  <div className="mt-8 flex items-center justify-between border-t pt-5">
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      {essay.type === "Peer-reviewed article" ? <BookOpenText className="size-3.5" aria-hidden="true" /> : <Clock3 className="size-3.5" aria-hidden="true" />} {essay.meta}
-                    </span>
-                    <Button variant="ghost" asChild>
-                      <a href={essay.href}>
-                        Read <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
-                      </a>
-                    </Button>
-                  </div>
-                </article>
-              </Reveal>
-            )
-          })}
-        </div>
+        <EssayList className="mt-12" />
       </div>
     </section>
+  )
+}
+
+export function EssayList({ className }: { className?: string }) {
+  return (
+    <div className={cn("grid gap-4 sm:gap-6 lg:grid-cols-2", className)}>
+      {essays.map((essay) => {
+        const isPdf = essay.readingTimeMinutes === undefined
+        const metaLabel = isPdf
+          ? `${essay.type} · PDF`
+          : `${essay.type} · ${essay.readingTimeMinutes} min read`
+
+        return (
+          <article key={essay.href} className="h-full">
+            <a
+              href={essay.href}
+              className="group flex h-full flex-col rounded-2xl bg-card/90 p-5 shadow-[0_8px_28px_-20px_rgba(28,27,24,0.12)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-card hover:shadow-[0_18px_40px_-22px_rgba(28,27,24,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-8"
+            >
+              <p className="text-[0.68rem] uppercase tracking-[0.13em] text-philosophy">
+                {metaLabel}
+              </p>
+              <h3 className="mt-3.5 font-serif text-[1.35rem] font-medium leading-snug tracking-[-0.015em] text-foreground transition-colors group-hover:text-primary sm:text-[1.7rem]">
+                {essay.title}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-[0.96rem]">
+                {essay.description}
+              </p>
+              <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-primary">
+                {isPdf ? "Read article" : "Read essay"}
+                {isPdf ? (
+                  <ArrowUpRight
+                    className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <ArrowRight
+                    className="size-4 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                )}
+              </span>
+            </a>
+          </article>
+        )
+      })}
+    </div>
   )
 }

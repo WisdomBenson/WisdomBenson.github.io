@@ -18,9 +18,10 @@ type BibTeXModalProps = {
   publication: Publication | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  onCloseAutoFocus: (event: Event) => void
 }
 
-export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProps) {
+export function BibTeXModal({ publication, open, onOpenChange, onCloseAutoFocus }: BibTeXModalProps) {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle")
 
   async function copyBibTeX() {
@@ -42,15 +43,18 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
         onOpenChange(nextOpen)
       }}
     >
-      <DialogContent className="editorial-panel p-6 sm:max-w-2xl">
+      <DialogContent
+        className="editorial-panel min-w-0 bg-card p-6 sm:max-w-2xl"
+        onCloseAutoFocus={onCloseAutoFocus}
+      >
         <DialogHeader>
-          <DialogTitle>BibTeX citation</DialogTitle>
+          <DialogTitle className="font-serif text-xl font-medium">BibTeX citation</DialogTitle>
           <DialogDescription>{publication?.title}</DialogDescription>
         </DialogHeader>
 
         <pre
           data-slot="bibtex-code"
-          className="max-h-[55vh] overflow-auto rounded-xl border border-foreground/15 bg-foreground p-4 font-mono text-xs leading-6 text-background"
+          className="max-h-[50dvh] min-w-0 overflow-y-auto whitespace-pre-wrap wrap-anywhere rounded-xl border border-foreground/10 bg-foreground p-4 font-mono text-xs leading-6 text-background"
           tabIndex={0}
           aria-label="BibTeX entry"
         >
@@ -58,7 +62,11 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
         </pre>
 
         <DialogFooter className="-mx-6 -mb-6 p-6">
-          <Button onClick={copyBibTeX} disabled={!publication}>
+          <Button
+            onClick={copyBibTeX}
+            disabled={!publication}
+            className="rounded-full bg-primary px-5 text-primary-foreground hover:bg-primary/90"
+          >
             {copyState === "copied" ? (
               <Check data-icon="inline-start" aria-hidden="true" />
             ) : (

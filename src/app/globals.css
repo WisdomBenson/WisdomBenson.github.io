@@ -1,5 +1,4 @@
 @config "../../tailwind.config.mjs";
-@import "@fontsource-variable/geist";
 @import "@fontsource-variable/jetbrains-mono";
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
@@ -8,6 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-surface: var(--surface-subtle);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -32,7 +32,8 @@
   --color-philosophy: var(--philosophy);
   --color-philosophy-foreground: var(--philosophy-foreground);
   --color-philosophy-muted: var(--philosophy-muted);
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -41,34 +42,34 @@
   --radius-2xl: calc(var(--radius) + 10px);
 }
 
-:root,
-.dark {
-  color-scheme: dark;
-  --radius: 0.875rem;
-  --background: #000000;
-  --foreground: #ffffff;
+:root {
+  color-scheme: light;
+  --radius: 0.75rem;
+  --background: #faf8f4;
+  --surface-subtle: #f3efe6;
+  --foreground: #1c1b18;
   --card: #ffffff;
-  --card-foreground: #020617;
+  --card-foreground: #1c1b18;
   --popover: #ffffff;
-  --popover-foreground: #020617;
-  --primary: #ffffff;
-  --primary-foreground: #000000;
-  --secondary: #171717;
-  --secondary-foreground: #f8fafc;
-  --muted: #171717;
-  --muted-foreground: #a3a3a3;
-  --accent: #ffffff;
-  --accent-foreground: #000000;
-  --destructive: #f87171;
-  --border: #262626;
-  --input: #404040;
-  --ring: #22d3ee;
-  --quantum: #22d3ee;
-  --quantum-foreground: #001014;
-  --quantum-muted: #0d3038;
-  --philosophy: #818cf8;
-  --philosophy-foreground: #ffffff;
-  --philosophy-muted: #25204d;
+  --popover-foreground: #1c1b18;
+  --primary: #1f4d3a;
+  --primary-foreground: #faf8f4;
+  --secondary: #efeae0;
+  --secondary-foreground: #1c1b18;
+  --muted: #f1ede4;
+  --muted-foreground: #57534e;
+  --accent: #eae4d8;
+  --accent-foreground: #1c1b18;
+  --destructive: #b91c1c;
+  --border: #e5dfd3;
+  --input: #d6cfc2;
+  --ring: #2d6a51;
+  --quantum: #1f4d3a;
+  --quantum-foreground: #faf8f4;
+  --quantum-muted: #e6efe9;
+  --philosophy: #1f4d3a;
+  --philosophy-foreground: #faf8f4;
+  --philosophy-muted: #e6efe9;
 }
 
 * {
@@ -91,73 +92,60 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--quantum) 35%, transparent);
+  background: color-mix(in srgb, var(--quantum) 22%, transparent);
 }
 
 a {
-  text-underline-offset: 0.22em;
+  text-underline-offset: 0.24em;
 }
 
 [id] {
-  scroll-margin-top: 6.5rem;
+  scroll-margin-top: 5.5rem;
 }
 
 .site-shell {
-  width: min(100% - 2rem, 80rem);
+  width: min(100% - 2rem, 74rem);
   margin-inline: auto;
 }
 
+@media (width >= 40rem) {
+  .site-shell {
+    width: min(100% - 3rem, 74rem);
+  }
+}
+
 .section-block {
-  padding-block: clamp(1.25rem, 3.5vw, 2.5rem);
+  padding-block: clamp(3.5rem, 6.5vw, 5.75rem);
+}
+
+.surface-band {
+  background: var(--surface-subtle);
+  border-block: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
 }
 
 .editorial-panel {
-  --background: #ffffff;
-  --foreground: #020617;
-  --card: #ffffff;
-  --card-foreground: #020617;
-  --popover: #ffffff;
-  --popover-foreground: #020617;
-  --primary: #020617;
-  --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #475569;
-  --accent: #e2e8f0;
-  --accent-foreground: #0f172a;
-  --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #0891b2;
-  --quantum: #0891b2;
-  --quantum-foreground: #ecfeff;
-  --quantum-muted: #cffafe;
-  --philosophy: #4f46e5;
-  --philosophy-foreground: #ffffff;
-  --philosophy-muted: #e0e7ff;
-  border: 1px solid rgb(255 255 255 / 0.2);
-  border-radius: 1.5rem;
-  background: var(--background);
-  box-shadow: 0 10px 30px rgb(255 255 255 / 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--card);
   color: var(--foreground);
+  box-shadow: 0 20px 50px -24px rgba(28, 27, 24, 0.16);
 }
 
 .editorial-card {
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
   border-radius: 1rem;
   background: var(--card);
-  box-shadow: 0 12px 28px rgb(15 23 42 / 0.06);
   color: var(--card-foreground);
+  box-shadow: 0 8px 28px -18px rgba(28, 27, 24, 0.12);
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
+  gap: 0.45rem;
   font-size: 0.7rem;
-  font-weight: 650;
-  letter-spacing: 0.16em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -173,9 +161,10 @@ a {
   transform: translateY(-160%);
   border: 1px solid var(--ring);
   border-radius: var(--radius-md);
-  background: var(--background);
+  background: var(--card);
+  color: var(--foreground);
   padding: 0.75rem 1rem;
-  font-weight: 650;
+  font-weight: 600;
   transition: transform 160ms ease;
 }
 
@@ -183,33 +172,103 @@ a {
   transform: translateY(0);
 }
 
+@media (width >= 64rem) {
+  /* Reserve the contents column for MDX sections before hydration. */
+  .article-layout:has([data-slot="article-body"] :is(h2, h3) ~ :is(h2, h3), > aside) {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+  }
+}
+
 .prose-lab {
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1.075rem;
+  line-height: 1.85;
 }
 
 .prose-lab h1,
 .prose-lab h2,
 .prose-lab h3 {
+  font-family: var(--font-serif);
   color: var(--foreground);
-  font-weight: 650;
-  letter-spacing: -0.035em;
+  font-weight: 500;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
-.prose-lab h1 { margin-block: 1rem 2rem; font-size: clamp(2.25rem, 7vw, 4.5rem); line-height: 0.98; }
-.prose-lab h2 { margin-block: 3rem 1rem; font-size: clamp(1.6rem, 4vw, 2.25rem); }
-.prose-lab h3 { margin-block: 2rem 0.75rem; font-size: 1.25rem; }
-.prose-lab p { margin-block: 1.1rem; color: var(--muted-foreground); }
-.prose-lab strong { color: var(--foreground); }
-.prose-lab a { color: var(--philosophy); text-decoration: underline; }
-.prose-lab blockquote { margin-block: 2rem; border-left: 2px solid var(--philosophy); padding-left: 1.25rem; color: var(--foreground); }
-.prose-lab code { border-radius: 0.35rem; background: var(--muted); padding: 0.15rem 0.35rem; font-family: var(--font-mono); font-size: 0.88em; }
-.prose-lab .katex-display { overflow-x: auto; padding-block: 1rem; }
+.prose-lab h1 {
+  margin-block: 0.75rem 1.5rem;
+  font-size: clamp(2.15rem, 4.8vw, 3.6rem);
+  line-height: 1.1;
+}
+
+.prose-lab h2 {
+  margin-block: 3rem 1rem;
+  font-size: clamp(1.55rem, 3.2vw, 2.05rem);
+  line-height: 1.2;
+}
+
+.prose-lab h3 {
+  margin-block: 2rem 0.75rem;
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+.prose-lab p {
+  margin-block: 1.25rem;
+  color: var(--muted-foreground);
+}
+
+.prose-lab p.eyebrow {
+  margin-block: 0;
+  color: var(--philosophy);
+}
+
+.prose-lab strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose-lab a {
+  color: var(--philosophy);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--philosophy) 40%, transparent);
+  transition: text-decoration-color 150ms ease;
+}
+
+.prose-lab a:hover {
+  text-decoration-color: var(--philosophy);
+}
+
+.prose-lab blockquote {
+  margin-block: 2rem;
+  border-left: 2px solid var(--philosophy);
+  padding-left: 1.25rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--foreground);
+}
+
+.prose-lab code {
+  border-radius: 0.35rem;
+  background: var(--muted);
+  padding: 0.15rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--foreground);
+}
+
+.prose-lab .katex-display {
+  overflow-x: auto;
+  padding-block: 1rem;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
