@@ -9,6 +9,16 @@
   let pauseVersion = 0
   let reportError
 
+  function resetTraining() {
+    // WebGazer 3.5.3 otherwise drops the earliest samples after 50 clicks.
+    for (const regression of tracker.getRegression()) {
+      regression.init()
+      for (const name of ["screenXClicksArray", "screenYClicksArray", "eyeFeaturesClicks", "dataClicks"]) {
+        regression[name].windowSize = 72
+      }
+    }
+  }
+
   window.gazeBridge = {
     async start(stream, onSample, onError) {
       tracker = window.webgazer
@@ -20,6 +30,9 @@
 
       tracker.params.faceMeshSolutionPath = new URL("./mediapipe/face_mesh/", document.baseURI).href
       tracker.saveDataAcrossSessions(false)
+      // Disable passive training even while begin() installs its listeners.
+      tracker.params.moveTickSize = Number.POSITIVE_INFINITY
+      resetTraining()
       tracker.applyKalmanFilter(false)
       tracker.showVideoPreview(false).showPredictionPoints(false)
       detector.getEyePatches = async (...args) => {
@@ -50,11 +63,13 @@
       }
     },
     record(x, y) {
-      if (ready && !stopped && face) tracker.recordScreenPosition(x, y, "click")
+      if (!ready || stopped || !face) return false
+      tracker.recordScreenPosition(x, y, "click")
+      return true
     },
     clear() {
       // clearData() also touches IndexedDB. This integration trains in RAM.
-      tracker?.getRegression().forEach(regression => regression.init())
+      if (tracker) resetTraining()
     },
     pause() {
       pauseVersion++
