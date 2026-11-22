@@ -5,7 +5,6 @@ import { ArrowLeft, Check, Copy, Share2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { profile } from "@/content/profile"
 
 type TocItem = { id: string; label: string; level: 2 | 3 }
@@ -82,9 +81,9 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        <div className={cn("grid gap-10", toc.length > 0 && "lg:grid-cols-[minmax(0,1fr)_15rem] xl:gap-14")}>
+        <div className="article-layout grid gap-10 xl:gap-14">
           <article className="prose-lab min-w-0 max-w-3xl">
-            <div ref={articleRef}>{children}</div>
+            <div ref={articleRef} data-slot="article-body">{children}</div>
             <div className="mt-16 border-t pt-8">
               <p className="eyebrow text-philosophy"><Check className="size-3.5" aria-hidden="true" /> About me</p>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">

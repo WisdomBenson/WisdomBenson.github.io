@@ -182,6 +182,12 @@ a {
   transform: translateY(0);
 }
 
+@media (width >= 64rem) {
+  .article-layout:has([data-slot="article-body"] :is(h2, h3)) {
+    grid-template-columns: minmax(0, 1fr) 15rem;
+  }
+}
+
 .prose-lab {
   font-size: 1.05rem;
   line-height: 1.8;
