@@ -8,17 +8,21 @@ import { profile } from "@/content/profile"
 
 const profileLinks = [
   { label: "Google Scholar", href: profile.links.googleScholar },
+  { label: "ORCID", href: profile.links.orcid },
   { label: "ResearchGate", href: profile.links.researchGate },
   { label: "PhilPeople", href: profile.links.philPeople },
   { label: "LinkedIn", href: profile.links.linkedin },
   { label: "GitHub", href: profile.links.github },
-  { label: "Audiomack search", href: profile.links.audiomack },
 ]
 
 export function ContactFooter() {
   async function copyEmail() {
-    await navigator.clipboard.writeText(profile.email)
-    toast.success("Email copied", { description: profile.email })
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      toast.success("Email copied", { description: profile.email })
+    } catch {
+      toast.error("Could not copy the address. Select the email above to copy it.")
+    }
   }
 
   return (
@@ -36,6 +40,7 @@ export function ContactFooter() {
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+              <p className="mb-2 select-all wrap-anywhere text-sm font-medium sm:col-span-2 lg:col-span-1">{profile.email}</p>
               <Button className="min-h-11 justify-between" asChild>
                 <a href={`mailto:${profile.email}`}>
                   <Mail data-icon="inline-start" aria-hidden="true" />
@@ -50,7 +55,7 @@ export function ContactFooter() {
               <Button variant="outline" className="min-h-11 justify-between sm:col-span-2 lg:col-span-1" asChild>
                 <a href={profile.resume} download>
                   <Download data-icon="inline-start" aria-hidden="true" />
-                  Résumé PDF
+                  CV PDF
                   <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
                 </a>
               </Button>
@@ -69,7 +74,8 @@ export function ContactFooter() {
               </div>
             </div>
             <div className="text-sm text-muted-foreground md:text-right">
-              <p>{profile.location} · {profile.phone}</p>
+              <p className="font-medium text-foreground">{profile.affiliation}</p>
+              <p className="mt-1">{profile.department}</p>
               <a href="#top" className="mt-2 inline-flex items-center gap-1.5 hover:text-foreground">Back to top <ArrowUp className="size-3.5" aria-hidden="true" /></a>
             </div>
           </div>

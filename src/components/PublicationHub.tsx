@@ -23,6 +23,8 @@ import {
   type PublicationCategory,
 } from "@/data/publications"
 
+const publicationsByYear = [...publications].sort((first, second) => second.year - first.year)
+
 type FilterValue = "all" | PublicationCategory
 
 const filters: readonly { value: FilterValue; label: string; count: number }[] = [
@@ -65,7 +67,7 @@ function AuthorList({ authors }: { authors: readonly string[] }) {
   return (
     <p className="mt-3 text-sm leading-6 text-muted-foreground">
       {authors.map((author, index) => {
-        const isWisdomBenson = author === "W. Benson" || author === "W. H. Benson"
+        const isWisdomBenson = author === "W. H. Benson"
         const punctuation = index === authors.length - 1 ? "" : index === authors.length - 2 ? " & " : ", "
 
         return (
@@ -174,7 +176,7 @@ export function PublicationHub() {
   const deferredQuery = useDeferredValue(query)
 
   const searchResults = useMemo(
-    () => publications.filter((publication) => matchesSearch(publication, deferredQuery)),
+    () => publicationsByYear.filter((publication) => matchesSearch(publication, deferredQuery)),
     [deferredQuery],
   )
 

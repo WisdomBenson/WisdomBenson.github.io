@@ -3,19 +3,18 @@ export const profile = {
   mark: "WHB",
   descriptor: "Quantum Physics Researcher & Philosophical Writer",
   affiliation: "Howard University",
+  department: "Department of Physics and Astronomy",
   email: "wisdom.benson@bison.howard.edu",
-  phone: "+1 984-312-9015",
-  location: "Silver Spring, Maryland",
   portrait: "/assets/wisdom-benson-portrait.jpeg",
   resume: "/wisdom-benson-resume.pdf",
   links: {
     github: "https://github.com/WisdomBenson",
     linkedin: "https://www.linkedin.com/in/wisdom-benson-228461247",
     researchGate: "https://www.researchgate.net/profile/Wisdom-Benson",
+    orcid: "https://orcid.org/0009-0006-9161-6557",
     philPeople: "https://philpeople.org/profiles/wisdom-benson",
     googleScholar: "https://scholar.google.com/citations?user=vxn6NxwAAAAJ&hl=en&oi=ao",
     philPapers: "https://philpapers.org/rec/BENREA-14",
-    audiomack: "https://audiomack.com/search?q=Wisdom%20Benson",
   },
 } as const
 
@@ -74,7 +73,7 @@ export const conferences = [
     year: "2026",
     venue: "APS Global Physics Summit",
     title: "Spectroscopic Characterization and Modeling and Simulation of Zinc Oxide and Zinc Sulfide Quantum Dots",
-    detail: "First author · Presented by PI Prabhakar Misra · March 20, 2026",
+    detail: "First author · Presented by Prabhakar Misra · March 20, 2026",
     href: "https://meetings-archive.aps.org/smt/2026/mar-y17/8/",
   },
   {

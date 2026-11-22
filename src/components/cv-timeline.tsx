@@ -31,14 +31,18 @@ const recognitions = [
 
 function TimelineList({ items }: { items: ReadonlyArray<{ period: string; school?: string; degree?: string; role?: string; place?: string; detail: string }> }) {
   return (
-    <ol className="relative border-l">
+    <ol className="divide-y border-b">
       {items.map((item) => (
-        <li key={`${item.period}-${item.degree ?? item.role}`} className="relative pb-10 pl-7 last:pb-0">
-          <span className="absolute -left-1.5 top-1.5 size-3 rounded-full border-2 border-background bg-quantum" aria-hidden="true" />
-          <p className="font-mono text-[0.68rem] uppercase tracking-[0.12em] text-muted-foreground">{item.period}</p>
-          <h3 className="mt-2 text-xl font-semibold tracking-[-0.035em]">{item.degree ?? item.role}</h3>
-          <p className="mt-1 text-sm font-medium text-quantum">{item.school ?? item.place}</p>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">{item.detail}</p>
+        <li
+          key={`${item.period}-${item.degree ?? item.role}`}
+          className="grid gap-2 py-5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-x-5 lg:grid-cols-[8rem_minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-x-8"
+        >
+          <p className="pt-1 font-mono text-xs text-muted-foreground">{item.period}</p>
+          <div>
+            <h3 className="text-lg font-semibold leading-snug tracking-tight">{item.degree ?? item.role}</h3>
+            <p className="mt-1 text-sm font-medium text-quantum">{item.school ?? item.place}</p>
+          </div>
+          <p className="text-sm leading-6 text-muted-foreground sm:col-start-2 lg:col-start-auto">{item.detail}</p>
         </li>
       ))}
     </ol>
@@ -55,32 +59,32 @@ export function CVTimeline() {
             <h2 className="mt-4 text-balance text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">A trajectory built across theory and experiment.</h2>
           </div>
           <div className="flex flex-col items-start gap-4 lg:items-end">
-            <p className="max-w-xl text-base leading-7 text-muted-foreground">Academic formation, active research roles, and public conference contributions—presented as evidence, not decoration.</p>
+            <p className="max-w-xl text-base leading-7 text-muted-foreground">Academic appointments, education, and selected conference presentations.</p>
             <Button variant="outline" className="min-h-10" asChild>
-              <a href={profile.resume} download><Download data-icon="inline-start" aria-hidden="true" /> Download résumé</a>
+              <a href={profile.resume} download><Download data-icon="inline-start" aria-hidden="true" /> Download CV</a>
             </Button>
           </div>
         </div>
 
-        <Tabs defaultValue="experience" className="mt-12 flex-col">
-          <TabsList className="h-auto w-full justify-start overflow-x-auto rounded-none border-b bg-transparent p-0">
-            <TabsTrigger value="experience" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+        <Tabs defaultValue="experience" className="mt-9 min-w-0 flex-col">
+          <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-4 gap-y-1 border-b px-0 pb-1 pt-0">
+            <TabsTrigger value="experience" className="h-10 flex-none px-0 data-[state=active]:text-quantum data-[state=active]:after:bg-quantum">
               <BriefcaseBusiness data-icon="inline-start" aria-hidden="true" /> Experience
             </TabsTrigger>
-            <TabsTrigger value="education" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+            <TabsTrigger value="education" className="h-10 flex-none px-0 data-[state=active]:text-quantum data-[state=active]:after:bg-quantum">
               <GraduationCap data-icon="inline-start" aria-hidden="true" /> Education
             </TabsTrigger>
-            <TabsTrigger value="conferences" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+            <TabsTrigger value="conferences" className="h-10 flex-none px-0 data-[state=active]:text-quantum data-[state=active]:after:bg-quantum">
               <CalendarDays data-icon="inline-start" aria-hidden="true" /> Conferences
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="experience" className="pt-10"><TimelineList items={experience} /></TabsContent>
-          <TabsContent value="education" className="pt-10"><TimelineList items={education} /></TabsContent>
-          <TabsContent value="conferences" className="pt-8">
-            <div className="divide-y border-y">
+          <TabsContent value="experience" className="pt-2"><TimelineList items={experience} /></TabsContent>
+          <TabsContent value="education" className="pt-2"><TimelineList items={education} /></TabsContent>
+          <TabsContent value="conferences" className="pt-2">
+            <div className="divide-y border-b">
               {conferences.map((conference) => (
-                <article key={`${conference.year}-${conference.title}`} className="grid gap-4 py-6 sm:grid-cols-[5rem_1fr_auto] sm:items-start sm:px-4">
+                <article key={`${conference.year}-${conference.title}`} className="grid gap-4 py-6 sm:grid-cols-[5rem_minmax(0,1fr)_auto] sm:items-start sm:px-4">
                   <Badge variant="outline" className="font-mono text-quantum">{conference.year}</Badge>
                   <div>
                     <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted-foreground">{conference.venue}</p>
@@ -98,17 +102,17 @@ export function CVTimeline() {
           </TabsContent>
         </Tabs>
 
-        <div className="mt-12 grid gap-3 md:grid-cols-2">
-          <div className="editorial-card p-6">
-            <p className="eyebrow text-muted-foreground">Computational toolkit</p>
+        <div className="mt-10 grid gap-7 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-10">
+          <div className="border-t pt-5">
+            <h3 className="eyebrow text-muted-foreground">Computational toolkit</h3>
             <div className="mt-5 flex flex-wrap gap-2">
               {["Quantum ESPRESSO", "WEST / PDEP-GW", "SIESTA", "Python", "C++", "MATLAB", "LaTeX", "SDSC Expanse"].map((skill) => (
                 <Badge key={skill} variant="secondary" className="h-7">{skill}</Badge>
               ))}
             </div>
           </div>
-          <div className="editorial-card p-6">
-            <p className="eyebrow text-muted-foreground">Recognition</p>
+          <div className="border-t pt-5">
+            <h3 className="eyebrow text-muted-foreground">Recognition</h3>
             <ul className="mt-5 flex flex-col gap-3 text-sm leading-6 text-muted-foreground">
               {recognitions.map((recognition) => (
                 <li key={`${recognition.label}-${recognition.period}`}>

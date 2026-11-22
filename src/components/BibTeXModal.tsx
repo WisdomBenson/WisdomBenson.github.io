@@ -42,7 +42,7 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
         onOpenChange(nextOpen)
       }}
     >
-      <DialogContent className="editorial-panel p-6 sm:max-w-2xl">
+      <DialogContent className="editorial-panel min-w-0 p-6 sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>BibTeX citation</DialogTitle>
           <DialogDescription>{publication?.title}</DialogDescription>
@@ -50,7 +50,7 @@ export function BibTeXModal({ publication, open, onOpenChange }: BibTeXModalProp
 
         <pre
           data-slot="bibtex-code"
-          className="max-h-[55vh] overflow-auto rounded-xl border border-foreground/15 bg-foreground p-4 font-mono text-xs leading-6 text-background"
+          className="max-h-[50dvh] min-w-0 overflow-y-auto whitespace-pre-wrap wrap-anywhere rounded-xl border border-foreground/15 bg-foreground p-4 font-mono text-xs leading-6 text-background"
           tabIndex={0}
           aria-label="BibTeX entry"
         >
