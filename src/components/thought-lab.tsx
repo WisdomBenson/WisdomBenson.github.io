@@ -1,8 +1,10 @@
-import { ArrowUpRight, BookOpenText, BriefcaseBusiness, Building2, Clock3, FileText, Scale } from "lucide-react"
+import { ArrowUpRight, BookOpenText, Clock3 } from "lucide-react"
 
 import { Reveal } from "@/components/reveal"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 const essays = [
   {
@@ -11,31 +13,27 @@ const essays = [
     description: "The original article in Philosophies 10(5), 102 (2025): a Kantian–Scheler–Schopenhauer synthesis of romantic exclusivity.",
     meta: "Full article · PDF",
     href: "/assets/articles/philosophies-10-00102.pdf",
-    icon: Scale,
   },
   {
     type: "Essay",
-    title: "What a Model Leaves Out: From Quantum Dots to the Future of Work",
+    title: "What a model leaves out: From quantum dots to the future of work",
     description: "Controlling a physical system differs fundamentally from understanding it.",
     meta: "3 min essay",
     href: "/thought-lab/model-and-meaning/",
-    icon: FileText,
   },
   {
     type: "Essay",
     title: "AI in our workplace",
-    description: "A concise argument for equipping workers with AI rather than using automation to sever people from the value they help create.",
+    description: "An argument for giving workers AI tools and keeping them connected to the value they help create.",
     meta: "2 min essay",
     href: "/thought-lab/ai-in-our-workplace/",
-    icon: BriefcaseBusiness,
   },
   {
     type: "Essay",
-    title: "AI Utopia or Dystopia? The Answer Will Be Written in Employment Contracts",
-    description: "An evidence-led argument that employment, access, and institutional incentives—not capability alone—will determine how AI changes work.",
+    title: "AI utopia or dystopia? The answer will be written in employment contracts",
+    description: "How employment contracts, access to AI tools, and institutional incentives shape the future of work.",
     meta: "7 min essay",
     href: "/thought-lab/ai-utopia-or-dystopia/",
-    icon: Building2,
   },
 ]
 
@@ -57,38 +55,44 @@ export function ThoughtLab() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-3 lg:grid-cols-2">
-          {essays.map((essay, index) => {
-            const Icon = essay.icon
-            return (
-              <Reveal key={essay.title} delay={index * 0.07} className="h-full">
-                <article className="editorial-card group flex h-full min-h-[25rem] flex-col overflow-hidden p-6 sm:p-8">
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-11 place-items-center rounded-xl bg-philosophy-muted text-philosophy">
-                      <Icon className="size-5" aria-hidden="true" />
-                    </span>
-                    <Badge variant="outline" className="text-philosophy">{essay.type}</Badge>
-                  </div>
-                  <h3 className="mt-16 max-w-lg text-balance text-3xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-4xl">
-                    {essay.title}
-                  </h3>
-                  <p className="mt-5 max-w-xl flex-1 text-base leading-7 text-muted-foreground">{essay.description}</p>
-                  <div className="mt-8 flex items-center justify-between border-t pt-5">
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      {essay.type === "Peer-reviewed article" ? <BookOpenText className="size-3.5" aria-hidden="true" /> : <Clock3 className="size-3.5" aria-hidden="true" />} {essay.meta}
-                    </span>
-                    <Button variant="ghost" asChild>
-                      <a href={essay.href}>
-                        Read <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
-                      </a>
-                    </Button>
-                  </div>
-                </article>
-              </Reveal>
-            )
-          })}
-        </div>
+        <EssayList className="mt-9" />
       </div>
     </section>
+  )
+}
+
+export function EssayList({ className }: { className: string }) {
+  return (
+    <div className={cn("grid gap-4 lg:grid-cols-2", className)}>
+      {essays.map((essay) => {
+        const isArticle = essay.type === "Peer-reviewed article"
+        const MetaIcon = isArticle ? BookOpenText : Clock3
+        return (
+          <article key={essay.href}>
+            <Card className="editorial-card h-full gap-3">
+              <CardHeader className="gap-3">
+                <Badge variant="outline" className="text-philosophy">{essay.type}</Badge>
+                <h3 className="max-w-lg text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
+                  {essay.title}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <p className="max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">{essay.description}</p>
+              </CardContent>
+              <CardFooter className="mt-auto justify-between gap-2 border-t bg-transparent">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <MetaIcon className="size-3.5" aria-hidden="true" /> {essay.meta}
+                </span>
+                <Button variant="ghost" asChild>
+                  <a href={essay.href} aria-label={`Read ${essay.title}`}>
+                    Read <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
+                  </a>
+                </Button>
+              </CardFooter>
+            </Card>
+          </article>
+        )
+      })}
+    </div>
   )
 }

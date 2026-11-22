@@ -1,5 +1,6 @@
 import Image from "next/image"
 
+import { FigureZoom } from "@/components/figure-zoom"
 import { Reveal } from "@/components/reveal"
 
 const evidenceFigures = [
@@ -7,6 +8,7 @@ const evidenceFigures = [
     plate: "Plate 01",
     title: "ZnO Quantum Dot Coordinate Map & Orbital Passivation Model",
     src: "/assets/zno-qd-coordinate-map-1400.webp",
+    zoomable: true,
     alt: "Four-panel coordinate map comparing hydroxyl- and acetate-passivated zinc oxide quantum dots",
     caption:
       "xy-projected coordinate indexing for ligand-passivated ZnO quantum dots under OH-low, OH-high, acetate-low, and acetate-high surface models. Dashed guides mark schematic row and column indices; selected labels report indices derived from the SCF coordinates.",
@@ -14,10 +16,12 @@ const evidenceFigures = [
   {
     plate: "Plate 02",
     title: "Room-Temperature Raman Spectrum under 488 nm Excitation",
+    // TODO: Re-export raman-spectrum-488nm-rt-{800,1400}.webp without the lab filename and with a generous left margin for the y-axis label.
     src: "/assets/raman-spectrum-488nm-rt-1400.webp",
+    zoomable: false,
     alt: "Raman spectrum of zinc oxide quantum dot sample 7B measured at room temperature using 488 nanometer excitation",
     caption:
-      "Measured Raman intensity for ZnO QD 7B from approximately 80 to 1200 cm⁻¹ under 488 nm excitation at room temperature. The plotted trace is presented without assigning vibrational modes beyond the information contained in the source figure.",
+      "Room-temperature Raman spectrum of ZnO quantum dot sample 7B under 488 nm excitation. The trace shows intensity in arbitrary units over approximately 80–1200 cm⁻¹.",
   },
 ] as const
 
@@ -37,24 +41,25 @@ export function ResearchShowcase() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-2">
+        <div className="mt-9 grid gap-5 lg:grid-cols-2">
           {evidenceFigures.map((figure, index) => (
-            <Reveal key={figure.plate} delay={index * 0.08}>
-              <figure data-slot="evidence-figure" className="editorial-card overflow-hidden p-3 sm:p-4">
-                <div className="relative aspect-[7/6] overflow-hidden rounded-xl border bg-card">
+            <Reveal key={figure.plate} className="min-w-0" delay={index * 0.08}>
+              <figure data-slot="evidence-figure" className="editorial-card h-full p-3 sm:p-4">
+                <div className="relative aspect-square overflow-hidden rounded-lg border bg-card">
                   <Image
                     src={figure.src}
                     alt={figure.alt}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-contain transition-transform duration-500 hover:scale-[1.01]"
+                    className="object-contain p-2 sm:p-4"
                   />
                 </div>
-                <figcaption className="grid gap-3 px-1 pb-2 pt-5 sm:grid-cols-[6rem_1fr]">
-                  <span className="font-mono text-xs text-quantum">{figure.plate}</span>
+                <figcaption className="grid gap-2 px-1 pb-2 pt-4 sm:grid-cols-[4.5rem_minmax(0,1fr)]">
+                  <span className="pt-1 font-mono text-xs text-quantum">{figure.plate}</span>
                   <div>
                     <h3 className="text-lg font-semibold tracking-[-0.025em]">{figure.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{figure.caption}</p>
+                    {figure.zoomable && <FigureZoom src={figure.src} alt={figure.alt} title={figure.title} />}
                   </div>
                 </figcaption>
               </figure>

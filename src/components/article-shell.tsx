@@ -2,16 +2,16 @@
 
 import { useEffect, useRef, useState } from "react"
 import { ArrowLeft, Check, Copy, Share2 } from "lucide-react"
-import Link from "next/link"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { profile } from "@/content/profile"
 
 type TocItem = { id: string; label: string; level: 2 | 3 }
 
 export function ArticleShell({ children }: { children: React.ReactNode }) {
-  const articleRef = useRef<HTMLElement>(null)
+  const articleRef = useRef<HTMLDivElement>(null)
   const [toc, setToc] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState("")
   const [readingTime, setReadingTime] = useState("")
@@ -44,24 +44,32 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
   }, [])
 
   async function copyLink() {
-    await navigator.clipboard.writeText(window.location.href)
-    toast.success("Article link copied")
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.success("Article link copied")
+    } catch {
+      toast.error("Could not copy the link. You can copy it from the address bar.")
+    }
   }
 
   async function share() {
     if (navigator.share) {
-      await navigator.share({ title: document.title, url: window.location.href })
+      try {
+        await navigator.share({ title: document.title, url: window.location.href })
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) await copyLink()
+      }
       return
     }
     await copyLink()
   }
 
   return (
-    <main className="site-shell section-block">
+    <main id="main-content" className="site-shell section-block">
       <div className="editorial-panel p-6 sm:p-10 lg:p-12">
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b pb-4 sm:mb-8">
           <Button variant="ghost" asChild>
-            <Link href="/#philosophy"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Philosophy &amp; Essays</Link>
+            <a href="/thought-lab/"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Philosophy &amp; Essays</a>
           </Button>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs text-muted-foreground">{readingTime}</span>
@@ -74,9 +82,9 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_16rem]">
-          <article ref={articleRef} className="prose-lab min-w-0 max-w-3xl">
-            {children}
+        <div className={cn("grid gap-10", toc.length > 0 && "lg:grid-cols-[minmax(0,1fr)_15rem] xl:gap-14")}>
+          <article className="prose-lab min-w-0 max-w-3xl">
+            <div ref={articleRef}>{children}</div>
             <div className="mt-16 border-t pt-8">
               <p className="eyebrow text-philosophy"><Check className="size-3.5" aria-hidden="true" /> About me</p>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -85,23 +93,26 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
             </div>
           </article>
 
-          <aside className="hidden lg:block">
-            <nav className="sticky top-24 border-l pl-5" aria-label="Table of contents">
-              <p className="eyebrow text-muted-foreground">On this page</p>
-              <ol className="mt-5 space-y-3">
-                {toc.map((item) => (
-                  <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
-                    <a
-                      href={`#${item.id}`}
-                      className={`block text-sm leading-5 transition-colors ${activeId === item.id ? "text-philosophy" : "text-muted-foreground hover:text-foreground"}`}
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </aside>
+          {toc.length > 0 && (
+            <aside className="hidden lg:block">
+              <nav className="sticky top-24 border-l pl-5" aria-label="Table of contents">
+                <p className="eyebrow text-muted-foreground">On this page</p>
+                <ol className="mt-5 flex flex-col gap-3">
+                  {toc.map((item) => (
+                    <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
+                      <a
+                        href={`#${item.id}`}
+                        aria-current={activeId === item.id ? "location" : undefined}
+                        className="block text-sm leading-5 text-muted-foreground transition-colors hover:text-foreground aria-[current=location]:font-medium aria-[current=location]:text-philosophy"
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </aside>
+          )}
         </div>
       </div>
     </main>

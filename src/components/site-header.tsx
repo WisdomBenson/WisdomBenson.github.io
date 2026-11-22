@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowUpRight, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
@@ -17,15 +17,14 @@ import { profile } from "@/content/profile"
 
 const navigation = [
   { label: "Research", href: "/#research" },
-  { label: "Philosophy", href: "/#philosophy" },
   { label: "Publications", href: "/#publications" },
+  { label: "Philosophy", href: "/#philosophy" },
   { label: "CV", href: "/#cv" },
-  { label: "Contact", href: "/#contact" },
 ]
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/15 bg-background/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-xl">
       <div className="site-shell flex h-16 items-center justify-between gap-4">
         <Link href="/#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
           <span className="grid size-9 place-items-center rounded-lg bg-foreground font-mono text-[0.66rem] font-bold tracking-tight text-background transition-transform group-hover:-rotate-3">
@@ -48,10 +47,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1">
-          <Button className="hidden sm:inline-flex" size="sm" asChild>
-            <a href={`mailto:${profile.email}`}>
-              Contact <ArrowUpRight data-icon="inline-end" aria-hidden="true" />
-            </a>
+          <Button size="sm" asChild>
+            <Link href="/#contact">Contact</Link>
           </Button>
 
           <Sheet>
@@ -66,14 +63,13 @@ export function SiteHeader() {
                 <SheetDescription>{profile.descriptor}</SheetDescription>
               </SheetHeader>
               <nav className="flex flex-col px-3" aria-label="Mobile navigation">
-                {navigation.map((item, index) => (
+                {navigation.map((item) => (
                   <SheetClose key={item.href} asChild>
                     <Link
                       href={item.href}
-                      className="flex min-h-14 items-center justify-between border-b px-3 text-base font-medium"
+                      className="flex min-h-14 items-center border-b px-3 text-base font-medium"
                     >
                       {item.label}
-                      <span className="font-mono text-xs text-muted-foreground">0{index + 1}</span>
                     </Link>
                   </SheetClose>
                 ))}

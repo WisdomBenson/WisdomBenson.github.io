@@ -1,6 +1,3 @@
-"use client"
-
-import { motion, useReducedMotion } from "framer-motion"
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 import Image from "next/image"
 
@@ -17,19 +14,12 @@ const affiliations = [
 ] as const
 
 export function HeroSection() {
-  const reduceMotion = useReducedMotion()
-
   return (
     <section id="top" className="pb-4 pt-6 sm:pb-6">
       <div className="editorial-panel site-shell grid gap-10 p-6 sm:p-10 lg:grid-cols-12 lg:items-center lg:gap-12 lg:p-14">
-        <motion.div
-          className="min-w-0 lg:col-span-7"
-          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        >
-          <Badge variant="outline">Howard University · Physics PhD Researcher</Badge>
-          <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
+        <div className="min-w-0 lg:col-span-7">
+          <Badge variant="outline" className="h-auto min-h-5 max-w-full whitespace-normal py-0.5 leading-tight">Howard University · Physics PhD Researcher</Badge>
+          <h1 className="mt-8 max-w-4xl text-balance text-[clamp(2rem,11vw,3rem)] font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
             Quantum Matter &amp; Metaphysical Inquiry
           </h1>
           <p className="mt-7 max-w-[65ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
@@ -46,9 +36,6 @@ export function HeroSection() {
             <Button size="lg" variant="outline" asChild>
               <a href="#philosophy">Read my essays</a>
             </Button>
-            <Button size="lg" variant="ghost" asChild>
-              <a href="#contact">Contact</a>
-            </Button>
           </div>
 
           <div className="mt-10 flex flex-wrap gap-x-4 gap-y-1 border-y py-4 font-mono text-[0.68rem] leading-6 tracking-[0.09em] text-muted-foreground">
@@ -58,23 +45,18 @@ export function HeroSection() {
               </span>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="min-w-0 lg:col-span-5"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.985 }}
-          animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.08 }}
-        >
-          <Card className="editorial-card overflow-hidden py-0">
+        <div className="min-w-0 lg:col-span-5">
+          <Card className="editorial-card gap-0 overflow-hidden py-0">
             <CardContent className="relative aspect-[4/5] p-0">
               <Image
-                src="/assets/wisdom-benson-portrait.jpeg"
+                src={profile.portrait}
                 alt="Portrait of Wisdom Benson"
                 fill
-                priority
+                preload
                 sizes="(max-width: 1024px) 100vw, 42vw"
-                className="object-cover object-[50%_24%] grayscale-[8%] transition-[filter,transform] duration-500 hover:scale-[1.01] hover:grayscale-0"
+                className="object-cover object-[50%_18%] brightness-[0.97] saturate-[0.92]"
               />
             </CardContent>
             <CardFooter className="grid gap-5 border-t bg-card px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
@@ -90,7 +72,7 @@ export function HeroSection() {
               </Button>
             </CardFooter>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

@@ -32,7 +32,7 @@ export const publications = [
     type: "Peer-Reviewed Journal",
     title:
       "Electronic properties of zinc oxide quantum dot: Insights from first-principles calculations using density functional theory",
-    authors: ["W. Benson", "C. Adams", "B. Baral", "P. Misra"],
+    authors: ["W. H. Benson", "C. Adams", "B. Baral", "P. Misra"],
     venue: "AIP Advances 16(2), 025236",
     year: 2026,
     doi: "10.1063/5.0303211",
@@ -76,7 +76,7 @@ export const publications = [
     category: "journal-articles",
     type: "Peer-Reviewed Journal",
     title:
-      "Romantic Exclusivity as Structural Necessity: A Kantian–Scheler–Schopenhauer Synthesis in Contemporary Discourse",
+      "Romantic exclusivity as structural necessity: A Kantian–Scheler–Schopenhauer synthesis in contemporary discourse",
     authors: ["W. H. Benson"],
     venue: "Philosophies 10(5), 102",
     year: 2025,
@@ -99,8 +99,8 @@ export const publications = [
     category: "journal-articles",
     type: "Peer-Reviewed Journal",
     title:
-      "Analysis of a Steady MHD Mixed Convection Fluid Flow in a Microchannel within Permeable Walls with Suction and Injection Parameters",
-    authors: ["G. O. Weinor", "K. E. Adesina", "G. M. Smart", "E. K. A. Wie-Addo", "W. Benson"],
+      "Analysis of a steady MHD mixed convection fluid flow in a microchannel within permeable walls with suction and injection parameters",
+    authors: ["G. O. Weinor", "K. E. Adesina", "G. M. Smart", "E. K. A. Wie-Addo", "W. H. Benson"],
     venue: "Open Access Library Journal 10(7), 1–9",
     year: 2023,
     doi: "10.4236/oalib.1110363",
@@ -122,8 +122,8 @@ export const publications = [
     category: "conference-posters",
     type: "Conference Poster",
     title:
-      "Mixed-Cation Tin-Lead Alloy Perovskites for Photovoltaic Applications: Bandgap Tuning & Photoluminescence Mapping",
-    authors: ["W. Benson"],
+      "Mixed-cation tin-lead alloy perovskites for photovoltaic applications: Bandgap tuning & photoluminescence mapping",
+    authors: ["W. H. Benson"],
     venue: "Triangle Student Research Competition (TSRC), North Carolina Central University",
     year: 2023,
     doi: "10.13140/RG.2.2.12618.54720",
@@ -146,7 +146,7 @@ export const publications = [
     type: "Book Chapter",
     title:
       "Advanced computational studies of quantum dots for optoelectronic, sensing, and computing applications",
-    authors: ["W. Benson", "S. Bandopadhyay", "C. Adams", "B. Baral", "P. Misra"],
+    authors: ["W. H. Benson", "S. Bandopadhyay", "C. Adams", "B. Baral", "P. Misra"],
     venue: "Nanoelectronics, CRC Press, pp. 169–197",
     year: 2025,
     doi: "10.1201/9781003512899-8",
@@ -167,8 +167,8 @@ export const publications = [
     category: "book-chapters-thesis",
     type: "Master's Thesis",
     title:
-      "Synthesis and Optical Characterization of Lead-Tin Alloy Perovskites for Photovoltaic Applications",
-    authors: ["W. Benson"],
+      "Synthesis and optical characterization of lead-tin alloy perovskites for photovoltaic applications",
+    authors: ["W. H. Benson"],
     venue: "North Carolina Central University",
     year: 2024,
     recordUrl: "https://www.proquest.com/docview/3176103303",
