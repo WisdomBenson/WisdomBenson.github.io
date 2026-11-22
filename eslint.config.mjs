@@ -10,7 +10,7 @@ export default defineConfig([
     "out/**",
     "dist/**",
     "next-env.d.ts",
-    "public/vendor/webgazer/webgazer.js",
-    "public/vendor/webgazer/mediapipe/**",
+    "public/vendor/mediapipe/vision_bundle.mjs",
+    "public/vendor/mediapipe/wasm/**",
   ]),
 ])
