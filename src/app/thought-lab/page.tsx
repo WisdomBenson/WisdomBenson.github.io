@@ -9,15 +9,18 @@ export const metadata: Metadata = {
 
 export default function ThoughtLabIndexPage() {
   return (
-    <main id="main-content" className="site-shell section-block">
-      <div className="editorial-panel p-6 sm:p-10 lg:p-12">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Philosophy &amp; Essays</h1>
-        <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-          Essays and published work on value, agency, scientific models, and the future of work.
+    <main id="main-content" className="site-shell pb-20 pt-12 sm:pb-28 sm:pt-16">
+      <div className="max-w-2xl">
+        <p className="eyebrow text-philosophy">Philosophy &amp; Essays</p>
+        <h1 className="mt-3 font-serif text-4xl font-normal leading-[1.1] tracking-[-0.02em] text-foreground sm:text-5xl">
+          Essays and published work
+        </h1>
+        <p className="mt-4 text-base leading-7 text-muted-foreground">
+          Writing on value, agency, scientific models, and the future of work.
         </p>
-        <h2 className="sr-only">Essays and articles</h2>
-        <EssayList className="mt-9" />
       </div>
+      <h2 className="sr-only">Essays and articles</h2>
+      <EssayList className="mt-12" />
     </main>
   )
 }

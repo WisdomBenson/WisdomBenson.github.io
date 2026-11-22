@@ -8,7 +8,7 @@ export default function ThoughtLabLayout({ children }: { children: React.ReactNo
       <a className="skip-link" href="#main-content">Skip to content</a>
       <SiteHeader />
       {children}
-      <footer className="site-shell pb-6 sm:pb-8">
+      <footer className="site-shell">
         <SiteFooterBar />
       </footer>
       <Toaster richColors position="bottom-right" />

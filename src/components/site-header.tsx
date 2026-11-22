@@ -24,50 +24,60 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-xl">
-      <div className="site-shell flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 border-b border-border/75 bg-background/88 backdrop-blur-md">
+      <div className="site-shell flex h-[4.25rem] items-center justify-between gap-6">
         <Link href="/#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
-          <span className="grid size-9 place-items-center rounded-lg bg-foreground font-mono text-[0.66rem] font-bold tracking-tight text-background transition-transform group-hover:-rotate-3">
+          <span className="grid size-8 place-items-center rounded-md bg-primary text-[0.64rem] font-semibold tracking-tight text-primary-foreground transition-transform group-hover:-rotate-2">
             {profile.mark}
           </span>
           <span className="min-w-0 leading-tight">
-            <span className="block truncate text-sm font-semibold tracking-[-0.02em]">{profile.name}</span>
-            <span className="hidden truncate font-mono text-[0.61rem] uppercase tracking-[0.16em] text-muted-foreground sm:block">
-              PHYSICS · PHILOSOPHY
+            <span className="block truncate font-serif text-[1.05rem] font-medium tracking-[-0.01em] text-foreground">
+              {profile.name}
+            </span>
+            <span className="hidden truncate text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground sm:block">
+              Physics · Philosophy
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <Button key={item.href} variant="ghost" size="sm" asChild>
-              <Link href={item.href}>{item.label}</Link>
-            </Button>
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary underline-offset-8 hover:underline focus-visible:underline active:underline"
+            >
+              {item.label}
+            </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-1">
-          <Button size="sm" asChild>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            asChild
+          >
             <Link href="/#contact">Contact</Link>
           </Button>
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation">
                 <Menu aria-hidden="true" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="editorial-panel rounded-none border-y-0 border-r-0">
-              <SheetHeader className="border-b px-6 py-6">
-                <SheetTitle>{profile.name}</SheetTitle>
+            <SheetContent side="right" className="border-l border-border bg-background">
+              <SheetHeader className="border-b border-border/80 px-6 py-6">
+                <SheetTitle className="font-serif text-xl font-medium">{profile.name}</SheetTitle>
                 <SheetDescription>{profile.descriptor}</SheetDescription>
               </SheetHeader>
-              <nav className="flex flex-col px-3" aria-label="Mobile navigation">
+              <nav className="flex flex-col px-3 py-2" aria-label="Mobile navigation">
                 {navigation.map((item) => (
                   <SheetClose key={item.href} asChild>
                     <Link
                       href={item.href}
-                      className="flex min-h-14 items-center border-b px-3 text-base font-medium"
+                      className="flex min-h-12 items-center border-b border-border/60 px-3 text-base font-medium text-foreground transition-colors hover:text-primary"
                     >
                       {item.label}
                     </Link>
