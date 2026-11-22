@@ -1,6 +1,7 @@
 import Image from "next/image"
 
 import { FigureZoom } from "@/components/figure-zoom"
+import { CardDetails } from "@/components/gaze/card-details"
 import { Reveal } from "@/components/reveal"
 
 const evidenceFigures = [
@@ -9,6 +10,7 @@ const evidenceFigures = [
     title: "ZnO Quantum Dot Coordinate Map & Orbital Passivation Model",
     src: "/assets/zno-qd-coordinate-map-1400.webp",
     height: 1572,
+    note: "Use the dashed row and column guides to locate the labeled coordinates in each panel.",
     alt: "Four-panel coordinate map comparing hydroxyl- and acetate-passivated zinc oxide quantum dots",
     caption:
       "xy-projected coordinate indexing for ligand-passivated ZnO quantum dots under OH-low, OH-high, acetate-low, and acetate-high surface models. Dashed guides mark schematic row and column indices; selected labels report indices derived from the SCF coordinates.",
@@ -18,6 +20,7 @@ const evidenceFigures = [
     title: "Raman Spectrum under 488 nm Excitation",
     src: "/assets/raman-spectrum-488nm-rt-1400.webp",
     height: 955,
+    note: "Compare peak positions along the Raman shift axis and relative intensities on the vertical axis.",
     alt: "Raman spectrum of zinc oxide quantum dots under 488 nanometer excitation, plotted as intensity against Raman shift",
     caption:
       "Raman intensity in arbitrary units for ZnO quantum dots under 488 nm excitation. The plotted range extends to 1,200 cm⁻¹.",
@@ -40,11 +43,12 @@ export function ResearchShowcase() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div data-gaze-grid="" className="mt-12 grid gap-8 lg:grid-cols-2">
           {evidenceFigures.map((figure) => (
             <Reveal key={figure.plate} className="h-full min-w-0">
               <figure
                 data-slot="evidence-figure"
+                data-gaze-target=""
                 className="flex h-full flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-[0_12px_36px_-22px_rgba(28,27,24,0.14)] sm:p-5"
               >
                 <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-card">
@@ -73,6 +77,9 @@ export function ResearchShowcase() {
                     {figure.title}
                   </h3>
                   <p className="mt-2.5 text-sm leading-6 text-muted-foreground">{figure.caption}</p>
+                  <div className="mt-4">
+                    <CardDetails label="Figure notes">{figure.note}</CardDetails>
+                  </div>
                 </figcaption>
               </figure>
             </Reveal>
