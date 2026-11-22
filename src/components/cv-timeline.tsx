@@ -19,6 +19,14 @@ const toolkitGroups = [
     category: "HPC & Typesetting",
     items: ["SDSC Expanse", "LaTeX"],
   },
+  {
+    category: "AI-Assisted Programming",
+    items: ["Rust", "CUDA", "OCaml"],
+  },
+  {
+    category: "App Development (CryptoTrackAI)",
+    items: ["React", "TypeScript", "React Native", "Electron", "REST API integration", "Cypress testing"],
+  },
 ] as const
 
 const recognitions = [
