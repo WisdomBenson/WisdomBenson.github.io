@@ -15,13 +15,12 @@ const evidenceFigures = [
   },
   {
     plate: "Plate 02",
-    title: "Room-Temperature Raman Spectrum under 488 nm Excitation",
-    // TODO: Re-export raman-spectrum-488nm-rt-{800,1400}.webp without the lab filename and with a generous left margin for the y-axis label.
+    title: "Raman Spectrum under 488 nm Excitation",
     src: "/assets/raman-spectrum-488nm-rt-1400.webp",
     zoomable: false,
-    alt: "Raman spectrum of zinc oxide quantum dot sample 7B measured at room temperature using 488 nanometer excitation",
+    alt: "Raman spectrum of zinc oxide quantum dots under 488 nanometer excitation, plotted as intensity against Raman shift",
     caption:
-      "Room-temperature Raman spectrum of ZnO quantum dot sample 7B under 488 nm excitation. The trace shows intensity in arbitrary units over approximately 80–1200 cm⁻¹.",
+      "Raman intensity in arbitrary units for ZnO quantum dots under 488 nm excitation. The plotted range extends to 1,200 cm⁻¹.",
   },
 ] as const
 

@@ -3,9 +3,8 @@ export const profile = {
   mark: "WHB",
   descriptor: "Quantum Physics Researcher & Philosophical Writer",
   affiliation: "Howard University",
+  department: "Department of Physics and Astronomy",
   email: "wisdom.benson@bison.howard.edu",
-  phone: "+1 984-312-9015",
-  location: "Silver Spring, Maryland",
   portrait: "/assets/wisdom-benson-portrait.jpeg",
   resume: "/wisdom-benson-resume.pdf",
   links: {
@@ -16,7 +15,6 @@ export const profile = {
     philPeople: "https://philpeople.org/profiles/wisdom-benson",
     googleScholar: "https://scholar.google.com/citations?user=vxn6NxwAAAAJ&hl=en&oi=ao",
     philPapers: "https://philpapers.org/rec/BENREA-14",
-    audiomack: "https://audiomack.com/search?q=Wisdom%20Benson",
   },
 } as const
 

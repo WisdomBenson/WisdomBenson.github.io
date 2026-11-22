@@ -13,7 +13,6 @@ const profileLinks = [
   { label: "PhilPeople", href: profile.links.philPeople },
   { label: "LinkedIn", href: profile.links.linkedin },
   { label: "GitHub", href: profile.links.github },
-  { label: "Audiomack search", href: profile.links.audiomack },
 ]
 
 export function ContactFooter() {
@@ -75,7 +74,8 @@ export function ContactFooter() {
               </div>
             </div>
             <div className="text-sm text-muted-foreground md:text-right">
-              <p>{profile.location} · {profile.phone}</p>
+              <p className="font-medium text-foreground">{profile.affiliation}</p>
+              <p className="mt-1">{profile.department}</p>
               <a href="#top" className="mt-2 inline-flex items-center gap-1.5 hover:text-foreground">Back to top <ArrowUp className="size-3.5" aria-hidden="true" /></a>
             </div>
           </div>
