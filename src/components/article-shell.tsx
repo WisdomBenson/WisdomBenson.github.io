@@ -2,18 +2,22 @@
 
 import { useEffect, useRef, useState } from "react"
 import { ArrowLeft, Check, Copy, Share2 } from "lucide-react"
+import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { essays } from "@/content/essays"
 import { profile } from "@/content/profile"
 
 type TocItem = { id: string; label: string; level: 2 | 3 }
 
 export function ArticleShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const canonicalPath = pathname.endsWith("/") ? pathname : pathname + "/"
+  const readingTimeMinutes = essays.find((essay) => essay.href === canonicalPath)?.readingTimeMinutes
   const articleRef = useRef<HTMLDivElement>(null)
   const [toc, setToc] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState("")
-  const [readingTime, setReadingTime] = useState("")
 
   useEffect(() => {
     const article = articleRef.current
@@ -26,9 +30,8 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
       return { id, label: heading.textContent || `Section ${index + 1}`, level: heading.tagName === "H2" ? 2 : 3 } as TocItem
     })
 
+    if (items.length < 2) return
     setToc(items)
-    const words = (article.textContent || "").trim().split(/\s+/).length
-    setReadingTime(`${Math.max(1, Math.ceil(words / 220))} min read`)
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -71,7 +74,9 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
             <a href="/thought-lab/"><ArrowLeft data-icon="inline-start" aria-hidden="true" /> Philosophy &amp; Essays</a>
           </Button>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs text-muted-foreground">{readingTime}</span>
+            {readingTimeMinutes !== undefined && (
+              <span data-slot="reading-time" className="font-mono text-xs text-muted-foreground">{readingTimeMinutes} min read</span>
+            )}
             <Button variant="outline" size="icon" onClick={copyLink} aria-label="Copy article link">
               <Copy aria-hidden="true" />
             </Button>
@@ -92,7 +97,7 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
             </div>
           </article>
 
-          {toc.length > 0 && (
+          {toc.length >= 2 && (
             <aside className="hidden lg:block">
               <nav className="sticky top-24 border-l pl-5" aria-label="Table of contents">
                 <p className="eyebrow text-muted-foreground">On this page</p>

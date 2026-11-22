@@ -4,38 +4,8 @@ import { Reveal } from "@/components/reveal"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { essays } from "@/content/essays"
 import { cn } from "@/lib/utils"
-
-const essays = [
-  {
-    type: "Peer-reviewed article",
-    title: "Romantic exclusivity as structural necessity",
-    description: "The original article in Philosophies 10(5), 102 (2025): a Kantian–Scheler–Schopenhauer synthesis of romantic exclusivity.",
-    meta: "Full article · PDF",
-    href: "/assets/articles/philosophies-10-00102.pdf",
-  },
-  {
-    type: "Essay",
-    title: "What a model leaves out: From quantum dots to the future of work",
-    description: "Controlling a physical system differs fundamentally from understanding it.",
-    meta: "3 min essay",
-    href: "/thought-lab/model-and-meaning/",
-  },
-  {
-    type: "Essay",
-    title: "AI in our workplace",
-    description: "An argument for giving workers AI tools and keeping them connected to the value they help create.",
-    meta: "2 min essay",
-    href: "/thought-lab/ai-in-our-workplace/",
-  },
-  {
-    type: "Essay",
-    title: "AI utopia or dystopia? The answer will be written in employment contracts",
-    description: "How employment contracts, access to AI tools, and institutional incentives shape the future of work.",
-    meta: "7 min essay",
-    href: "/thought-lab/ai-utopia-or-dystopia/",
-  },
-]
 
 export function ThoughtLab() {
   return (
@@ -81,7 +51,7 @@ export function EssayList({ className }: { className: string }) {
               </CardContent>
               <CardFooter className="mt-auto justify-between gap-2 border-t bg-transparent">
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <MetaIcon className="size-3.5" aria-hidden="true" /> {essay.meta}
+                  <MetaIcon className="size-3.5" aria-hidden="true" /> {essay.readingTimeMinutes === undefined ? "Full article · PDF" : `${essay.readingTimeMinutes} min essay`}
                 </span>
                 <Button variant="ghost" asChild>
                   <a href={essay.href} aria-label={`Read ${essay.title}`}>

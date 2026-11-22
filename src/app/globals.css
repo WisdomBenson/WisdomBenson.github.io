@@ -183,7 +183,8 @@ a {
 }
 
 @media (width >= 64rem) {
-  .article-layout:has([data-slot="article-body"] :is(h2, h3)) {
+  /* Reserve the contents column for MDX sections before hydration. */
+  .article-layout:has([data-slot="article-body"] :is(h2, h3) ~ :is(h2, h3), > aside) {
     grid-template-columns: minmax(0, 1fr) 15rem;
   }
 }
