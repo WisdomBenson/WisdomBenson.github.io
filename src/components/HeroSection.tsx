@@ -18,15 +18,15 @@ export function HeroSection() {
         <div className="min-w-0 lg:col-span-7">
           <p className="eyebrow text-quantum">Howard University · Physics PhD Researcher</p>
 
-          <h1 className="mt-5 max-w-2xl text-balance font-serif text-[clamp(2.5rem,6vw,4.35rem)] font-normal leading-[1.06] tracking-[-0.02em] text-foreground">
+          <h1 className="mt-5 max-w-2xl text-balance font-serif text-4xl font-normal leading-[1.06] tracking-[-0.02em] text-foreground sm:text-5xl md:text-6xl xl:text-[4.35rem]">
             Quantum Matter &amp; Metaphysical Inquiry
           </h1>
 
-          <p className="mt-6 max-w-[58ch] text-base leading-relaxed text-muted-foreground sm:text-lg sm:leading-8">
+          <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg sm:leading-8">
             My research examines finite semiconductor nanostructures, with a focus on zinc oxide (ZnO) quantum dots and first-principles DFT/GW methods. In philosophy, I explore value, agency, and metaphysical structure through Kant, Scheler, and Schopenhauer.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 sm:mt-8">
             <Button
               size="lg"
               className="h-11 rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"

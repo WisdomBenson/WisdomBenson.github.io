@@ -105,7 +105,7 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
       {items.map((publication, index) => (
         <li
           key={publication.id}
-          className="grid w-full min-w-0 gap-y-2 py-7 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-6 lg:grid-cols-[6rem_minmax(0,1fr)] lg:gap-x-8"
+          className="grid w-full min-w-0 gap-y-1.5 py-5 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-2 sm:py-7 lg:grid-cols-[6rem_minmax(0,1fr)] lg:gap-x-8"
         >
           <div className="flex items-baseline gap-2.5 pt-1 font-mono text-xs text-muted-foreground sm:flex-col sm:gap-1">
             <span className="font-medium text-foreground">{publication.year}</span>
