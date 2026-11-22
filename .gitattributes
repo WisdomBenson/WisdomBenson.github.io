@@ -5,7 +5,8 @@
 *.png binary
 *.webp binary
 
-# Keep the pinned runtime and attribution byte-for-byte.
-public/vendor/webgazer/webgazer.js -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
-public/vendor/webgazer/WEBGAZER-NOTICE.md -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
-public/vendor/webgazer/mediapipe/** -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
+# Preserve the pinned MediaPipe distribution byte for byte.
+public/vendor/mediapipe/vision_bundle.mjs -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
+public/vendor/mediapipe/wasm/** -text linguist-vendored whitespace=-blank-at-eol,-blank-at-eof
+*.task binary
+*.wasm binary

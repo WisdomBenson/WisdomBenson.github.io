@@ -9,7 +9,7 @@ export function CardDetails({ label, children }: { label: string; children: Reac
   return (
     <Collapsible className="border-t border-border/70 pt-2">
       <CollapsibleTrigger asChild>
-        <Button data-gaze-expand="" variant="ghost" size="sm" className="gap-2 px-2 text-muted-foreground hover:text-primary [&[aria-expanded=true]_svg]:rotate-180">
+        <Button variant="ghost" size="sm" className="gap-2 px-2 text-muted-foreground hover:text-primary [&[aria-expanded=true]_svg]:rotate-180">
           {label}
           <ChevronDown aria-hidden="true" />
         </Button>

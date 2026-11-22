@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 import { FigureZoom } from "@/components/figure-zoom"
-import { CardDetails } from "@/components/gaze/card-details"
+import { CardDetails } from "@/components/card-details"
 import { Reveal } from "@/components/reveal"
 
 const evidenceFigures = [
@@ -43,12 +43,11 @@ export function ResearchShowcase() {
           </p>
         </Reveal>
 
-        <div data-gaze-grid="" className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div className="mt-12 grid gap-8 lg:grid-cols-2">
           {evidenceFigures.map((figure) => (
             <Reveal key={figure.plate} className="h-full min-w-0">
               <figure
                 data-slot="evidence-figure"
-                data-gaze-target=""
                 className="flex h-full flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-[0_12px_36px_-22px_rgba(28,27,24,0.14)] sm:p-5"
               >
                 <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-card">

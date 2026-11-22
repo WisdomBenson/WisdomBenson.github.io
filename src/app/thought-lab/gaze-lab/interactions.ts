@@ -1,10 +1,10 @@
-import type { Point } from "./tracker"
+import type { Point } from "./gaze-math"
 
 export const EDGE_FRACTION = 0.18
 const EDGE_DWELL = 350
 const HIT_PADDING = 80
 const HALF_DEAD_ZONE = 50
-const MIN_SIZE = 180
+const MIN_SIZE = 220
 const GRACE = 300
 const BLINK = 100
 
@@ -40,8 +40,8 @@ function separate(target: Target, other: Target) {
 
 type EdgeDirection = -1 | 0 | 1
 
-export function createInteractions(showEdge: (direction: EdgeDirection, progress: number, scrolling: boolean) => void) {
-  const elements = [...document.querySelectorAll<HTMLElement>("[data-gaze-target]")]
+export function createInteractions(sandbox: HTMLElement, showEdge: (direction: EdgeDirection, progress: number, scrolling: boolean) => void) {
+  const elements = [...sandbox.querySelectorAll<HTMLElement>("[data-gaze-target]")]
   const resize = new ResizeObserver(invalidate)
   elements.forEach(element => resize.observe(element))
   window.addEventListener("scroll", invalidate, { passive: true })
@@ -69,7 +69,7 @@ export function createInteractions(showEdge: (direction: EdgeDirection, progress
       if (!trigger || box.width < MIN_SIZE || box.height < MIN_SIZE) return []
 
       const hit = { left: box.left - HIT_PADDING, right: box.right + HIT_PADDING, top: box.top - HIT_PADDING, bottom: box.bottom + HIT_PADDING }
-      const blocked = [...element.querySelectorAll("a[href]:not([data-gaze-card-link]), [data-gaze-exclude], button:not([data-gaze-expand]), input, select, textarea")].map(control => control.getBoundingClientRect())
+      const blocked = [...element.querySelectorAll("a[href], button:not([data-gaze-expand]), input, select, textarea")].map(control => control.getBoundingClientRect())
       return [{ element, trigger, box, hit, blocked }]
     })
     for (const target of targets) {

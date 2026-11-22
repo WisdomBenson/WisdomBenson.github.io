@@ -26,6 +26,12 @@ export default function ThoughtLabIndexPage() {
       </div>
       <h2 className="sr-only">Essays and articles</h2>
       <EssayList className="mt-12" />
+      <a
+        href="/thought-lab/gaze-lab/"
+        className="mt-12 hidden text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline [@media(min-width:1024px)_and_(pointer:fine)]:inline-flex"
+      >
+        Interactive lab: Gaze-assisted reading →
+      </a>
     </main>
   )
 }
