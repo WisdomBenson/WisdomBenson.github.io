@@ -18,7 +18,7 @@ export function HeroSection() {
         <div className="min-w-0 lg:col-span-7">
           <p className="eyebrow text-quantum">Howard University · Physics PhD Researcher</p>
 
-          <h1 className="mt-5 max-w-2xl text-balance font-serif text-4xl font-normal leading-[1.06] tracking-[-0.02em] text-foreground sm:text-5xl md:text-6xl xl:text-[4.35rem]">
+          <h1 className="mt-5 max-w-2xl text-balance font-serif text-[clamp(2.1rem,6vw,4.35rem)] font-normal leading-[1.06] tracking-[-0.02em] text-foreground sm:text-5xl md:text-6xl xl:text-[4.35rem]">
             Quantum Matter &amp; Metaphysical Inquiry
           </h1>
 

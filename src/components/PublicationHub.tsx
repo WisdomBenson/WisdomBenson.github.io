@@ -144,7 +144,7 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
                   <button
                     type="button"
                     onClick={() => onCopyDoi(publication)}
-                    className="inline-flex items-center gap-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="inline-flex items-center gap-1.5 py-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <Copy className="size-3.5" aria-hidden="true" />
                     Copy DOI
@@ -165,7 +165,7 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
               <button
                 type="button"
                 onClick={(event) => onCite(publication, event.currentTarget)}
-                className="inline-flex items-center gap-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex items-center gap-1.5 py-1.5 font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <BookOpenText className="size-3.5" aria-hidden="true" />
                 Cite / BibTeX
@@ -229,12 +229,12 @@ export function PublicationHub() {
           className="mt-10 flex-col"
         >
           <div className="grid gap-5 border-b border-border/80 pb-4 xl:grid-cols-[1fr_20rem] xl:items-end">
-            <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-3 gap-y-2 p-0 sm:gap-x-6">
+            <TabsList variant="line" className="h-auto w-full flex-wrap justify-start gap-x-3 gap-y-2 p-0 max-[360px]:gap-x-2 sm:gap-x-6">
               {filters.map((filter) => (
                 <TabsTrigger
                   key={filter.value}
                   value={filter.value}
-                  className="h-10 flex-none rounded-none border-0 px-0 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground after:inset-x-0 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:after:bottom-0 data-[state=active]:after:h-[2px] data-[state=active]:after:bg-primary data-[state=active]:after:opacity-100"
+                  className="h-10 flex-none rounded-none border-0 px-0 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground after:inset-x-0 max-[360px]:gap-1 max-[360px]:text-xs data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:after:bottom-0 data-[state=active]:after:h-[2px] data-[state=active]:after:bg-primary data-[state=active]:after:opacity-100"
                 >
                   {filter.label}
                   <span className="text-[0.7rem]">({filter.count})</span>

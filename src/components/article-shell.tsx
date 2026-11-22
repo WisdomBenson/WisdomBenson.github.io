@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowLeft, BookOpenText, Copy, Share2 } from "lucide-react"
+import { ArrowLeft, ArrowRight, BookOpenText, Copy, Share2 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
@@ -96,7 +96,7 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
             type="button"
             onClick={copyLink}
             aria-label="Copy article link"
-            className="inline-flex size-8 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Copy className="size-3.5" aria-hidden="true" />
           </button>
@@ -104,7 +104,7 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
             type="button"
             onClick={share}
             aria-label="Share article"
-            className="inline-flex size-8 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Share2 className="size-3.5" aria-hidden="true" />
           </button>
@@ -112,11 +112,14 @@ export function ArticleShell({ children }: { children: React.ReactNode }) {
       </div>
 
       <div className="article-layout grid gap-12 xl:gap-16">
-        <article className="prose-lab min-w-0 max-w-[68ch]">
+        <article className="prose-lab mx-auto w-full min-w-0 max-w-[68ch]">
           <div ref={articleRef} data-slot="article-body">
             {children}
           </div>
-          <div className="mt-16 border-t border-border/80 pt-8">
+          <a href="/thought-lab/" className="mt-12 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+            More essays <ArrowRight className="size-4" aria-hidden="true" />
+          </a>
+          <div className="mt-8 border-t border-border/80 pt-8">
             <p className="eyebrow text-philosophy">
               <BookOpenText className="size-3.5" aria-hidden="true" /> About the author
             </p>
