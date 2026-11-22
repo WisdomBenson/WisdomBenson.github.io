@@ -64,13 +64,13 @@ export function CVTimeline() {
 
         <Tabs defaultValue="experience" className="mt-12 flex-col">
           <TabsList className="h-auto w-full justify-start overflow-x-auto rounded-none border-b bg-transparent p-0">
-            <TabsTrigger value="experience" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+            <TabsTrigger value="experience" className="h-11 flex-none rounded-none border-b-2 border-transparent px-4 data-[state=active]:border-quantum data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <BriefcaseBusiness data-icon="inline-start" aria-hidden="true" /> Experience
             </TabsTrigger>
-            <TabsTrigger value="education" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+            <TabsTrigger value="education" className="h-11 flex-none rounded-none border-b-2 border-transparent px-4 data-[state=active]:border-quantum data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <GraduationCap data-icon="inline-start" aria-hidden="true" /> Education
             </TabsTrigger>
-            <TabsTrigger value="conferences" className="h-11 flex-none rounded-none border-0 px-4 data-[state=active]:bg-transparent data-[state=active]:text-quantum">
+            <TabsTrigger value="conferences" className="h-11 flex-none rounded-none border-b-2 border-transparent px-4 data-[state=active]:border-quantum data-[state=active]:bg-transparent data-[state=active]:text-quantum">
               <CalendarDays data-icon="inline-start" aria-hidden="true" /> Conferences
             </TabsTrigger>
           </TabsList>

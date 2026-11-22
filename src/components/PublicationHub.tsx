@@ -105,7 +105,7 @@ function PublicationList({ items, onCite, onCopyDoi }: PublicationListProps) {
       {items.map((publication, index) => (
         <li
           key={publication.id}
-          className="editorial-card grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 p-5 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 sm:p-6 lg:gap-x-8"
+          className="editorial-card grid w-full min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-x-3 p-4 sm:grid-cols-[3.5rem_minmax(0,1fr)] sm:gap-x-6 sm:p-6 lg:gap-x-8"
         >
           <span className="pt-1 font-mono text-xs text-muted-foreground">
             {String(index + 1).padStart(2, "0")}

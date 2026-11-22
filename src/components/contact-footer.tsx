@@ -70,7 +70,7 @@ export function ContactFooter() {
             </div>
             <div className="text-sm text-muted-foreground md:text-right">
               <p>{profile.location} · {profile.phone}</p>
-              <a href="#top" className="mt-2 inline-flex items-center gap-1.5 hover:text-foreground">Back to top <ArrowUp className="size-3.5" aria-hidden="true" /></a>
+              <a href="#top" className="mt-2 inline-flex items-center gap-1.5 font-medium text-quantum transition-colors hover:text-foreground">Back to top <ArrowUp className="size-3.5" aria-hidden="true" /></a>
             </div>
           </div>
         </div>

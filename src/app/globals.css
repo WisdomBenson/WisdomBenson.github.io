@@ -108,7 +108,7 @@ a {
 }
 
 .section-block {
-  padding-block: clamp(1rem, 2.5vw, 2rem);
+  padding-block: clamp(1.25rem, 3.5vw, 2.5rem);
 }
 
 .editorial-panel {

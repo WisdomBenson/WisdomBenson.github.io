@@ -29,10 +29,10 @@ export function HeroSection() {
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
           <Badge variant="outline">Howard University · Physics PhD Researcher</Badge>
-          <h1 className="mt-8 max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.06em] sm:text-6xl">
+          <h1 className="mt-5 max-w-4xl text-balance text-4xl font-semibold leading-[0.96] tracking-[-0.06em] sm:mt-8 sm:text-5xl md:text-6xl">
             Quantum Matter &amp; Metaphysical Inquiry
           </h1>
-          <p className="mt-7 max-w-[65ch] text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+          <p className="mt-5 max-w-[65ch] text-base leading-7 text-muted-foreground sm:mt-7 sm:text-lg sm:leading-8">
             My research examines finite semiconductor nanostructures, with a focus on zinc oxide (ZnO) quantum dots and first-principles DFT/GW methods. In philosophy, I explore value, agency, and metaphysical structure through Kant, Scheler, and Schopenhauer.
           </p>
 
@@ -77,7 +77,7 @@ export function HeroSection() {
                 className="object-cover object-[50%_24%] grayscale-[8%] transition-[filter,transform] duration-500 hover:scale-[1.01] hover:grayscale-0"
               />
             </CardContent>
-            <CardFooter className="grid gap-5 border-t bg-card px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
+            <CardFooter className="grid gap-5 border-t bg-muted/40 px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
               <div>
                 <p className="text-lg font-semibold tracking-[-0.025em]">{profile.name}</p>
                 <p className="mt-1 text-sm text-muted-foreground">Condensed Matter Physics · Philosophical Metaphysics</p>

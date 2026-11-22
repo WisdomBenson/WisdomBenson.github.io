@@ -62,14 +62,14 @@ export function ThoughtLab() {
             const Icon = essay.icon
             return (
               <Reveal key={essay.title} delay={index * 0.07} className="h-full">
-                <article className="editorial-card group flex h-full min-h-[25rem] flex-col overflow-hidden p-6 sm:p-8">
+                <article className="editorial-card group flex h-full min-h-[18rem] flex-col overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
                   <div className="flex items-center justify-between">
                     <span className="grid size-11 place-items-center rounded-xl bg-philosophy-muted text-philosophy">
                       <Icon className="size-5" aria-hidden="true" />
                     </span>
                     <Badge variant="outline" className="text-philosophy">{essay.type}</Badge>
                   </div>
-                  <h3 className="mt-16 max-w-lg text-balance text-3xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-4xl">
+                  <h3 className="mt-8 max-w-lg text-balance text-2xl font-semibold leading-[1.02] tracking-[-0.05em] sm:mt-16 sm:text-3xl md:text-4xl">
                     {essay.title}
                   </h3>
                   <p className="mt-5 max-w-xl flex-1 text-base leading-7 text-muted-foreground">{essay.description}</p>
