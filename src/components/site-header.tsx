@@ -25,13 +25,13 @@ const navigation = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/75 bg-background/88 backdrop-blur-md">
-      <div className="site-shell flex h-[4.25rem] items-center justify-between gap-6">
-        <Link href="/#top" className="group flex min-w-0 items-center gap-3" aria-label="Wisdom Benson, home">
-          <span className="grid size-8 place-items-center rounded-md bg-primary text-[0.64rem] font-semibold tracking-tight text-primary-foreground transition-transform group-hover:-rotate-2">
+      <div className="site-shell flex h-[4.25rem] items-center justify-between gap-2 sm:gap-6">
+        <Link href="/#top" className="group flex min-w-0 items-center gap-3 max-[360px]:gap-1.5" aria-label="Wisdom Benson, home">
+          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-primary text-[0.64rem] font-semibold tracking-tight text-primary-foreground transition-transform group-hover:-rotate-2 max-[360px]:size-7">
             {profile.mark}
           </span>
           <span className="min-w-0 leading-tight">
-            <span className="block truncate font-serif text-[1.05rem] font-medium tracking-[-0.01em] text-foreground">
+            <span className="block truncate font-serif text-[1.05rem] font-medium tracking-[-0.01em] text-foreground max-[360px]:text-[0.9375rem]">
               {profile.name}
             </span>
             <span className="hidden truncate text-[0.58rem] uppercase tracking-[0.16em] text-muted-foreground sm:block">
@@ -55,7 +55,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Button
             size="sm"
-            className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className="h-9 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 max-[360px]:px-3"
             asChild
           >
             <Link href="/#contact">Contact</Link>
@@ -63,7 +63,7 @@ export function SiteHeader() {
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation">
+              <Button variant="ghost" size="icon" className="size-10 lg:hidden" aria-label="Open navigation">
                 <Menu aria-hidden="true" />
               </Button>
             </SheetTrigger>

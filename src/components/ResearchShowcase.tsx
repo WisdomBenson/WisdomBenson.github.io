@@ -61,7 +61,13 @@ export function ResearchShowcase() {
                     <span className="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-quantum">
                       {figure.plate}
                     </span>
-                    <FigureZoom src={figure.src} alt={figure.alt} title={figure.title} height={figure.height} />
+                    <FigureZoom
+                      src={figure.src}
+                      alt={figure.alt}
+                      title={figure.title}
+                      caption={figure.caption}
+                      height={figure.height}
+                    />
                   </div>
                   <h3 className="mt-2.5 font-serif text-xl font-medium leading-snug tracking-[-0.01em] text-foreground sm:text-2xl">
                     {figure.title}
