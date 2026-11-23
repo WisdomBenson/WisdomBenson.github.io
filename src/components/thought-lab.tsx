@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, BookOpenText } from "lucide-react"
 
 import { CardDetails } from "@/components/card-details"
 import { Reveal } from "@/components/reveal"
+import { Button } from "@/components/ui/button"
 import { essays } from "@/content/essays"
 import { cn } from "@/lib/utils"
 
@@ -18,9 +19,17 @@ export function ThoughtLab() {
               Value, agency, and metaphysical structure
             </h2>
           </div>
-          <p className="max-w-[56ch] text-base leading-7 text-muted-foreground lg:col-span-5 lg:justify-self-end">
-            The philosophical work asks what our concepts commit us to: in love, value, agency, and the explanations we accept as complete.
-          </p>
+          <div className="max-w-[56ch] lg:col-span-5 lg:justify-self-end">
+            <p className="text-base leading-7 text-muted-foreground">
+              The philosophical work asks what our concepts commit us to: in love, value, agency, and the explanations we accept as complete.
+            </p>
+            <Button asChild variant="link" className="mt-2 px-0">
+              <a href="/thought-lab/">
+                All essays &amp; lab
+                <ArrowRight data-icon="inline-end" aria-hidden="true" />
+              </a>
+            </Button>
+          </div>
         </Reveal>
 
         <EssayList className="mt-12" />
